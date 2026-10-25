@@ -17,86 +17,152 @@
 }
 
 .navbar {
-    width: calc(100% - 80px);
-    max-width: 1267px;
-    min-height: 65px;
-
-    margin: 0;
-    padding: 7px 28px;
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 24px;
+
+    width: calc(100% - 80px);
+    max-width: 1320px;
+    min-height: 65px;
+    margin: 0;
+    padding: 7px 20px;
 
     background-color: #FCF8EB;
     border-radius: 18px;
-    z-index: 100;
 }
 
-/* Logo */
+/* Brand */
 .navbar-brand {
     display: flex;
     align-items: center;
-    flex-shrink: 0;
+    gap: 7px;
+    flex: 0 0 auto;
 }
 
 .navbar-logo {
     display: block;
-    width: 95px;
-    height: 2.2rem;
+    width: 35px;
+    height: 36px;
     object-fit: contain;
-    object-position: left center;
     flex-shrink: 0;
 }
 
-/* Navigation links */
+.navbar-brand-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 96px;
+    color: #0F3027;
+    line-height: 1.092;
+    white-space: nowrap;
+}
+
+.navbar-brand-name {
+    font-family: 'Ellak', sans-serif;
+    font-size: 16.4px;
+    font-weight: normal;
+}
+
+.navbar-brand-institute {
+    margin-top: 1px;
+    font-family: "Geist", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    font-style: normal;
+    line-height: 1.09;
+    vertical-align: middle;
+}
+
+/* Desktop navigation */
+.navbar-menu {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
 .navbar-links {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 52px;
+    gap: 27px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .navbar-links a {
-    font-family: 'Ellak', sans-serif;
-    color: #173D32;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 127px;
+    min-height: 32px;
+    padding: 0 10px;
+
+    color: #0F3027;
+    background-color: #FCF8EB;
+    font-family: "Gotham", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.09;
+    letter-spacing: 0;
+    text-align: center;
+    vertical-align: middle;
     text-decoration: none;
     white-space: nowrap;
+    border-radius: 11px;
 
-    font-size: 15px;
-    font-weight: normal;
-    line-height: 1.4;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
 
-    transition: opacity 0.2s ease;
+.navbar-links a:nth-child(2) {
+    width: 230px;
 }
 
 .navbar-links a:hover {
-    opacity: 0.65;
+    background-color: #F4EEDC;
 }
 
-/* Login button */
+.navbar-links a:focus-visible,
+.login-button:focus-visible,
+.navbar-menu-toggle:focus-visible {
+    outline: 2px solid #0F3027;
+    outline-offset: 3px;
+}
+
 .navbar-actions {
     display: flex;
     align-items: center;
-    flex-shrink: 0;
+    flex: 0 0 auto;
 }
 
 .login-button {
     height: 36px;
-    min-width: 80px;
-    padding: 0 20px;
+    min-width: 82px;
+    padding: 0 16px;
 
-    border: none;
-    border-radius: 10px;
-
+    border: 0;
+    border-radius: 11px;
     background-color: #0F3027;
-    color: #FFFFFF;
+    color: #FCF8EB;
 
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-
+    font-family: "Gotham", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.09;
+    letter-spacing: 0;
+    text-align: center;
+    vertical-align: middle;
     cursor: pointer;
     transition: opacity 0.2s ease;
 }
@@ -105,51 +171,139 @@
     opacity: 0.85;
 }
 
-/* Tablet */
+.navbar-menu-toggle {
+    display: none;
+}
+
+/* Compact navigation */
 @media (max-width: 900px) {
     .navbar {
         width: calc(100% - 40px);
-        padding: 8px 20px;
+        padding: 7px 16px;
         gap: 16px;
     }
 
     .navbar-links {
-        gap: 24px;
+        gap: 8px;
     }
 
     .navbar-links a {
+        width: auto;
+        padding: 0 10px;
         font-size: 13px;
     }
 
-    .navbar-logo {
-        width: 85px;
+    .login-button {
+        min-width: 74px;
+        padding: 0 12px;
     }
 }
 
-/* Mobile */
-@media (max-width: 650px) {
+/* Mobile navigation */
+@media (max-width: 760px) {
     .navbar {
-        width: calc(100% - 24px);
-        padding: 10px 14px;
-        gap: 10px;
-        border-radius: 15px;
+        top: 15px;
+        width: calc(100% - 20px);
+        min-height: 57px;
+        padding: 8px 12px;
+        gap: 8px;
+        border-radius: 16px;
+    }
+
+    .navbar-brand {
+        gap: 6px;
     }
 
     .navbar-logo {
-        width: 75px;
+        width: 29px;
+        height: 30px;
+    }
+
+    .navbar-brand-copy {
+        width: 89px;
+    }
+
+    .navbar-brand-name {
+        font-size: 14.8px;
+    }
+
+    .navbar-brand-institute {
+        font-size: 9.86px;
+    }
+
+    .navbar-menu-toggle {
+        display: flex;
+        flex: 0 0 24px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 24px;
+        height: 24px;
+        margin-left: auto;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .navbar-menu-toggle span {
+        display: block;
+        width: 19px;
+        height: 2.5px;
+        border-radius: 2px;
+        background-color: #0F3027;
+    }
+
+    .navbar-menu {
+        display: none;
+    }
+
+    .navbar-menu.is-open {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 12px;
+        border-radius: 16px;
+        background-color: #FCF8EB;
+        box-shadow: 0 8px 24px rgb(15 48 39 / 12%);
     }
 
     .navbar-links {
-        gap: 12px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        position: static;
+        left: auto;
+        transform: none;
+        width: 100%;
     }
 
     .navbar-links a {
-        font-size: 10px;
+        justify-content: flex-start;
+        min-height: 40px;
+        padding: 0 12px;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    .navbar-actions,
+    .login-button {
+        width: 100%;
     }
 
     .login-button {
-        height: 25px;
-        padding: 0 12px;
-        font-size: 11px;
+        height: 40px;
     }
+}
+
+.navbar-menu-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
 }

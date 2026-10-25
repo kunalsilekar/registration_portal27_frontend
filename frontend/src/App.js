@@ -1,7 +1,7 @@
-import Hero from './sections/Hero';
 import './App.css';
 import FAQSection from './sections/FAQ';
 import Footer from './sections/Footer';
+import LandingScene from './sections/LandingScene';
 
 function App() {
   return (
@@ -9,6 +9,7 @@ function App() {
       <Hero />
       <FAQSection />
       <Footer />
+      <LandingScene />
     </main>
   );
 }

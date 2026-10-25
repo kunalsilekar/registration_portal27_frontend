@@ -1,27 +1,50 @@
+import { useState } from 'react';
 import './Navbar.css';
 
 function Navbar() {
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const closeMenu = () => setMenuOpen(false);
+
     return (
-        <nav className="navbar">
-            {/* Left: Logo */}
+        <nav className="navbar" aria-label="Main navigation">
             <div className="navbar-brand">
                 <img
                     src="/assets/Alcher_Logo.svg"
-                    alt="Alcheringa IIT Guwahati"
+                    alt=""
                     className="navbar-logo"
                 />
+                <span className="navbar-brand-copy" aria-label="Alcheringa, IIT Guwahati">
+                    <span className="navbar-brand-name">Alcheringa</span>
+                    <span className="navbar-brand-institute">IIT GUWAHATI</span>
+                </span>
             </div>
 
-            {/* Centre: Navigation links */}
-            <div className="navbar-links">
-                <a href="#about">About Us</a>
-                <a href="#modules">Modules &amp; Competitions</a>
-                <a href="#contact">Contact us</a>
-            </div>
+            <button
+                type="button"
+                className="navbar-menu-toggle"
+                aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen((open) => !open)}
+            >
+                <img
+                    className="navbar-menu-icon"
+                    src="/assets/menu-line.svg"
+                    alt=""
+                    aria-hidden="true"
+                />
+            </button>
 
-            {/* Right: Login */}
-            <div className="navbar-actions">
-                <button className="login-button">Login</button>
+            <div className={"navbar-menu " + (menuOpen ? 'is-open' : '')}>
+                <div className="navbar-links">
+                    <a href="#about" onClick={closeMenu}>About us</a>
+                    <a href="#modules" onClick={closeMenu}>Modules &amp; Competitions</a>
+                    <a href="#contact" onClick={closeMenu}>Contact us</a>
+                </div>
+
+                <div className="navbar-actions">
+                    <button className="login-button" onClick={closeMenu}>Login</button>
+                </div>
             </div>
         </nav>
     );
