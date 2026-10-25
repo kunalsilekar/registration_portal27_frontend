@@ -1,11 +1,11 @@
-import Hero from './sections/Hero';
 import './App.css';
-
+import LandingPage from './pages/LandingPage';
+import {Routes, Route} from 'react-router-dom'
 function App() {
   return (
-    <main className="landing-page">
-      <Hero />
-    </main>
+    <Routes>
+      <Route path='/' element={<LandingPage/>}/>
+    </Routes>
   );
 }
 
