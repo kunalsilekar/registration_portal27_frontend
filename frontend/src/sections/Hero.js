@@ -162,7 +162,7 @@ function Hero() {
                 .to(
                     foregroundRef.current,
                     {
-                        y: -350,
+                        y: () => (window.matchMedia('(max-width: 760px)').matches ? -(window.innerHeight * 0.2 + 376) : -350),
                         ease: 'none',
                     },
                     0
@@ -170,14 +170,14 @@ function Hero() {
                 .to(
                     heroCopyRef.current,
                     {
-                        y: -200, ease: 'none'
+                        y: -50, ease: 'none'
                     },
                     0
                 )
                 .to(
                     statsRef.current,
                     {
-                        y: -350,
+                        y: () => (window.matchMedia('(max-width: 760px)').matches ? -(window.innerHeight * 0.2 + 376) : -350),
                         ease: 'none',
                     },
                     0
@@ -207,19 +207,31 @@ function Hero() {
 
     return (
         <section className="hero-scene" ref={sectionRef}>
-            <img
-                ref={landscapeRef}
-                className="landscape"
-                src="/assets/landscape.jpeg"
-                alt="Sunset landscape with mountains and waterfalls"
-            />
+            <picture>
+                <source
+                    media="(max-width: 768px)"
+                    srcSet="/assets/landscape-mobile.jpeg"
+                />
+                <img
+                    ref={landscapeRef}
+                    className="landscape"
+                    src="/assets/landscape.jpeg"
+                    alt="Sunset landscape with mountains and waterfalls"
+                />
+            </picture>
 
-            <img
-                ref={foregroundRef}
-                className="foreground"
-                src="/assets/foreground.jpeg"
-                alt=""
-            />
+            <picture>
+                <source
+                    media="(max-width: 768px)"
+                    srcSet="/assets/foreground-mobile.jpeg"
+                />
+                <img
+                    ref={foregroundRef}
+                    className="foreground"
+                    src="/assets/foreground.jpeg"
+                    alt=""
+                />
+            </picture>
 
             <div ref={heroCopyRef} className="hero-copy">
                 <h1
@@ -244,7 +256,7 @@ function Hero() {
 
                 <div className="hero-intro">
                     <p className="hero-tagline">
-                        Northeast India's biggest cultural fest is back. Bring your crew, bring your craft.
+                        Northeast India’s biggest cultural fest is back. Bring your crew, bring your craft.
                     </p>
                     <button type="button" className="hero-register-button">
                         <span className="hero-register-label">REGISTER</span>
@@ -268,6 +280,10 @@ function Hero() {
                 <div className="hero-stat">
                     <AnimatedStatNumber value={45} suffix="+" started={statsStarted} />
                     <span className="hero-stat-label">COMPETITIONS</span>
+                </div>
+                <div className="hero-stat hero-stat-featured">
+                    <AnimatedStatNumber value={3000} suffix="+" started={statsStarted} />
+                    <span className="hero-stat-label">PARTICIPANTS</span>
                 </div>
             </div>
 
