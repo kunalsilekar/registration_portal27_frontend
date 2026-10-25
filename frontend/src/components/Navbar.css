@@ -71,10 +71,13 @@
 
 .navbar-brand-institute {
     margin-top: 1px;
-    font-family: Arial, sans-serif;
-    font-size: 9.7px;
-    font-weight: normal;
-    letter-spacing: -0.03em;
+    font-family: "Geist", sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    font-style: normal;
+    line-height: 1.09;
+    vertical-align: middle;
 }
 
 /* Desktop navigation */
@@ -106,11 +109,14 @@
 
     color: #0F3027;
     background-color: #FCF8EB;
-    font-family: Arial, sans-serif;
+    font-family: "Gotham", sans-serif;
     font-size: 16px;
-    font-weight: 600;
-    line-height: 1.092;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 1.09;
+    letter-spacing: 0;
     text-align: center;
+    vertical-align: middle;
     text-decoration: none;
     white-space: nowrap;
     border-radius: 11px;
@@ -149,9 +155,14 @@
     background-color: #0F3027;
     color: #FCF8EB;
 
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font-family: "Gotham", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.09;
+    letter-spacing: 0;
+    text-align: center;
+    vertical-align: middle;
     cursor: pointer;
     transition: opacity 0.2s ease;
 }
@@ -289,4 +300,10 @@
     .login-button {
         height: 40px;
     }
+}
+
+.navbar-menu-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
 }
