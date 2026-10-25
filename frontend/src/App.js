@@ -1,16 +1,12 @@
 import './App.css';
-import FAQSection from './sections/FAQ';
-import Footer from './sections/Footer';
-import LandingScene from './sections/LandingScene';
+import LandingPage from './pages/LandingPage';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <main className="landing-page">
-      <Hero />
-      <FAQSection />
-      <Footer />
-      <LandingScene />
-    </main>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+    </Routes>
   );
 }
 

@@ -48,7 +48,7 @@ body {
 
 .landing-page {
   min-height: 100vh;
-  background: #F2EBE1;
+  background-image: url(../public/assets/background.png);
 }
 
 .landing-scene-track {

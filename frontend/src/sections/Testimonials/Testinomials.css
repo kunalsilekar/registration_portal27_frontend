@@ -1,0 +1,521 @@
+/* =========================================================
+   Alcheringa27 – Testimonials
+   All sizes below were measured from the Figma frame (1440px wide).
+   --u = 1 design pixel. On desktop it scales with the viewport width
+   (100vw / 1440) so the section always looks exactly like the design.
+   Tablet / phone (<= 960px) switch to real px values (see bottom).
+   ========================================================= */
+
+:root {
+  --alcher-page-cream: #f8e7d1; /* paper colour above the ribbon */
+  --alcher-cream: #edd9c3;      /* ribbon text + headings */
+  --alcher-cream-bright: #f6e6cf; /* active card + scroll nav */
+  --alcher-card-muted: #91877a; /* side cards */
+  --alcher-forest-dark: #192c29; /* ribbon band */
+  --alcher-accent-active: #0f3027;
+  --alcher-accent-muted: #091c17;
+  --alcher-text-dark: #223a3e;  /* all text inside cards */
+  --alcher-text-muted: #223a3e;
+  --alcher-thumb: #c4ad90;
+  --alcher-bg-image: url("../../../public/assets/testinomials.png");
+}
+
+.alcher-testimonials {
+  --u: calc(100vw / 1440);
+
+  position: relative;
+  width: 100%;
+  background-color: #16241f;
+  background-image: var(--alcher-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  padding-bottom: calc(140 * var(--u));
+  font-family: "Gotham", "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  color: var(--alcher-cream);
+  box-sizing: border-box;
+}
+
+/* ---------- soft background layers (kept subtle: the photo already has the mood) ---------- */
+.alcher-testimonials__bg-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.alcher-testimonials__sky-glow,
+.alcher-testimonials__gate-silhouette {
+  display: none;
+}
+
+.alcher-testimonials__foliage-vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(11, 23, 17, 0.35) 0%,
+    rgba(11, 23, 17, 0) 40%
+  );
+}
+
+/* =========================================
+   TOP CURVED TICKER
+   ========================================= */
+.alcher-ticker-wrapper {
+  position: relative;
+  width: 100%;
+  height: calc(340 * var(--u));
+  z-index: 3;
+  line-height: 0;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+}
+
+.alcher-ticker-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.alcher-ticker-svg__cream-top {
+  fill: var(--alcher-page-cream);
+}
+
+.alcher-ticker-svg__band {
+  fill: none;
+  stroke: var(--alcher-forest-dark);
+  stroke-width: 129px; /* band thickness in the design */
+  stroke-linecap: butt;
+}
+
+.alcher-ticker-svg__text {
+  fill: var(--alcher-cream);
+  font-family: "Ellak", "Gotham", sans-serif;
+  font-size: 64px; /* capital height ≈ 46px, like the design */
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   MAIN LAYOUT (left text / right cards)
+   Design: left edge 82px, right edge 105px, top of cards 213px below the ribbon
+   ========================================= */
+.alcher-testimonials__container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin-top: calc(213 * var(--u));
+  height: calc(475 * var(--u));
+  padding: 0 calc(105 * var(--u)) 0 calc(82 * var(--u));
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+/* ---------- Left column ---------- */
+.alcher-testimonials__left {
+  width: calc(560 * var(--u));
+  height: calc(470 * var(--u));
+  margin-top: calc(-28 * var(--u));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.alcher-testimonials__title {
+  margin: 0;
+  font-family: "Ellak", "Gotham", sans-serif;
+  font-size: calc(96 * var(--u));
+  font-weight: 400;
+  line-height: 0.8;
+  letter-spacing: 0;
+  color: var(--alcher-cream);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.alcher-testimonials__copy {
+  max-width: calc(380 * var(--u));
+  font-family: "Gotham", sans-serif;
+}
+
+.alcher-testimonials__subtitle {
+  margin: 0 0 calc(20 * var(--u)) 0;
+  font-size: calc(32 * var(--u));
+  font-weight: 400;
+  line-height: calc(36 * var(--u));
+  letter-spacing: 0;
+  color: var(--alcher-cream);
+}
+
+.alcher-testimonials__desc {
+  margin: 0;
+  font-size: calc(15 * var(--u));
+  font-weight: 500;
+  line-height: calc(16.5 * var(--u));
+  color: var(--alcher-cream);
+}
+
+/* ---------- Right column ---------- */
+.alcher-testimonials__right {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(627 * var(--u)); /* 548 stage + 51 gap + 28 nav */
+  height: calc(475 * var(--u));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.alcher-cards-stage {
+  position: relative;
+  flex: 0 0 auto;
+  width: calc(548 * var(--u));
+  height: calc(475 * var(--u));
+  touch-action: pan-x;
+}
+
+/* ---------- Card (464 x 136) ---------- */
+.alcher-card {
+  position: absolute;
+  top: calc(50% - 68 * var(--u));
+  right: 0;
+  width: calc(464 * var(--u));
+  height: calc(136 * var(--u));
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  gap: calc(12 * var(--u));
+  padding: calc(12 * var(--u)) calc(14 * var(--u)) calc(12 * var(--u))
+    calc(12 * var(--u));
+  border-radius: calc(10 * var(--u));
+  overflow: hidden;
+  transition: background-color 0.45s ease;
+  will-change: transform, opacity;
+  border-left: 10px solid #053430;
+  font-family: "Gotham", sans-serif;
+}
+
+.alcher-card--hidden {
+  pointer-events: none;
+}
+
+.alcher-card--active {
+  background-color: var(--alcher-cream-bright);
+  cursor: default;
+}
+
+.alcher-card--muted {
+  background-color: var(--alcher-card-muted);
+  cursor: pointer;
+}
+
+.alcher-card--muted:focus-visible {
+  outline: 2px solid var(--alcher-cream-bright);
+  outline-offset: 2px;
+}
+
+.alcher-card__accent-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: calc(2 * var(--u));
+}
+
+.alcher-card--active .alcher-card__accent-bar {
+  background-color: var(--alcher-accent-active);
+}
+
+.alcher-card--muted .alcher-card__accent-bar {
+  background-color: var(--alcher-accent-muted);
+}
+
+.alcher-card__avatar-wrap {
+  flex: 0 0 calc(90 * var(--u));
+  height: 100%;
+  border-radius: calc(12 * var(--u));
+  overflow: hidden;
+  background-color: #2b352e;
+}
+
+.alcher-card__avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.alcher-card__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--alcher-text-dark);
+}
+
+.alcher-card__quote {
+  margin: 0;
+  font-size: calc(11.5 * var(--u));
+  font-weight: 600;
+  line-height: calc(13 * var(--u));
+  color: var(--alcher-text-dark);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.alcher-card__footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: calc(8 * var(--u));
+}
+
+.alcher-card__author {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.alcher-card__name {
+  margin: 0;
+  font-size: calc(16 * var(--u));
+  font-weight: 500;
+  line-height: calc(17 * var(--u));
+  color: var(--alcher-text-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alcher-card__role {
+  margin-top: calc(1 * var(--u));
+  font-size: calc(12 * var(--u));
+  font-weight: 400;
+  line-height: calc(14 * var(--u));
+  color: var(--alcher-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* rating flowers: 12px, 4.5px apart, bottom aligned with the role text */
+.alcher-card__stars {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(4.5 * var(--u));
+  flex: 0 0 auto;
+}
+
+.alcher-card__star {
+  display: block;
+  width: calc(12 * var(--u));
+  height: calc(12 * var(--u));
+  object-fit: contain;
+}
+
+.alcher-card__star.is-empty {
+  opacity: 0.3;
+}
+
+/* =========================================
+   SCROLL NAV  (28px buttons, 10px track, 15px gaps)
+   ========================================= */
+.alcher-scroll-nav {
+  flex: 0 0 auto;
+  width: calc(28 * var(--u));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(15 * var(--u));
+  z-index: 5;
+  user-select: none;
+}
+
+.alcher-scroll-nav__btn {
+  width: calc(28 * var(--u));
+  height: calc(28 * var(--u));
+  border-radius: 50%;
+  border: none;
+  background-color: var(--alcher-cream-bright);
+  color: var(--alcher-text-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.alcher-scroll-nav__btn svg {
+  width: 50%;
+  height: 50%;
+}
+
+.alcher-scroll-nav__btn:hover {
+  transform: scale(1.1);
+  background-color: #ffffff;
+}
+
+.alcher-scroll-nav__btn:active {
+  transform: scale(0.95);
+}
+
+.alcher-scroll-nav__track {
+  position: relative;
+  width: calc(10 * var(--u));
+  height: calc(285 * var(--u));
+  border-radius: 999px;
+  background-color: var(--alcher-cream-bright);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.alcher-scroll-nav__thumb {
+  position: absolute;
+  top: 0;
+  left: calc(2 * var(--u));
+  width: calc(6 * var(--u));
+  height: calc(43 * var(--u));
+  border-radius: 999px;
+  background-color: var(--alcher-thumb);
+  will-change: transform;
+}
+
+/* =========================================
+   PHONE  (<= 820px) – matches the 402px iPhone frame
+   --u = 100vw / 402, so it scales with the screen
+   ========================================= */
+@media (max-width: 820px) {
+  .alcher-testimonials {
+    --u: calc(100vw / 402);
+    padding-bottom: calc(61 * var(--u));
+  }
+
+  .alcher-ticker-wrapper {
+    height: calc(122 * var(--u));
+  }
+
+  .alcher-ticker-svg__band {
+    stroke-width: 49px;
+  }
+
+  .alcher-ticker-svg__text {
+    font-size: 24px; /* capital height ≈ 17px */
+  }
+
+  /* title centred, cards directly below; subtitle, description and arrows are not in the phone design */
+  .alcher-testimonials__container {
+    margin-top: calc(92 * var(--u));
+    height: auto;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .alcher-testimonials__left {
+    width: 100%;
+    height: auto;
+    margin-top: 0;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .alcher-testimonials__title {
+    width: 100%;
+    text-align: center;
+    font-size: calc(61 * var(--u));
+  }
+
+  .alcher-testimonials__copy,
+  .alcher-scroll-nav {
+    display: none;
+  }
+
+  .alcher-testimonials__right {
+    width: 100%;
+    height: auto;
+    margin-top: calc(112 * var(--u));
+    justify-content: center;
+  }
+
+  .alcher-cards-stage {
+    width: calc(366 * var(--u));
+    height: calc(485 * var(--u));
+    touch-action: pan-y; /* page still scrolls vertically; swipe sideways to change card */
+  }
+
+  .alcher-card,
+  .alcher-card--muted,
+  .alcher-card--active {
+    top: calc(50% - 72.5 * var(--u));
+    right: auto;
+    left: 0;
+    width: calc(366 * var(--u));
+    height: calc(145 * var(--u));
+    padding: calc(12 * var(--u)) calc(11 * var(--u)) calc(12 * var(--u))
+      calc(17 * var(--u));
+    gap: calc(16 * var(--u));
+    border-radius: calc(10 * var(--u));
+    background-color: var(--alcher-cream-bright); /* all three cards are cream on phone */
+  }
+
+  .alcher-card__accent-bar,
+  .alcher-card--active .alcher-card__accent-bar,
+  .alcher-card--muted .alcher-card__accent-bar {
+    width: calc(8 * var(--u));
+    background-color: #053430;
+  }
+
+  .alcher-card__avatar-wrap {
+    flex: 0 0 calc(71 * var(--u));
+    height: calc(88 * var(--u));
+    border-radius: calc(10 * var(--u));
+  }
+
+  .alcher-card__quote {
+    font-size: calc(9 * var(--u));
+    line-height: calc(10 * var(--u));
+    -webkit-line-clamp: 4;
+  }
+
+  .alcher-card__name {
+    font-size: calc(12.5 * var(--u));
+    line-height: calc(14 * var(--u));
+  }
+
+  .alcher-card__role {
+    font-size: calc(9 * var(--u));
+    line-height: calc(11 * var(--u));
+  }
+
+  .alcher-card__stars {
+    gap: calc(2.5 * var(--u));
+  }
+
+  .alcher-card__star {
+    width: calc(9 * var(--u));
+    height: calc(9 * var(--u));
+  }
+
+  .alcher-card__star.is-filled {
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alcher-card,
+  .alcher-scroll-nav__btn {
+    transition: none;
+  }
+}
