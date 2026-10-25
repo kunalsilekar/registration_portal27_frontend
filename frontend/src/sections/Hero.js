@@ -1,11 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { animate } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
+import About from './About/About';
 import '../App.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 function AnimatedStatNumber({ value, suffix = '', started }) {
     const [display, setDisplay] = useState('0');
@@ -49,10 +46,8 @@ function AnimatedStatNumber({ value, suffix = '', started }) {
 }
 
 function Hero() {
-    const sectionRef = useRef(null);
     const landscapeRef = useRef(null);
     const foregroundRef = useRef(null);
-    const navbarRef = useRef(null);
     const letterRefs = useRef([]);
     const hoveredLetterRef = useRef(null);
     const titleText = 'ALCHERINGA';
@@ -119,75 +114,6 @@ function Hero() {
     };
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            // Navbar starts lower and moves up during the initial scroll.
-            gsap.fromTo(
-                navbarRef.current,
-                { y: 24 },
-                {
-                    y: 0,
-                    ease: 'none',
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: 'top top',
-                        end: '+=180',
-                        scrub: 1,
-                    },
-                }
-            );
-
-            // Existing landscape and foreground parallax animation.
-            const animation = gsap.timeline({
-                scrollTrigger: {
-                    trigger: sectionRef.current,
-                    start: 'top top',
-                    end: '+=800',
-                    scrub: 1,
-                    pin: true,
-                    anticipatePin: 1,
-                    pinSpacing: true,
-                    invalidateOnRefresh: true,
-                },
-            });
-
-            animation
-                .to(
-                    landscapeRef.current,
-                    {
-                        y: -50,
-                        ease: 'none',
-                    },
-                    0
-                )
-                .to(
-                    foregroundRef.current,
-                    {
-                        y: () => (window.matchMedia('(max-width: 760px)').matches ? -(window.innerHeight * 0.2 + 376) : -350),
-                        ease: 'none',
-                    },
-                    0
-                )
-                .to(
-                    heroCopyRef.current,
-                    {
-                        y: -50, ease: 'none'
-                    },
-                    0
-                )
-                .to(
-                    statsRef.current,
-                    {
-                        y: () => (window.matchMedia('(max-width: 760px)').matches ? -(window.innerHeight * 0.2 + 376) : -350),
-                        ease: 'none',
-                    },
-                    0
-                );
-        }, sectionRef);
-
-        return () => ctx.revert();
-    }, []);
-
-    useEffect(() => {
         const stats = statsRef.current;
         if (!stats) return;
 
@@ -206,7 +132,7 @@ function Hero() {
     }, []);
 
     return (
-        <section className="hero-scene" ref={sectionRef}>
+        <section className="hero-scene">
             <picture>
                 <source
                     media="(max-width: 768px)"
@@ -289,9 +215,11 @@ function Hero() {
 
 
 
-            <div ref={navbarRef} className="navbar-animation-wrapper">
+            <div className="navbar-animation-wrapper">
                 <Navbar />
             </div>
+
+            <About />
         </section>
     );
 }

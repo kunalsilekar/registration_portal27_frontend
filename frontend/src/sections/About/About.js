@@ -1,7 +1,3 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 import './About.css';
 
 
@@ -11,18 +7,15 @@ const guitar2Img = '/assets/guitar2.png';
 const guitar3Img = '/assets/guitar3.png';
 const stageImg = '/assets/stage.png';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
-
-
 const PHOTOS = [
-  { src: guitarImg,  left: 4,  top: 12, width: 11,  tilt: -18 },
-  { src: guitar2Img, left: 20, top: 31, width: 6.5, tilt: -6 },
-  { src: concertImg, left: 23, top: 0,  width: 6.5, tilt: -8 },
-  { src: guitar3Img, left: 13, top: 58, width: 13,  tilt: 12 },
-  { src: stageImg,   left: 82, top: 2,  width: 11,  tilt: 12 },
-  { src: concertImg, left: 72, top: 23, width: 8,   tilt: -6 },
-  { src: guitar2Img, left: 86, top: 47, width: 11,  tilt: -3 },
-  { src: guitar2Img, left: 76, top: 68, width: 8,   tilt: 5 },
+  { src: guitarImg, x: 90, y: 128, boxWidth: 164.82, boxHeight: 187.63, imageWidth: 128.19, imageHeight: 160.23, tilt: 14.78 },
+  { src: guitar2Img, x: 275, y: 286, boxWidth: 100.03, boxHeight: 122.37, imageWidth: 94.22, imageHeight: 117.77, tilt: 2.89 },
+  { src: concertImg, x: 345, y: 27, boxWidth: 149.12, boxHeight: 149.12, imageWidth: 135, imageHeight: 135, tilt: -6.36 },
+  { src: guitar3Img, x: 228, y: 471, boxWidth: 202.27, boxHeight: 230.21, imageWidth: 160, imageHeight: 198, tilt: -13.67 },
+  { src: stageImg, x: 1133, y: 43, boxWidth: 150.34, boxHeight: 169.43, imageWidth: 114.09, imageHeight: 142.61, tilt: -16.75 },
+  { src: concertImg, x: 1047, y: 246, boxWidth: 112.79, boxHeight: 112.79, imageWidth: 102.12, imageHeight: 102.12, tilt: -6.36 },
+  { src: guitar2Img, x: 1168.98, y: 378.21, boxWidth: 152.82, boxHeight: 186.51, imageWidth: 142, imageHeight: 178, tilt: 3.57 },
+  { src: guitar2Img, x: 1033, y: 536, boxWidth: 100.03, boxHeight: 122.37, imageWidth: 94.22, imageHeight: 117.77, tilt: 2.89 },
 ];
 function Ornament() {
   return (
@@ -34,85 +27,8 @@ function Ornament() {
   );
 } 
 function About() {
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-   
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const section = sectionRef.current;
-
-  
-    const ctx = gsap.context(() => {
-     
-      const isLeft = (el) => el.offsetLeft + el.offsetWidth / 2 < section.offsetWidth / 2;
-
-      
-      const tiltOf = (el) => parseFloat(el.dataset.tilt);
-
-      
-      SplitText.create('.about-text', {
-        type: 'lines',
-        autoSplit: true,
-        onSplit: (self) =>
-          gsap.from(self.lines, {
-            opacity: 0,
-            y: 28,
-            rotation: 3,
-            filter: 'blur(12px)',
-            transformOrigin: 'center top',
-            duration: 0.9,
-            ease: 'power3.out',
-            stagger: 0.12,
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 75%',
-              toggleActions: 'play none none reverse', 
-            },
-          }),
-      });
-
-     
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: section,
-          start: 'top top',
-          end: '+=1000',
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true, 
-        },
-      });
-
-      tl.fromTo('.about-heading', { scale: 1.36, y: 100 }, { scale: 1, y: 0, duration: 1 }, 0)
-        .fromTo('.about-text', { y: 114 }, { y: 0, duration: 1 }, 0)
-        .fromTo(
-          '.about-photo',
-          {
-            
-            x: (i, el) => (isLeft(el) ? -(el.offsetLeft + el.offsetWidth + 60) : section.offsetWidth - el.offsetLeft + 60),
-            rotation: (i, el) => tiltOf(el) + (isLeft(el) ? -30 : 30),
-          },
-          { x: 0, rotation: (i, el) => tiltOf(el), duration: 0.8, stagger: 0.07 },
-          0.15
-        )
-        .fromTo('.about-cta', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, 0.85);
-    }, sectionRef);
-
-    
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener('load', refresh);
-
-    return () => {
-      window.removeEventListener('load', refresh);
-      ctx.revert();
-    };
-  }, []);
-
   return (
-    <section className="about-scene" ref={sectionRef}>
+    <section className="about-scene">
       <div className="about-copy">
         <h2 className="about-heading">
           <span className="about-heading-small">ABOUT</span>
@@ -139,19 +55,28 @@ function About() {
       </div>
 
       {PHOTOS.map((photo, index) => (
-        <img
+        <div
           key={index}
           className="about-photo"
-          src={photo.src}
-          alt=""
           data-tilt={photo.tilt}
           style={{
-            left: `${photo.left}%`,
-            top: `${photo.top}%`,
-            width: `${photo.width}vw`,
-            transform: `rotate(${photo.tilt}deg)`,
+            left: `${(photo.x / 1440) * 100}%`,
+            top: `${(photo.y / 757) * 100}%`,
+            width: `${(photo.boxWidth / 1440) * 100}%`,
+            height: `${(photo.boxHeight / 757) * 100}%`,
           }}
-        />
+        >
+          <img
+            className="about-photo-image"
+            src={photo.src}
+            alt=""
+            draggable="false"
+            style={{
+              width: `${(photo.imageWidth / photo.boxWidth) * 100}%`,
+              height: `${(photo.imageHeight / photo.boxHeight) * 100}%`,
+            }}
+          />
+        </div>
       ))}
     </section>
   );

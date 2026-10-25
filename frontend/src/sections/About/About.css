@@ -8,11 +8,16 @@
 }
 
 .about-scene {
-  position: relative;
+  position: absolute;
+  top: calc(var(--foreground-height) + var(--about-offset));
+  left: 0;
+  z-index: 1;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
   background: #F2EBE1 url('../../../public/assets/about_background.png') center / cover no-repeat;
   color: #053430;
+  padding: 0;
 }
 
 .about-copy {
@@ -23,7 +28,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  padding: 40px 20px;
   text-align: center;
 }
 
@@ -158,7 +163,17 @@
 .about-photo {
   position: absolute;
   z-index: 1;
-  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.about-photo-image {
+  display: block;
+  flex: none;
   border-radius: 6px;
   will-change: transform;
 }
