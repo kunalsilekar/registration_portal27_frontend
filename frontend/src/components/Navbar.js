@@ -27,8 +27,12 @@ function Navbar() {
                 aria-expanded={menuOpen}
                 onClick={() => setMenuOpen((open) => !open)}
             >
-                <span />
-                <span />
+                <img
+                    className="navbar-menu-icon"
+                    src="/assets/menu-line.svg"
+                    alt=""
+                    aria-hidden="true"
+                />
             </button>
 
             <div className={"navbar-menu " + (menuOpen ? 'is-open' : '')}>

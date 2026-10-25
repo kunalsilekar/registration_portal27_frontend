@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700&family=Hepta+Slab:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&family=Inter:wght@400;500;600&display=swap");
+
 @font-face {
   font-family: 'Ellak';
   src: url('../public/assets/fonts/Ellak.woff2') format('woff2');
@@ -6,6 +8,29 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Gotham";
+  src: url("../public/assets/fonts/gothambook-webfont.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("../public/assets/fonts/gothammedium-webfont.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("../public/assets/fonts/gothambold-webfont.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 * {
   box-sizing: border-box;
 }
@@ -117,9 +142,12 @@ body {
 .hero-tagline {
   margin: 0;
   color: #000;
-  font-size: clamp(14px, 1.25vw, 18px);
+  font-family: "Geist", sans-serif;
+  font-size: 18px;
+  font-style: normal;
   font-weight: 500;
-  line-height: 1.092;
+  line-height: 1.09;
+  text-align: center;
   text-shadow: 0 0 19.3px #f1ffe2;
 }
 
@@ -170,11 +198,14 @@ body {
   position: relative;
   z-index: 2;
   color: #ebeee7;
-  font-family: Arial, sans-serif;
+  font-family: "Gotham", sans-serif;
   font-size: 18px;
+  font-style: normal;
   font-weight: 700;
-  letter-spacing: -0.72px;
-  line-height: 1.092;
+  letter-spacing: -4%;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1.09;
   transition: transform 200ms ease-out;
 }
 
@@ -229,6 +260,10 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.hero-stat-featured {
+  display: none;
+}
+
 .hero-stat-label {
   font-size: clamp(18px, 2.22vw, 32px);
   line-height: 1.5;
@@ -250,6 +285,98 @@ body {
 
 .hero-copy {
   position: relative;
-  z-index: 2;
+  z-index: -1;
   width: 100%;
+}
+
+@media (max-width: 760px) {
+  .hero-title {
+    width: min(271px, calc(100% - 40px));
+    margin: 0 75px;
+    padding-top: 310px;
+    font-size: clamp(40px, 11.94vw, 48px);
+  }
+
+  .hero-intro {
+    width: min(271px, calc(100% - 40px));
+    margin: 20px 75px 0;
+  }
+
+  .hero-tagline {
+    max-width: 271px;
+    font-family: "Gotham", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.092;
+  }
+
+  .hero-register-button {
+    width: 121px;
+    height: 47px;
+    margin-top: 41px;
+  }
+
+  .hero-register-button::before {
+    top: 3px;
+    left: 3px;
+    width: 115px;
+    height: 41px;
+    border-radius: 8px;
+    background: #032825;
+  }
+
+  .hero-register-button::after {
+    top: 0;
+    left: 0;
+    width: 115px;
+    height: 41px;
+    border-radius: 8px;
+  }
+
+  .hero-register-label {
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .landscape {
+    height: 100vh;
+  }
+
+  .foreground {
+    height: 120vh;
+  }
+}
+@media (max-width: 760px) {
+  .hero-stats {
+    top: 120vh;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, 96px);
+    gap: 24px 12px;
+    padding: 20px 0;
+  }
+
+  .hero-stat-featured {
+    display: flex;
+    grid-column: 1 / -1;
+  }
+
+  .hero-stats::before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    bottom: 0;
+    height: auto;
+    transform: translateX(-50%);
+    background-image: url('../public/assets/paper-texture-mobile.png');
+    background-position: center -783px;
+    background-repeat: no-repeat;
+    background-size: 680px 1465px;
+    content: '';
+    pointer-events: none;
+  }
 }
