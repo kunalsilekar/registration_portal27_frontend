@@ -94,12 +94,12 @@
 .am-heading {
     position: absolute;
     z-index: 2;
-    top: 7vh;
-    right: 18%;
+    top: 14vh;
+    right: 12%;
     margin: 0;
     font-family: 'Ellak', sans-serif;
     font-weight: 400;
-    font-size: clamp(26px, 3.4vw, 50px);
+    font-size: clamp(26px, 3.4vw, 48px);
     line-height: 1.1;
     text-align: right;
     color: var(--green);
@@ -108,12 +108,12 @@
 .am-title {
     position: absolute;
     z-index: 2;
-    bottom: 5vh;
+    bottom: 10vh;
     left: 14%;
     margin: 0;
     font-family: 'Ellak', sans-serif;
     font-weight: 400;
-    font-size: clamp(48px, 7.5vw, 112px);
+    font-size: clamp(48px, 7.5vw, 84px);
     line-height: 1;
     color: var(--green);
     pointer-events: none;
