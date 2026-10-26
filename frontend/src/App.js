@@ -1,21 +1,12 @@
-import React from 'react';
 import './App.css';
-import Hero from './sections/Hero';
-import FAQSection from './sections/FAQ';
-import Footer from './sections/Footer';
+import LandingPage from './pages/LandingPage';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <main className="landing-page">
-      {/* Hero Section (includes Navbar parallax) */}
-      <Hero />
-
-      {/* FAQ Section */}
-      <FAQSection />
-
-      {/* Footer Section */}
-      <Footer />
-    </main>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+    </Routes>
   );
 }
 
