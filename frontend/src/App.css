@@ -373,8 +373,10 @@ body {
   }
 
   .landing-scene-panel {
-    --foreground-height: 120vh;
-    --about-offset: 0px;
+    --foreground-height: 100vh;
+    --mobile-stats-gap: 0px;
+    --mobile-stats-height: 376px;
+    --about-offset: calc(var(--mobile-stats-gap) + var(--mobile-stats-height));
   }
 
   .foreground {
@@ -383,7 +385,7 @@ body {
 }
 @media (max-width: 760px) {
   .hero-stats {
-    top: calc(120vh + 57px);
+    top: calc(var(--foreground-height) + var(--mobile-stats-gap));
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(3, 96px);
     gap: 24px 12px;

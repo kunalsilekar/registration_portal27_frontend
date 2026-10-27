@@ -26,6 +26,10 @@ function LandingScene() {
       const tiltOf = (el) => parseFloat(el.dataset.tilt);
       const attachedTargetY = () =>
         navbar.offsetTop - (foreground.offsetTop + foreground.offsetHeight);
+      const sceneTargetY = () =>
+        window.matchMedia('(max-width: 760px)').matches
+          ? navbar.offsetTop - about.offsetTop
+          : attachedTargetY();
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -38,12 +42,12 @@ function LandingScene() {
         },
       });
 
-      // Keep stats attached to the foreground by moving them with the same vertical offset.
+      // Move the foreground, stats, and About together; on mobile they form one vertical stack.
       tl.fromTo(navbarWrapper, { y: 24 }, { y: 0, duration: 1.8 }, 0)
         .to('.landscape', { y: -140, duration: 18 }, 0)
-        .to(foreground, { y: attachedTargetY, duration: 18 }, 0)
-        .to(stats, { y: attachedTargetY, duration: 18 }, 0)
-        .to(about, { y: attachedTargetY, duration: 18 }, 0)
+        .to(foreground, { y: sceneTargetY, duration: 18 }, 0)
+        .to(stats, { y: sceneTargetY, duration: 18 }, 0)
+        .to(about, { y: sceneTargetY, duration: 18 }, 0)
         .to('.hero-copy', { y: -50, duration: 18 }, 0)
         .fromTo(
           '.about-heading',

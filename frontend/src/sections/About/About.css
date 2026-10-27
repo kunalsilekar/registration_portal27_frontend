@@ -177,3 +177,9 @@
   border-radius: 6px;
   will-change: transform;
 }
+
+@media (max-width: 768px) {
+  .about-photo {
+    display: none;
+  }
+}
