@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Phone } from 'lucide-react';
 import './Footer.css';
 
@@ -6,6 +6,20 @@ const stageDesktop = '/assets/state.jpg';
 const stageMobile = '/assets/footer_bg_mobile.jpg';
 const alcherLogoDesktop = '/assets/alcherLogo.svg';
 const alcherLogoMobile = '/assets/alcherLogo_mobile.svg';
+
+/* Team members displayed on hover (names only) */
+const CREATIVES_TEAM = [
+
+];
+
+const WEBOPS_TEAM = [
+'Santosh',
+'Akash',
+'Kunal',
+'Koushik',
+'Aaryan',
+'Dinesh',
+];
 
 /* Desktop Social Icon SVGs (#F5E3CD fill) */
 const LinkedInIcon = () => (
@@ -85,7 +99,76 @@ const XTwitterIconMobile = () => (
   </svg>
 );
 
+/* Reusable Interactive Credits Section with Hover Tooltips (Names Only) */
+function CreditsSection() {
+  const [activeTooltip, setActiveTooltip] = useState(null);
+
+  return (
+    <div className="footer-credits">
+      Designed by{' '}
+      <span
+        className={`credits-trigger ${activeTooltip === 'creatives' ? 'active' : ''}`}
+        onMouseEnter={() => setActiveTooltip('creatives')}
+        onMouseLeave={() => setActiveTooltip(null)}
+        onClick={() => setActiveTooltip(activeTooltip === 'creatives' ? null : 'creatives')}
+        tabIndex={0}
+      >
+        <span className="credits-team-name">Team Creatives</span>
+        <div className="credits-tooltip" role="tooltip">
+          <div className="credits-tooltip-header">
+            <span className="credits-tooltip-title">Team Creatives</span>
+          </div>
+          <div className="credits-tooltip-list">
+            {CREATIVES_TEAM.map((name, i) => (
+              <div key={i} className="credits-member-item">
+                <span className="credits-member-name">{name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </span>
+      . Developed by{' '}
+      <span
+        className={`credits-trigger ${activeTooltip === 'webops' ? 'active' : ''}`}
+        onMouseEnter={() => setActiveTooltip('webops')}
+        onMouseLeave={() => setActiveTooltip(null)}
+        onClick={() => setActiveTooltip(activeTooltip === 'webops' ? null : 'webops')}
+        tabIndex={0}
+      >
+        <span className="credits-team-name">Team WebOps</span>
+        <div className="credits-tooltip" role="tooltip">
+          <div className="credits-tooltip-header">
+            <span className="credits-tooltip-title">Team WebOps</span>
+          </div>
+          <div className="credits-tooltip-list">
+            {WEBOPS_TEAM.map((name, i) => (
+              <div key={i} className="credits-member-item">
+                <span className="credits-member-name">{name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </span>
+    </div>
+  );
+}
+
 const Footer = () => {
+  const scrollToSection = (e, targetId) => {
+    e.preventDefault();
+    const element = document.getElementById(targetId);
+    if (element) {
+      const topOffset = element.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({
+        top: topOffset,
+        behavior: 'smooth'
+      });
+      window.history.pushState(null, '', `#${targetId}`);
+    } else {
+      window.location.href = `/#${targetId}`;
+    }
+  };
+
   return (
     <footer
       className="footer-wrapper"
@@ -135,10 +218,35 @@ const Footer = () => {
           <div className="footer-links-col">
             <h4 className="footer-col-heading">Links</h4>
             <ul className="footer-links-list">
-              <li className="footer-link-item"><a href="#about">About us</a></li>
-              <li className="footer-link-item"><a href="#modules">Modules and Competitions</a></li>
-              <li className="footer-link-item"><a href="#testimonials">Testimonials</a></li>
-              <li className="footer-link-item"><a href="#faqs">FAQs</a></li>
+              <li className="footer-link-item">
+                <a href="https://alcheringa.co.in/team" target="_blank" rel="noreferrer">
+                  About us
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a
+                  href="#modules"
+                  onClick={(e) => scrollToSection(e, 'modules')}
+                >
+                  Modules and Competitions
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a
+                  href="#testimonials"
+                  onClick={(e) => scrollToSection(e, 'testimonials')}
+                >
+                  Testimonials
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a
+                  href="#faqs"
+                  onClick={(e) => scrollToSection(e, 'faqs')}
+                >
+                  FAQs
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -147,31 +255,34 @@ const Footer = () => {
             <h4 className="footer-col-heading">Contact Us</h4>
             <div className="footer-contacts-grid">
               <div className="contact-card">
-                <span className="contact-name">Sudhanshu Raj</span>
+                <span className="contact-name">Mayank Sahu</span>
                 <span className="contact-role">PR Head</span>
-                <a href="tel:+918292967325" className="contact-phone-link">
+                <a href="tel:+918827412678" className="contact-phone-link">
                   <Phone size={14} />
-                  <span>+91 82929 67325</span>
+                  <span>+91 88274 12678</span>
                 </a>
               </div>
 
               <div className="contact-card">
-                <span className="contact-name">Sidharth Shukla</span>
+                <span className="contact-name">Shubham Kumar</span>
                 <span className="contact-role">PR Head</span>
-                <a href="tel:+917354647811" className="contact-phone-link">
+                <a href="tel:+917209688170" className="contact-phone-link">
                   <Phone size={14} />
-                  <span>+91 73546 47811</span>
+                  <span>+91 72096 88170</span>
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar: Copyright & Legal */}
+        {/* Bottom Bar: Copyright, Team Credits & Legal Links */}
         <div className="footer-bottom-bar">
           <p className="footer-copyright">
             Alcheringa @ 2027. All rights reserved.
           </p>
+
+          <CreditsSection />
+
           <div className="footer-bottom-links">
             <a href="#contact-us">Contact us</a>
             <a href="#feedback">Feedback</a>
@@ -219,31 +330,64 @@ const Footer = () => {
         <div className="footer-mobile-bottom">
           <h3 className="footer-mobile-title">LINKS</h3>
           <ul className="footer-mobile-links-list">
-            <li><a href="#about">About us</a></li>
-            <li><a href="#modules">Modules and Competitions</a></li>
-            <li><a href="#testimonials">Testimonials</a></li>
-            <li><a href="#faqs">FAQs</a></li>
+            <li>
+              <a href="https://alcheringa.co.in/team" target="_blank" rel="noreferrer">
+                About us
+              </a>
+            </li>
+            <li>
+              <a
+                href="#modules"
+                onClick={(e) => scrollToSection(e, 'modules')}
+              >
+                Modules and Competitions
+              </a>
+            </li>
+            <li>
+              <a
+                href="#testimonials"
+                onClick={(e) => scrollToSection(e, 'testimonials')}
+              >
+                Testimonials
+              </a>
+            </li>
+            <li>
+              <a
+                href="#faqs"
+                onClick={(e) => scrollToSection(e, 'faqs')}
+              >
+                FAQs
+              </a>
+            </li>
           </ul>
 
           <h3 className="footer-mobile-title contact-title">CONTACT US</h3>
           <div className="footer-mobile-contacts">
             <div className="footer-mobile-contact-card">
-              <span className="footer-mobile-contact-name">Sudhanshu Raj</span>
+              <span className="footer-mobile-contact-name">Mayank Sahu</span>
               <span className="footer-mobile-contact-role">PR Head</span>
-              <a href="tel:+918292967325" className="footer-mobile-phone-link">
+              <a href="tel:+918827412678" className="footer-mobile-phone-link">
                 <Phone size={14} />
-                <span>+91 82929 67325</span>
+                <span>+91 88274 12678</span>
               </a>
             </div>
 
             <div className="footer-mobile-contact-card">
-              <span className="footer-mobile-contact-name">Sidharth Shukla</span>
+              <span className="footer-mobile-contact-name">Shubham Kumar</span>
               <span className="footer-mobile-contact-role">PR Head</span>
-              <a href="tel:+917354647811" className="footer-mobile-phone-link">
+              <a href="tel:+917209688170" className="footer-mobile-phone-link">
                 <Phone size={14} />
-                <span>+91 73546 47811</span>
+                <span>+91 72096 88170</span>
               </a>
             </div>
+          </div>
+
+          {/* Mobile Credits & Copyright */}
+          <div className="footer-mobile-credits">
+            <CreditsSection />
+            <p className="footer-mobile-copyright">
+              Alcheringa @ 2027. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
