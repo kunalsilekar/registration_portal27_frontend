@@ -388,6 +388,7 @@ export default function Testimonials({
 
   return (
     <section
+      id="testimonials"
       ref={sectionRef}
       className="alcher-testimonials"
       style={

@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
-import { redirectToLogin } from '../utils/api';
 
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -43,12 +43,17 @@ function Navbar() {
                     <a href="#contact" onClick={closeMenu}>Contact us</a>
                 </div>
 
-                <div className="navbar-actions">
-                    <button className="login-button" onClick={closeMenu}>Login</button>
-                </div>
+                <Link
+                    to="/login"
+                    className="login-button"
+                    onClick={closeMenu}
+                >
+                    Login
+                </Link>
             </div>
         </nav>
     );
 }
 
 export default Navbar;
+

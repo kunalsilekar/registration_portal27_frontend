@@ -38,7 +38,7 @@
 }
 
 .faq-subtitle {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 700;
   line-height: 1.28;
@@ -58,7 +58,7 @@
 }
 
 .faq-help-title {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 19px;
   font-weight: 700;
   color: #0f2a20;
@@ -67,7 +67,7 @@
 }
 
 .faq-help-desc {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 13.5px;
   line-height: 1.45;
   color: #3b3327;
@@ -86,7 +86,7 @@
   border: 1px solid rgba(180, 160, 140, 0.2);
   border-radius: 12px;
   padding: 13px 44px 13px 16px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 13px;
   color: #1b2f26;
   outline: none;
@@ -128,7 +128,7 @@
 }
 
 .faq-help-success {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 13px;
   color: #0e2b21;
   font-weight: 600;
@@ -171,7 +171,7 @@
 }
 
 .faq-item.collapsed .faq-question {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 15.5px;
   font-weight: 600;
   color: #053430;
@@ -206,7 +206,7 @@
 }
 
 .faq-item.expanded .faq-question {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 16.5px;
   font-weight: 600;
   color: #ffffff;
@@ -222,7 +222,7 @@
 }
 
 .faq-answer-text {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 13.5px;
   font-style: italic;
   line-height: 1.55;
@@ -323,7 +323,7 @@
 
 
 .faq-help-login-prompt {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 12.5px;
   color: #7f1d1d;
   background: #fef2f2;
@@ -346,7 +346,7 @@
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   transition: all 0.2s ease;
   white-space: nowrap;
 }
@@ -365,7 +365,7 @@
 }
 
 .faq-help-error {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 13px;
   color: #c0392b;
   margin-top: 10px;
@@ -383,7 +383,7 @@
   background: transparent;
   border: none;
   color: #0F3027;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
@@ -414,7 +414,7 @@
   border: 1px solid rgba(180, 160, 140, 0.25);
   border-radius: 10px;
   padding: 10px 12px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
 }
 
 .faq-query-header {
@@ -492,5 +492,5 @@
   color: #7d7062;
   font-style: italic;
   margin: 6px 0 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Gotham', sans-serif;
 }

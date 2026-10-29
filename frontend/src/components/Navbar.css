@@ -146,6 +146,10 @@
 }
 
 .login-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     height: 36px;
     min-width: 82px;
     padding: 0 16px;
@@ -307,3 +311,4 @@
     width: 20px;
     height: 20px;
 }
+
