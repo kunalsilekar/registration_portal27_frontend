@@ -16,8 +16,77 @@
   flex: 1 1 auto;
 }
 
-.common-background-page .footer-wrapper {
-  background-color: transparent;
-  background-image: none !important;
+@media (min-width: 769px) {
+  .common-background-page .footer-wrapper {
+    background-color: transparent;
+    background-image: none !important;
+  }
 }
 
+@media (max-width: 768px) {
+  .common-background-page {
+    background-image: none;
+  }
+
+  .common-background-content {
+    min-height: 176.13vw;
+    flex: 0 0 auto;
+    background-color: #071c20;
+    background-image: url('../../public/assets/IITG_Gate_Background_mobile.jpeg');
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+  }
+}
+
+
+/* Keep desktop password-reset pages within the viewport without affecting mobile or Sign In. */
+@media (min-width: 769px) {
+  .reset-password-layout,
+  .otp-layout,
+  .set-password-layout,
+  .password-reset-done-layout {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .reset-password-layout .common-background-content,
+  .otp-layout .common-background-content,
+  .set-password-layout .common-background-content,
+  .password-reset-done-layout .common-background-content {
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .reset-password-layout .sign-in-page,
+  .otp-layout .sign-in-page,
+  .set-password-layout .sign-in-page,
+  .password-reset-done-layout .sign-in-page {
+    --reset-flow-vpad: clamp(20px, 6vh, 72px);
+    height: 100%;
+    min-height: 0;
+    padding-top: var(--reset-flow-vpad);
+    padding-bottom: var(--reset-flow-vpad);
+    overflow: hidden;
+  }
+
+  .reset-password-layout .sign-in-card,
+  .otp-layout .sign-in-card,
+  .set-password-layout .sign-in-card,
+  .password-reset-done-layout .sign-in-card {
+    height: min(618px, calc(100vh - var(--reset-flow-vpad) - var(--reset-flow-vpad)));
+    height: min(618px, calc(100dvh - var(--reset-flow-vpad) - var(--reset-flow-vpad)));
+    max-height: 100%;
+  }
+
+  .reset-password-layout .sign-in-promo,
+  .otp-layout .sign-in-promo,
+  .set-password-layout .sign-in-promo,
+  .password-reset-done-layout .sign-in-promo {
+    height: auto;
+    min-height: 0;
+  }
+}

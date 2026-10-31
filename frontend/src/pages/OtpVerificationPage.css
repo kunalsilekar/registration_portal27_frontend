@@ -1,0 +1,201 @@
+.otp-form {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  max-width: 388px;
+  color: #0f3027;
+  font-family: 'Gotham', sans-serif;
+  text-align: center;
+}
+
+.otp-mail-symbol {
+  display: block;
+  align-self: center;
+  width: 82px;
+  height: 82px;
+  margin-bottom: 8px;
+}
+.otp-heading {
+  margin-bottom: 48px;
+}
+
+.otp-heading h2 {
+  margin: 0;
+  color: #0f3027;
+  font-family: 'Ellak', sans-serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.otp-heading p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.otp-code-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 21px;
+}
+
+.otp-code-inputs input {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #cfbd9d;
+  border-radius: 6px;
+  outline-color: #0f3027;
+  background: rgb(246 235 218 / 65%);
+  color: #0f3027;
+  font-family: 'Gotham', sans-serif;
+  font-size: 18px;
+  text-align: center;
+}
+
+.otp-continue {
+  width: 100%;
+  height: 36px;
+  margin: 0;
+  border-radius: 7px;
+  font-family: 'Gotham', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.otp-resend {
+  margin: 18px 0 0;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.otp-resend button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.otp-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 340px;
+  margin: 62px auto 0;
+}
+
+.otp-progress span {
+  height: 4px;
+  flex: 1;
+  border-radius: 4px;
+  background: #eadcc8;
+}
+
+.otp-progress .is-current {
+  background: #b89d79;
+}
+
+@media (max-width: 1200px) and (min-width: 769px) {
+  .otp-form {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .otp-page {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 24px 20px 40px;
+  }
+
+  .otp-page .sign-in-back {
+    position: static;
+    align-self: flex-start;
+    flex: 0 0 auto;
+  }
+
+  .otp-page .sign-in-card {
+    width: 100%;
+    gap: 16px;
+  }
+
+  .otp-page .sign-in-promo {
+    height: 190px;
+  }
+
+  .otp-mail-symbol {
+    width: 56px;
+    height: 56px;
+  }
+
+  .otp-form {
+    max-width: none;
+    padding: 28px 20px 24px;
+    border-radius: 16px;
+    background: #f4e7d5;
+  }
+
+  .otp-heading {
+    margin-bottom: 16px;
+  }
+
+  .otp-heading h2 {
+    font-family: 'Lilita One', sans-serif;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .otp-heading p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .otp-code-inputs {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .otp-code-inputs input {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+  }
+
+  .otp-code-inputs input:first-child {
+    border-color: #0f3027;
+  }
+
+  .otp-continue {
+    height: 48px;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .otp-resend {
+    margin-top: 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .otp-progress {
+    max-width: none;
+    margin-top: 16px;
+  }
+}
