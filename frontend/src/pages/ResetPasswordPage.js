@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import CommonBackground from '../sections/Common_Background';
 import './LoginPage.css';
 import './ResetPasswordPage.css';
+import { requestPasswordResetApi } from '../utils/api';
 
 function ResetPasswordPage() {
   const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate('/verify-otp', { state: { email: event.currentTarget.elements.email.value } });
+    const email = event.currentTarget.elements.email.value.trim();
+    setBusy(true);
+    setError('');
+    try {
+      await requestPasswordResetApi(email);
+      sessionStorage.setItem('alcher_password_reset_email', email);
+      navigate('/verify-otp', { state: { email, flow: 'password-reset' } });
+    } catch (requestError) {
+      setError(requestError.message || 'Could not send the reset code.');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -42,7 +56,10 @@ function ResetPasswordPage() {
               <input name="email" type="email" placeholder="Enter your email address here" autoComplete="email" required />
             </label>
 
-            <button className="sign-in-submit reset-password-submit" type="submit">Request OTP</button>
+            <button className="sign-in-submit reset-password-submit" type="submit" disabled={busy}>
+              {busy ? 'Sending...' : 'Request OTP'}
+            </button>
+            {error && <p className="google-sign-in-message" role="alert">{error}</p>}
 
             <div className="reset-password-progress" role="img" aria-label="Step 1 of 4">
               <span className="is-current" />

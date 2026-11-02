@@ -162,13 +162,13 @@
   }
 
   .otp-code-inputs {
-    gap: 12px;
+    gap: 8px;
     margin-bottom: 16px;
   }
 
   .otp-code-inputs input {
-    width: 56px;
-    height: 56px;
+    width: min(44px, calc((100vw - 100px) / 6));
+    height: 48px;
     border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
     font-size: 20px;

@@ -1,14 +1,40 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CommonBackground from '../sections/Common_Background';
 import './LoginPage.css';
 import './SetNewPasswordPage.css';
+import { confirmPasswordResetApi } from '../utils/api';
 
 function SetNewPasswordPage() {
   const navigate = useNavigate();
-  const handleSubmit = (event) => {
+  const location = useLocation();
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate('/password-reset-complete');
+    const { newPassword, confirmPassword } = event.currentTarget.elements;
+    if (newPassword.value !== confirmPassword.value) {
+      setError('The passwords do not match.');
+      return;
+    }
+    const token = location.state?.resetToken || sessionStorage.getItem('alcher_password_reset_token');
+    if (!token) {
+      setError('Your reset session has expired. Please request a new code.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    try {
+      await confirmPasswordResetApi(token, newPassword.value, confirmPassword.value);
+      sessionStorage.removeItem('alcher_password_reset_token');
+      sessionStorage.removeItem('alcher_password_reset_email');
+      navigate('/password-reset-complete', { replace: true });
+    } catch (resetError) {
+      setError(resetError.message || 'Could not reset the password.');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -40,7 +66,7 @@ function SetNewPasswordPage() {
 
             <header className="set-password-heading">
               <h2>SET NEW PASSWORD</h2>
-              <p className="desktop-password-hint">Enter New Password. Must be at least 6 characters.</p>
+              <p className="desktop-password-hint">Enter New Password. Must be at least 8 characters.</p>
               <p className="mobile-password-hint">Enter new password. Must be at least 8 characters.</p>
             </header>
 
@@ -54,7 +80,10 @@ function SetNewPasswordPage() {
               <input name="confirmPassword" type="password" placeholder="Re-enter new password" autoComplete="new-password" minLength={8} required />
             </label>
 
-            <button className="sign-in-submit set-password-submit" type="submit">Reset</button>
+            <button className="sign-in-submit set-password-submit" type="submit" disabled={busy}>
+              {busy ? 'Resetting...' : 'Reset'}
+            </button>
+            {error && <p className="google-sign-in-message" role="alert">{error}</p>}
 
             <div className="set-password-progress" role="img" aria-label="Step 3 of 4">
               <span />

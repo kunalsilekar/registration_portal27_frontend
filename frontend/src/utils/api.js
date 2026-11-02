@@ -11,6 +11,64 @@ export const redirectToLogin = (returnAnchor = '#faqs') => {
   window.location.href = destination;
 };
 
+const getApiErrorMessage = (data, fallback) => {
+  if (data?.detail) return data.detail;
+  if (data && typeof data === 'object') {
+    for (const [field, value] of Object.entries(data)) {
+      const message = Array.isArray(value) ? value[0] : value;
+      if (typeof message === 'string') return field === 'non_field_errors' ? message : `${field}: ${message}`;
+    }
+  }
+  return fallback;
+};
+
+const postJson = async (path, payload, fallback) => {
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    throw new Error('Could not reach the backend. Make sure the Django server is running.');
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(getApiErrorMessage(data, fallback));
+  return data;
+};
+
+export const loginApi = (email, password) =>
+  postJson('/api/login/', { email, password }, 'Sign in failed. Please check your details.');
+
+export const requestPasswordResetApi = (email) =>
+  postJson('/api/forgot-password/', { email }, 'Could not send the reset code.');
+
+export const verifyOtpApi = (email, otp) =>
+  postJson('/api/verify-otp/', { email, otp }, 'The code is invalid or has expired.');
+
+export const confirmPasswordResetApi = (token, password, confirmPassword) =>
+  postJson('/api/reset-password-confirm/', {
+    token,
+    password,
+    confirm_password: confirmPassword,
+  }, 'Could not reset the password.');
+
+export const googleLoginApi = async (idToken) => {
+  const response = await fetch(`${API_BASE_URL}/api/auth/google/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: idToken }),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.detail || 'Google sign-in failed. Please try again.');
+  }
+
+  return data;
+};
 export const getAuthToken = () => {
   return localStorage.getItem('alcher_token') || localStorage.getItem('token') || localStorage.getItem('access_token') || null;
 };
@@ -34,6 +92,7 @@ export const setAuthData = (token, user) => {
 };
 
 export const clearAuthData = () => {
+  localStorage.removeItem('alcher_refresh_token');
   localStorage.removeItem('alcher_token');
   localStorage.removeItem('token');
   localStorage.removeItem('access_token');
