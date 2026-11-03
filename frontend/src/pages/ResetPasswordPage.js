@@ -18,6 +18,7 @@ function ResetPasswordPage() {
     try {
       await requestPasswordResetApi(email);
       sessionStorage.setItem('alcher_password_reset_email', email);
+      sessionStorage.setItem('alcher_otp_flow', 'password-reset');
       navigate('/verify-otp', { state: { email, flow: 'password-reset' } });
     } catch (requestError) {
       setError(requestError.message || 'Could not send the reset code.');

@@ -13,8 +13,7 @@ function LandingScene() {
     if (!track) return;
 
     const ctx = gsap.context(() => {
-      const navbarWrapper = track.querySelector('.navbar-animation-wrapper');
-      const navbar = track.querySelector('.navbar');
+      const navbar = document.querySelector('.landing-navbar-fixed .navbar');
       const foreground = track.querySelector('.foreground');
       const about = track.querySelector('.about-scene');
       const stats = track.querySelector('.hero-stats');
@@ -43,8 +42,7 @@ function LandingScene() {
       });
 
       // Move the foreground, stats, and About together; on mobile they form one vertical stack.
-      tl.fromTo(navbarWrapper, { y: 24 }, { y: 0, duration: 1.8 }, 0)
-        .to('.landscape', { y: -140, duration: 18 }, 0)
+      tl.to('.landscape', { y: -140, duration: 18 }, 0)
         .to(foreground, { y: sceneTargetY, duration: 18 }, 0)
         .to(stats, { y: sceneTargetY, duration: 18 }, 0)
         .to(about, { y: sceneTargetY, duration: 18 }, 0)

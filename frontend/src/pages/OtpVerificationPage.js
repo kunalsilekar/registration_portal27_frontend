@@ -10,8 +10,10 @@ function OtpVerificationPage() {
   const inputRefs = useRef([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const isSignup = location.state?.flow === 'signup';
-  const email = location.state?.email || sessionStorage.getItem('alcher_password_reset_email') || '';
+  const flow = location.state?.flow || sessionStorage.getItem('alcher_otp_flow') || 'password-reset';
+  const isSignup = flow === 'signup';
+  const signupEmail = isSignup ? sessionStorage.getItem('alcher_signup_email') : null;
+  const email = location.state?.email || signupEmail || sessionStorage.getItem('alcher_password_reset_email') || '';
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
@@ -56,7 +58,11 @@ function OtpVerificationPage() {
     try {
       const result = await verifyOtpApi(email, digits.join(''));
       if (isSignup) {
-        if (result?.access) setAuthData(result.access, result.user);
+        if (!result?.access) throw new Error('The server did not return an access token after verification.');
+        setAuthData(result.access, result.user);
+        if (result.refresh) localStorage.setItem('alcher_refresh_token', result.refresh);
+        sessionStorage.removeItem('alcher_signup_email');
+        sessionStorage.removeItem('alcher_otp_flow');
         navigate('/', { replace: true });
         return;
       }
@@ -71,6 +77,10 @@ function OtpVerificationPage() {
   };
 
   const handleResend = async () => {
+    if (isSignup) {
+      setNotice('To request a new signup code, return to registration and submit the same details again.');
+      return;
+    }
     if (!email) {
       setError('Email is missing. Please request a new verification code.');
       return;

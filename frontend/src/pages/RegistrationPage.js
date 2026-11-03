@@ -101,6 +101,7 @@ function RegistrationPage() {
         phone_number: `${formData.country_code}${formData.phone_number.trim()}`,
         alternate_phone: formData.alternate_phone ? `${formData.alt_country_code}${formData.alternate_phone.trim()}` : '',
         password: formData.password,
+        confirm_password: formData.confirm_password,
         team_name: formData.team_name.trim(),
         collegename: formData.collegename.trim(),
         city: formData.city.trim(),
@@ -108,7 +109,10 @@ function RegistrationPage() {
       };
 
       await registerApi(payload);
-      navigate('/verify-otp', { state: { email: formData.email.trim(), flow: 'signup' } });
+      const email = formData.email.trim();
+      sessionStorage.setItem('alcher_signup_email', email);
+      sessionStorage.setItem('alcher_otp_flow', 'signup');
+      navigate('/verify-otp', { state: { email, flow: 'signup' } });
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {

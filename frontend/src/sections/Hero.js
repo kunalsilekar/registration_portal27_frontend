@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { animate } from 'framer-motion';
-import Navbar from '../components/Navbar';
 import About from './About/About';
 import '../App.css';
 import { useNavigate } from 'react-router-dom';
@@ -186,7 +185,7 @@ function Hero() {
                     <p className="hero-tagline">
                         Northeast India’s biggest cultural fest is back. Bring your crew, bring your craft.
                     </p>
-                    <button type="button" className="hero-register-button"  onClick={()=>{navigate("/signup")}}>
+                    <button type="button" className="hero-register-button"  onClick={()=>{navigate("#")}}>
                         <span className="hero-register-label">REGISTER</span>
                     </button>
                 </div>
@@ -213,12 +212,6 @@ function Hero() {
                     <AnimatedStatNumber value={3000} suffix="+" started={statsStarted} />
                     <span className="hero-stat-label">PARTICIPANTS</span>
                 </div>
-            </div>
-
-
-
-            <div className="navbar-animation-wrapper">
-                <Navbar />
             </div>
 
             <About />
