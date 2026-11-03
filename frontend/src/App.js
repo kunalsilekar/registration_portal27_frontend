@@ -6,6 +6,7 @@ import OtpVerificationPage from './pages/OtpVerificationPage';
 import SetNewPasswordPage from './pages/SetNewPasswordPage';
 import PasswordResetCompletePage from './pages/PasswordResetCompletePage';
 import CommonBackground from './sections/Common_Background';
+import RegistrationPage from "./pages/RegistrationPage"
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <Route path="/verify-otp" element={<OtpVerificationPage />} />
       <Route path="/set-new-password" element={<SetNewPasswordPage />} />
       <Route path="/password-reset-complete" element={<PasswordResetCompletePage />} />
+      <Route path="/signup" element={<RegistrationPage />} />
     </Routes>
   );
 }

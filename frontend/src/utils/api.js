@@ -39,6 +39,9 @@ const postJson = async (path, payload, fallback) => {
   return data;
 };
 
+export const registerApi = (data) =>
+  postJson('/api/register/', data, 'Registration failed. Please check your details.');
+
 export const loginApi = (email, password) =>
   postJson('/api/login/', { email, password }, 'Sign in failed. Please check your details.');
 
