@@ -3,13 +3,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CommonBackground from '../sections/Common_Background';
 import './LoginPage.css';
 import './OtpVerificationPage.css';
-import { requestPasswordResetApi, verifyOtpApi } from '../utils/api';
+import { requestPasswordResetApi, setAuthData, verifyOtpApi } from '../utils/api';
 
 function OtpVerificationPage() {
   const [digits, setDigits] = useState(['', '', '', '', '', '']);
   const inputRefs = useRef([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const isSignup = location.state?.flow === 'signup';
   const email = location.state?.email || sessionStorage.getItem('alcher_password_reset_email') || '';
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -46,7 +47,7 @@ function OtpVerificationPage() {
       return;
     }
     if (!email) {
-      setError('Email is missing. Please request a new password reset code.');
+      setError('Email is missing. Please request a new verification code.');
       return;
     }
     setBusy(true);
@@ -54,6 +55,11 @@ function OtpVerificationPage() {
     setNotice('');
     try {
       const result = await verifyOtpApi(email, digits.join(''));
+      if (isSignup) {
+        if (result?.access) setAuthData(result.access, result.user);
+        navigate('/', { replace: true });
+        return;
+      }
       if (!result.reset_token) throw new Error('The server did not return a password reset token.');
       sessionStorage.setItem('alcher_password_reset_token', result.reset_token);
       navigate('/set-new-password', { state: { resetToken: result.reset_token } });
@@ -66,7 +72,7 @@ function OtpVerificationPage() {
 
   const handleResend = async () => {
     if (!email) {
-      setError('Email is missing. Please request a new password reset code.');
+      setError('Email is missing. Please request a new verification code.');
       return;
     }
     setBusy(true);
@@ -87,7 +93,7 @@ function OtpVerificationPage() {
   return (
     <CommonBackground className="sign-in-layout otp-layout" showFooter={false}>
       <section className="sign-in-page otp-page" aria-label="OTP verification">
-        <Link className="sign-in-back" to="/forgot-password" aria-label="Back to reset password">
+        <Link className="sign-in-back" to={isSignup ? "/signup" : "/forgot-password"} aria-label={isSignup ? "Back to sign up" : "Back to reset password"}>
           <picture>
             <source media="(max-width: 768px)" srcSet="/assets/mobile_back.svg" />
             <img src="/assets/back_symbol.svg" alt="" aria-hidden="true" />
@@ -138,11 +144,21 @@ function OtpVerificationPage() {
             {error && <p className="google-sign-in-message" role="alert">{error}</p>}
             {notice && <p className="google-sign-in-message" role="status">{notice}</p>}
 
-            <div className="otp-progress" role="img" aria-label="Step 2 of 4">
-              <span />
-              <span className="is-current" />
-              <span />
-              <span />
+            <div className="otp-progress" role="img" aria-label={isSignup ? "Step 3 of 3" : "Step 2 of 4"}>
+              {isSignup ? (
+                <>
+                  <span className="is-current" />
+                  <span className="is-current" />
+                  <span className="is-current" />
+                </>
+              ) : (
+                <>
+                  <span />
+                  <span className="is-current" />
+                  <span />
+                  <span />
+                </>
+              )}
             </div>
           </form>
         </div>
@@ -152,4 +168,3 @@ function OtpVerificationPage() {
 }
 
 export default OtpVerificationPage;
-
