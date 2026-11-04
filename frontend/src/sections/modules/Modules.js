@@ -1,5 +1,6 @@
 import './Module.css';
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -252,12 +253,12 @@ export default function Module() {
                                             <li key={competition}>{competition}</li>
                                         ))}
                                     </ul>
-                                    <a className="explore-btn" href={`/modules/${slugify(module.category)}`}>
+                                    <Link className="explore-btn" to={`/modules/${slugify(module.category)}`}>
                                         <span className="eb-icon" aria-hidden="true">
                                             <ChevronIcon />
                                         </span>
                                         <span className="eb-label">Explore More</span>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

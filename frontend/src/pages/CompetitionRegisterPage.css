@@ -1,0 +1,953 @@
+/* Competition Registration Form Page */
+.comp-register-page-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #121915;
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Navbar Wrapper */
+.comp-register-navbar-wrap {
+  width: 100%;
+  position: relative;
+  min-height: 110px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+/* Main Container */
+.comp-register-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 20px 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Loading State */
+.comp-register-loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  gap: 16px;
+}
+
+.comp-register-spin {
+  animation: comp-spin 1s linear infinite;
+  color: #ede2d1;
+}
+
+@keyframes comp-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================================
+   Form Card Container with texture.png Background
+   ======================================================== */
+.comp-register-card {
+  width: 100%;
+  background-color: #ede2d1;
+  background-image: url('../../public/assets/texture.png');
+  background-repeat: repeat;
+  background-size: 400px auto;
+  border-radius: 22px;
+  padding: 24px 32px 34px;
+  box-sizing: border-box;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  position: relative;
+}
+
+/* Back Link */
+.comp-register-top-bar {
+  margin-bottom: 14px;
+}
+
+.comp-register-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0F3027;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.comp-register-back-link:hover {
+  opacity: 0.75;
+}
+
+/* Top Banner with Background Image */
+.comp-register-banner {
+  width: 100%;
+  min-height: 195px;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 24px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.comp-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(5, 10, 8, 0.95) 0%,
+    rgba(5, 10, 8, 0.88) 45%,
+    rgba(5, 10, 8, 0.45) 75%,
+    transparent 100%
+  );
+  display: flex;
+  align-items: center;
+  padding: 24px 28px;
+  box-sizing: border-box;
+}
+
+.comp-banner-content {
+  max-width: 480px;
+}
+
+.comp-banner-title {
+  font-family: 'Ellak', sans-serif;
+  font-size: clamp(26px, 3.8vw, 42px);
+  font-weight: normal;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.comp-banner-module {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  opacity: 0.95;
+}
+
+.comp-banner-desc {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Alerts */
+.comp-register-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.comp-register-alert-success {
+  background: #e6f4ea;
+  color: #137333;
+  border: 1px solid #ceead6;
+}
+
+.comp-register-alert-error {
+  background: #fce8e6;
+  color: #c5221f;
+  border: 1px solid #fad2cf;
+}
+
+/* ========================================================
+   Form Layout (Desktop 2-Col / Mobile Flex Order)
+   ======================================================== */
+.comp-register-form {
+  width: 100%;
+}
+
+/* DESKTOP 2-COLUMN FLEX LAYOUT (Zero unwanted vertical stretching or gaps) */
+.comp-form-desktop-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  width: 100%;
+}
+
+.comp-form-left-col,
+.comp-form-right-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* MOBILE LAYOUT (Hidden on Desktop) */
+.comp-form-mobile-layout {
+  display: none;
+}
+
+.comp-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 20px;
+  min-height: 28px;
+}
+
+/* Meta Chips (Group & On Ground) */
+.comp-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #0F3027;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.comp-meta-icon {
+  stroke-width: 2.4;
+  color: #0F3027;
+}
+
+/* Form Field Groups */
+.comp-field-group {
+  margin-bottom: 18px;
+}
+
+.comp-field-label {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F3027;
+  margin-bottom: 8px;
+  letter-spacing: 0.1px;
+}
+
+/* Inputs & Textareas matching screenshot */
+.comp-input,
+.comp-textarea {
+  width: 100%;
+  background: rgba(235, 224, 208, 0.58);
+  border: 1px solid rgba(15, 48, 39, 0.22);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: #0F3027;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.comp-input::placeholder,
+.comp-textarea::placeholder {
+  color: #8c978f;
+  font-style: normal;
+}
+
+.comp-input:focus,
+.comp-textarea:focus {
+  border-color: #0F3027;
+  background: rgba(235, 224, 208, 0.85);
+  box-shadow: 0 0 0 2px rgba(15, 48, 39, 0.12);
+}
+
+.comp-textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.45;
+}
+
+/* Readonly Input */
+.comp-input-readonly {
+  background: rgba(235, 224, 208, 0.45);
+  border-color: rgba(15, 48, 39, 0.18);
+  color: #556258;
+  cursor: default;
+}
+
+/* Input with Right Icon (Previous Performance) */
+.comp-input-with-icon {
+  position: relative;
+  width: 100%;
+}
+
+.comp-input-with-icon .comp-input {
+  padding-right: 40px;
+}
+
+.comp-input-right-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0F3027;
+  pointer-events: none;
+}
+
+/* ========================================================
+   Team Member Selection Dropdown Design
+   ======================================================== */
+.comp-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.comp-select-trigger {
+  width: 100%;
+  background: rgba(235, 224, 208, 0.58);
+  border: 1px solid rgba(15, 48, 39, 0.22);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: #0F3027;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: pointer;
+  outline: none;
+  text-align: left;
+  transition: border-color 0.2s ease;
+}
+
+.comp-select-trigger:focus,
+.comp-select-trigger:hover {
+  border-color: #0F3027;
+}
+
+.comp-select-placeholder {
+  color: #8c978f;
+}
+
+.comp-chevron {
+  color: #0F3027;
+  stroke-width: 2.4;
+  transition: transform 0.2s ease;
+}
+
+.comp-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Container */
+.comp-select-dropdown {
+  position: relative;
+  width: 100%;
+  background-color: #ede2d1;
+  background-image: url('../../public/assets/texture.png');
+  background-repeat: repeat;
+  background-size: 350px auto;
+  border: 1px solid rgba(15, 48, 39, 0.22);
+  border-radius: 12px;
+  padding: 6px;
+  margin-top: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Row Item */
+.comp-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid rgba(15, 48, 39, 0.08);
+  box-sizing: border-box;
+}
+
+.comp-member-row:last-child {
+  border-bottom: none;
+}
+
+/* First item active style matching screenshot highlight */
+.comp-member-row.is-active-style {
+  background-color: #e5d7c3;
+}
+
+.comp-member-row:hover {
+  background-color: #e1d3bf;
+}
+
+.comp-member-row.is-selected {
+  background-color: #ded0bc;
+}
+
+.comp-member-details {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.comp-member-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.comp-member-email {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #333333;
+  line-height: 1.25;
+  margin-top: 2px;
+}
+
+.comp-member-plus-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8c8274;
+  transition: color 0.15s ease;
+}
+
+.comp-member-row:hover .comp-member-plus-icon,
+.comp-member-row.is-selected .comp-member-plus-icon {
+  color: #0F3027;
+}
+
+/* Selected Members Chips */
+.comp-selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.comp-member-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #0F3027;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.comp-chip-remove {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.8;
+}
+
+.comp-chip-remove:hover {
+  opacity: 1;
+}
+
+/* Helper link: Add New Team Member */
+.comp-add-new-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.comp-add-new-link {
+  background: none;
+  border: none;
+  color: #0F3027;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 0;
+  text-decoration: none;
+}
+
+.comp-add-new-link:hover {
+  text-decoration: underline;
+}
+
+/* Register Submit Button */
+.comp-submit-block {
+  margin-top: 14px;
+}
+
+.comp-register-btn {
+  background: #0F3027;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 32px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(15, 48, 39, 0.25);
+}
+
+.comp-register-btn:hover:not(:disabled) {
+  background: #194a3d;
+  transform: translateY(-1px);
+}
+
+.comp-register-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Review Note */
+.comp-review-note {
+  margin-top: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11.5px;
+  color: #4b544e;
+  line-height: 1.45;
+}
+
+.comp-review-note strong {
+  color: #0F3027;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.comp-review-note p {
+  margin: 0;
+}
+
+/* Guidelines Box */
+.comp-guidelines-box {
+  background: rgba(238, 228, 214, 0.55);
+  border: 1px solid rgba(15, 48, 39, 0.18);
+  border-radius: 14px;
+  padding: 20px 22px 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.comp-guidelines-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #0F3027;
+  margin: 0 0 12px;
+}
+
+.comp-guidelines-list {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #2e3a32;
+  box-sizing: border-box;
+}
+
+.comp-guidelines-list li {
+  margin-bottom: 6px;
+}
+
+.comp-guidelines-action {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comp-agree-btn {
+  background-color: #dfd2c0;
+  color: #0F3027;
+  border: 1px solid rgba(15, 48, 39, 0.15);
+  border-radius: 8px;
+  padding: 7px 26px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comp-agree-btn:hover {
+  background-color: #d3c4b0;
+}
+
+.comp-agree-btn.is-agreed {
+  background-color: #0F3027;
+  color: #ffffff;
+  border-color: #0F3027;
+}
+
+/* ========================================================
+   "ADD NEW TEAM MEMBER" MODAL & MOBILE BOTTOM SHEET
+   ======================================================== */
+.comp-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: modal-fade-in 0.2s ease;
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.comp-modal-drag-handle {
+  display: none;
+}
+
+.comp-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  background-color: #ede2d1;
+  background-image: url('../../public/assets/texture.png');
+  background-repeat: repeat;
+  background-size: 380px auto;
+  border-radius: 18px;
+  padding: 28px 32px 24px;
+  box-sizing: border-box;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  animation: modal-pop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modal-pop {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.comp-modal-title {
+  font-family: 'Ellak', sans-serif;
+  font-size: 26px;
+  font-weight: normal;
+  text-transform: uppercase;
+  text-align: center;
+  color: #0F3027;
+  margin: 0 0 20px;
+  letter-spacing: 0.5px;
+}
+
+.comp-modal-error-msg {
+  background: #fce8e6;
+  color: #c5221f;
+  border: 1px solid #fad2cf;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.comp-modal-form {
+  width: 100%;
+}
+
+.comp-modal-field {
+  margin-bottom: 14px;
+}
+
+.comp-modal-label {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1a2820;
+  margin-bottom: 6px;
+}
+
+.comp-modal-input {
+  width: 100%;
+  background: rgba(235, 224, 208, 0.65);
+  border: 1px solid rgba(15, 48, 39, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: #0F3027;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.comp-modal-input:focus {
+  border-color: #0F3027;
+  background: rgba(235, 224, 208, 0.9);
+  box-shadow: 0 0 0 2px rgba(15, 48, 39, 0.12);
+}
+
+.comp-modal-input::placeholder {
+  color: #8c978f;
+}
+
+/* Phone Number Row with +91 Country Code Box */
+.comp-modal-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.comp-modal-country-code {
+  background: rgba(235, 224, 208, 0.65);
+  border: 1px solid rgba(15, 48, 39, 0.2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F3027;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  box-sizing: border-box;
+}
+
+.comp-modal-phone-input {
+  flex: 1;
+}
+
+.comp-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.comp-modal-cancel-btn {
+  background-color: #ded1bf;
+  color: #111111;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 26px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.comp-modal-cancel-btn:hover {
+  background-color: #d1c3af;
+}
+
+.comp-modal-done-btn {
+  background-color: #0F3027;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 30px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(15, 48, 39, 0.2);
+}
+
+.comp-modal-done-btn:hover {
+  background-color: #194a3d;
+}
+
+/* ========================================================
+   MOBILE SKELETON LAYOUT MATCHING SCREENSHOTS (<= 768px)
+   ======================================================== */
+@media (max-width: 768px) {
+  /* 1. Mobile Layout Visibility & Skeleton Stacking */
+  .comp-form-desktop-layout {
+    display: none;
+  }
+
+  .comp-form-mobile-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .comp-meta-row {
+    margin-bottom: 4px;
+    gap: 18px;
+  }
+
+  .comp-field-group {
+    margin-bottom: 0;
+  }
+
+  .comp-guidelines-box {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  .comp-submit-block {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .comp-register-btn {
+    width: 100%;
+    padding: 13px;
+    font-size: 15px;
+  }
+
+  .comp-review-note {
+    margin-top: 6px;
+  }
+
+  .comp-register-navbar-wrap {
+    min-height: 85px;
+    padding: 10px 14px 0;
+  }
+
+  .comp-register-main {
+    padding: 10px 12px 50px;
+  }
+
+  .comp-register-card {
+    border-radius: 18px;
+    padding: 16px 14px 24px;
+  }
+
+  .comp-register-banner {
+    min-height: 180px;
+    margin-bottom: 18px;
+  }
+
+  .comp-banner-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(5, 10, 8, 0.65) 0%,
+      rgba(5, 10, 8, 0.94) 100%
+    );
+    padding: 16px;
+  }
+
+  .comp-banner-title {
+    font-size: 26px;
+  }
+
+  .comp-banner-desc {
+    -webkit-line-clamp: 2;
+    font-size: 11.5px;
+  }
+
+  /* 2. Mobile Modal: Bottom Sheet Drawer (Image 2) */
+  .comp-modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .comp-modal-card {
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    padding: 12px 20px 26px;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.45);
+    animation: sheet-slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes sheet-slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .comp-modal-drag-handle {
+    display: block;
+    width: 38px;
+    height: 4px;
+    background: #b0a494;
+    border-radius: 9999px;
+    margin: 4px auto 14px;
+  }
+
+  .comp-modal-title {
+    font-size: 22px;
+    margin: 0 0 16px;
+  }
+
+  .comp-modal-actions {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 18px;
+  }
+
+  .comp-modal-cancel-btn,
+  .comp-modal-done-btn {
+    flex: 1;
+    height: 42px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13.5px;
+  }
+}

@@ -90,3 +90,47 @@ export const getMyQueriesApi = async () => {
 
   return await response.json();
 };
+
+export const fetchCompetitionsApi = async (moduleQuery = null) => {
+  const normalized = moduleQuery ? moduleQuery.replace(/-/g, '').toLowerCase() : '';
+  const url = normalized
+    ? `${API_BASE_URL}/api/competitions/?module=${encodeURIComponent(normalized)}`
+    : `${API_BASE_URL}/api/competitions/`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to load competitions (${response.status})`);
+  }
+  return await response.json();
+};
+
+export const fetchCompetitionDetailApi = async (competitionId) => {
+  const response = await fetch(`${API_BASE_URL}/api/competitions/${competitionId}/`);
+  if (!response.ok) {
+    throw new Error(`Failed to load competition details (${response.status})`);
+  }
+  return await response.json();
+};
+
+
+export const registerCompetitionApi = async (payload) => {
+  const token = getAuthToken();
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/register-competition/`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || data.detail || 'Failed to submit registration.');
+  }
+  return data;
+};

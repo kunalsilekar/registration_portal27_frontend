@@ -1,0 +1,225 @@
+/* Modules & Competitions Page Styling */
+.modules-page-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ede2d1;
+  background-repeat: repeat-y;
+  background-size: 100% auto;
+  background-position: top center;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* Navbar Wrapper with explicit reservation for absolute navbar */
+.modules-navbar-container {
+  width: 100%;
+  position: relative;
+  min-height: 110px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+/* Main Content Area */
+.modules-main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 24px 80px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Page Heading matching screenshot */
+.modules-heading-block {
+  margin: 20px 0 44px;
+  text-align: center;
+}
+
+.modules-page-title {
+  font-family: 'Ellak', sans-serif;
+  font-size: clamp(38px, 5.2vw, 64px);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #0F3027;
+  margin: 0;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(15, 48, 39, 0.08);
+}
+
+.modules-page-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(13px, 1.25vw, 15px);
+  font-weight: 500;
+  line-height: 1.45;
+  color: #556157;
+  margin: 10px auto 0;
+  max-width: 340px;
+  text-align: center;
+}
+
+/* Competitions Responsive Grid: 3 Desktop, 2 Tablet, 1 Mobile */
+.competitions-grid-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.competitions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px 30px;
+  width: 100%;
+  max-width: 1020px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* State Containers (Loading, Error, Empty) */
+.modules-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  background: rgba(234, 217, 196, 0.65);
+  border: 1px solid rgba(15, 48, 39, 0.12);
+  border-radius: 18px;
+  max-width: 480px;
+  width: 90%;
+  margin: 40px auto;
+  box-shadow: 0 4px 18px rgba(34, 25, 14, 0.04);
+}
+
+.modules-spin-icon {
+  color: #0F3027;
+  animation: modules-spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes modules-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.modules-state-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #0F3027;
+  margin: 0 0 10px;
+}
+
+.modules-state-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  color: #3b3327;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modules-error-icon {
+  color: #c0392b;
+  margin-bottom: 12px;
+}
+
+.modules-retry-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  background: #0F3027;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modules-retry-button:hover {
+  background: #194637;
+  transform: translateY(-1px);
+}
+
+.modules-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  background: #0F3027;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.modules-back-link:hover {
+  background: #194637;
+  transform: translateY(-1px);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 992px) {
+  .competitions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 660px;
+    gap: 30px 24px;
+  }
+
+  .modules-heading-block {
+    margin: 24px 0 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .modules-navbar-container {
+    min-height: 85px;
+    padding: 10px 14px 0;
+  }
+
+  .modules-main-content {
+    padding: 10px 14px 60px;
+  }
+
+  .modules-heading-block {
+    margin: 10px 0 22px;
+  }
+
+  .modules-page-title {
+    font-size: clamp(32px, 8.5vw, 42px);
+    letter-spacing: 0.5px;
+  }
+
+  .modules-page-subtitle {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #556157;
+    max-width: 270px;
+    margin: 8px auto 0;
+  }
+
+  .competitions-grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+    width: 100%;
+    gap: 18px;
+  }
+}
+
