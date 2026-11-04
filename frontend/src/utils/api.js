@@ -43,7 +43,7 @@ export const registerApi = (data) =>
   postJson('/api/register/', data, 'Registration failed. Please check your details.');
 
 export const loginApi = (email, password) =>
-  postJson('/api/login/', { email, password }, 'Sign in failed. Please check your details.');
+  postJson('/login/', { email, password }, 'Sign in failed. Please check your details.');
 
 export const requestPasswordResetApi = (email) =>
   postJson('/api/forgot-password/', { email }, 'Could not send the reset code.');

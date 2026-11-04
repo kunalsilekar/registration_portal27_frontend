@@ -25,6 +25,13 @@ function Navbar() {
     }, []);
 
     const closeMenu = () => setMenuOpen(false);
+    const handleBrandClick = (event) => {
+        closeMenu();
+        if (window.location.pathname === '/') {
+            event.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
     const signOut = () => {
         clearAuthData();
         setIsAuthenticated(false);
@@ -37,13 +44,13 @@ function Navbar() {
 
     return (
         <nav className="navbar" aria-label="Main navigation">
-            <div className="navbar-brand">
+            <Link to="/" className="navbar-brand" aria-label="Alcheringa home" onClick={handleBrandClick}>
                 <img src="/assets/Alcher_Logo.svg" alt="" className="navbar-logo" />
                 <span className="navbar-brand-copy" aria-label="Alcheringa, IIT Guwahati">
                     <span className="navbar-brand-name">Alcheringa</span>
                     <span className="navbar-brand-institute">IIT GUWAHATI</span>
                 </span>
-            </div>
+            </Link>
 
             <button
                 type="button"
@@ -57,7 +64,7 @@ function Navbar() {
 
             <div className={'navbar-menu ' + (menuOpen ? 'is-open' : '')}>
                 <div className="navbar-links">
-                    <a href="https://alcheringa.co.in/team" onClick={closeMenu}>About Us</a>
+                    <a href="https://alcheringa.co.in/team" target="_blank" rel="noopener noreferrer" onClick={closeMenu}>About Us</a>
                     <a href="#modules" onClick={closeMenu}>Modules &amp; Competitions</a>
                     <a href="#contact" onClick={closeMenu}>Contact us</a>
                 </div>
