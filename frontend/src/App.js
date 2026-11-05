@@ -1,12 +1,4 @@
 import './App.css';
-import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
-import OtpVerificationPage from './pages/OtpVerificationPage';
-import SetNewPasswordPage from './pages/SetNewPasswordPage';
-import PasswordResetCompletePage from './pages/PasswordResetCompletePage';
-import CommonBackground from './sections/Common_Background';
-import RegistrationPage from "./pages/RegistrationPage"
 import { lazy, Suspense } from 'react';
 import GoogleProfileCompletionPage from "./pages/GoogleProfileCompletionPage";
 import { Routes, Route } from 'react-router-dom';
