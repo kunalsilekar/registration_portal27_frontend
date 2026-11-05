@@ -156,8 +156,17 @@
 }
 
 .sign-in-heading a,
+.signup-button-label {
+  font-weight: 700;
+}
+
 .sign-in-create-account a {
+  font-weight: 700;
   color: inherit;
+  text-decoration: none;
+}
+
+.signup_button{
   text-decoration: none;
 }
 
@@ -311,7 +320,8 @@
   width: 191px;
   min-height: 35px;
   align-self: center;
-  margin-top: 15px;
+  margin: 15px auto 0;
+  text-align: center;
   border: 1px solid #d8c7ad;
   border-radius: 6px;
   background: rgb(242 229 211 / 72%);
@@ -538,3 +548,6 @@
     line-height: 1.3;
   }
 }
+
+
+

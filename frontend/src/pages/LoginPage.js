@@ -150,7 +150,7 @@ function LoginPage() {
             <div className={`google-sign-in-control${googleAuthBusy ? ' is-busy' : ''}`}>
               <div className="sign-in-google-visual" aria-hidden="true">
                 <img src="/assets/google.svg" alt="" />
-                <span>Signup with Google</span>
+                <span>Continue with Google</span>
               </div>
               <div
                 className="google-sign-in-host"
@@ -185,9 +185,11 @@ function LoginPage() {
             </button>
             {loginError && <p className="google-sign-in-message" role="alert">{loginError}</p>}
 
-            <div className="sign-in-create-account">
-              or <Link to="/signup">Create New Account ?</Link>
-            </div>
+            <Link to="/signup" className='signup_button'>
+              <div className="sign-in-create-account">
+                or <span className="signup-button-label">Create New Account ?</span>
+              </div>
+            </Link>
           </form>
         </div>
       </section>
@@ -196,3 +198,4 @@ function LoginPage() {
 }
 
 export default LoginPage;
+

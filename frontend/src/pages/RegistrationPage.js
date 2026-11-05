@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import validator from 'validator';
 import CommonBackground from '../sections/Common_Background';
-import { registerApi } from '../utils/api';
+import { googleLoginApi, registerApi, setAuthData } from '../utils/api';
 import './LoginPage.css';
 import './RegistrationPage.css';
 
@@ -22,6 +22,92 @@ const COUNTRY_CODES = [
 
 function RegistrationPage() {
   const navigate = useNavigate();
+  const googleButtonRef = useRef(null);
+  const googleAuthBusyRef = useRef(false);
+  const [googleAuthError, setGoogleAuthError] = useState('');
+  const [googleAuthBusy, setGoogleAuthBusy] = useState(false);
+  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+  const handleGoogleCredential = useCallback(async (response) => {
+    if (!response?.credential || googleAuthBusyRef.current) return;
+    googleAuthBusyRef.current = true;
+    setGoogleAuthBusy(true);
+    setGoogleAuthError('');
+    try {
+      const auth = await googleLoginApi(response.credential);
+      if (!auth.access) throw new Error('The server did not return an access token.');
+      setAuthData(auth.access, auth.user);
+      if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
+      const needsCompletion = Boolean(auth.needs_completion);
+      localStorage.setItem('alcher_needs_completion', String(needsCompletion));
+      navigate(needsCompletion ? '/complete-profile' : '/', { replace: true });
+    } catch (error) {
+      setGoogleAuthError(error.message || 'Google sign-up failed. Please try again.');
+    } finally {
+      googleAuthBusyRef.current = false;
+      setGoogleAuthBusy(false);
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const buttonHost = googleButtonRef.current;
+    if (!buttonHost) return undefined;
+    if (!googleClientId) {
+      setGoogleAuthError('Google sign-up is not configured for this frontend.');
+      return undefined;
+    }
+
+    let cancelled = false;
+    let resizeObserver;
+    let initializedGoogle = false;
+    let lastRenderedWidth = 0;
+    let script = document.getElementById('google-identity-services');
+
+    const renderGoogleButton = () => {
+      if (cancelled || !window.google?.accounts?.id || !buttonHost.isConnected) return;
+      const width = Math.max(180, Math.min(400, Math.floor(buttonHost.getBoundingClientRect().width)));
+      if (!initializedGoogle) {
+        window.google.accounts.id.initialize({ client_id: googleClientId, callback: handleGoogleCredential });
+        initializedGoogle = true;
+      }
+      if (lastRenderedWidth === width && buttonHost.childElementCount > 0) return;
+      lastRenderedWidth = width;
+      buttonHost.replaceChildren();
+      window.google.accounts.id.renderButton(buttonHost, {
+        theme: 'outline',
+        size: window.matchMedia('(max-width: 768px)').matches ? 'large' : 'medium',
+        text: 'signup_with',
+        shape: 'rectangular',
+        logo_alignment: 'left',
+        width,
+      });
+    };
+
+    if (window.google?.accounts?.id) {
+      renderGoogleButton();
+    } else if (!script) {
+      script = document.createElement('script');
+      script.id = 'google-identity-services';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = renderGoogleButton;
+      script.onerror = () => setGoogleAuthError('Could not load Google sign-up. Check your internet connection.');
+      document.head.appendChild(script);
+    } else {
+      script.addEventListener('load', renderGoogleButton, { once: true });
+    }
+
+    if ('ResizeObserver' in window) {
+      resizeObserver = new ResizeObserver(renderGoogleButton);
+      resizeObserver.observe(buttonHost);
+    }
+    return () => {
+      cancelled = true;
+      resizeObserver?.disconnect();
+      script?.removeEventListener('load', renderGoogleButton);
+    };
+  }, [googleClientId, handleGoogleCredential]);
 
   // Multi-step form step tracking (1: Account details, 2: College & Team details)
   const [step, setStep] = useState(1);
@@ -166,6 +252,25 @@ function RegistrationPage() {
                 Already have an account? <Link to="/login">Sign In</Link>
               </p>
             </header>
+
+            {step === 1 && (
+              <>
+                <div className={`google-sign-in-control${googleAuthBusy ? ' is-busy' : ''}`}>
+                  <div className="sign-in-google-visual" aria-hidden="true">
+                    <img src="/assets/google.svg" alt="" />
+                    <span>Continue with Google</span>
+                  </div>
+                  <div className="google-sign-in-host" ref={googleButtonRef} aria-label="Continue with Google to sign up" aria-busy={googleAuthBusy} />
+                </div>
+                {googleAuthError && <p className="google-sign-in-message" role="alert">{googleAuthError}</p>}
+                {googleAuthBusy && <p className="google-sign-in-message" aria-live="polite">Continuing with Google…</p>}
+                <div className="sign-in-divider" aria-hidden="true">
+                  <span />
+                  <small>or</small>
+                  <span />
+                </div>
+              </>
+            )}
 
             {step === 1 ? (
               <>
@@ -346,3 +451,5 @@ function RegistrationPage() {
 }
 
 export default RegistrationPage;
+
+
