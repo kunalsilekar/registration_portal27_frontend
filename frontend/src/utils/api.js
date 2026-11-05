@@ -72,6 +72,31 @@ export const googleLoginApi = async (idToken) => {
 
   return data;
 };
+export const getExploreModulesApi = async () => {
+  let response;
+  try {
+    response = await fetch(API_BASE_URL + '/api/competitions/');
+  } catch (error) {
+    throw new Error('Could not reach the backend while loading modules.');
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(getApiErrorMessage(data, 'Could not load modules and competitions.'));
+  }
+  if (!Array.isArray(data.modules) || !Array.isArray(data.allcomp)) {
+    throw new Error('The backend returned an unexpected modules response.');
+  }
+  return data;
+};
+export const getApiMediaUrl = (path) => {
+  if (typeof path !== 'string' || !path.trim()) return '';
+  try {
+    return new URL(path, API_BASE_URL + '/').toString();
+  } catch (error) {
+    return '';
+  }
+};
 export const getAuthToken = () => {
   return localStorage.getItem('alcher_token') || localStorage.getItem('token') || localStorage.getItem('access_token') || null;
 };
