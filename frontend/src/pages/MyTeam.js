@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./MyTeam.css";
 import defaultPhoto from "../asset/Ppic.png";
 import { getAuthToken } from "../utils/api";
-const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_API_BASE_URL;
 const MyTeam = () => {
   const [members, setMembers] = useState([]);
   const [showForm, setShowForm] = useState(false);

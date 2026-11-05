@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyRegistrations.css";
 import { clearAuthData, getAuthToken } from "../utils/api";
-const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_API_BASE_URL;
 /*const dummyRegistrations = [
   {
     id: 1,
