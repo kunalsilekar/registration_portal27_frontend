@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = (process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
 
 // Configurable login route / URL (can be customized via REACT_APP_LOGIN_URL)
 export const LOGIN_URL = process.env.REACT_APP_LOGIN_URL || '/login';
@@ -76,6 +76,30 @@ export const getAuthToken = () => {
   return localStorage.getItem('alcher_token') || localStorage.getItem('token') || localStorage.getItem('access_token') || null;
 };
 
+export const completeGoogleProfileApi = async (profile) => {
+  const token = getAuthToken();
+  if (!token) throw new Error('Your session expired. Please sign in with Google again.');
+
+  let response;
+  try {
+    response = await fetch(API_BASE_URL + '/api/auth/complete-profile/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify(profile),
+    });
+  } catch (error) {
+    throw new Error('Could not reach the backend. Please try again.');
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(getApiErrorMessage(data, 'Could not save your profile details.'));
+  }
+  return data;
+};
 export const getStoredUser = () => {
   try {
     const raw = localStorage.getItem('alcher_user') || localStorage.getItem('user');
@@ -92,6 +116,7 @@ export const setAuthData = (token, user) => {
   if (user) {
     localStorage.setItem('alcher_user', JSON.stringify(user));
   }
+  window.dispatchEvent(new Event('alcher-auth-changed'));
 };
 
 export const clearAuthData = () => {

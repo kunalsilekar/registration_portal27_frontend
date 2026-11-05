@@ -26,8 +26,9 @@ function LoginPage() {
 
       setAuthData(auth.access, auth.user);
       if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
-      localStorage.setItem('alcher_needs_completion', String(Boolean(auth.needs_completion)));
-      navigate('/', { replace: true, state: { needsCompletion: Boolean(auth.needs_completion) } });
+      const needsCompletion = Boolean(auth.needs_completion);
+      localStorage.setItem('alcher_needs_completion', String(needsCompletion));
+      navigate(needsCompletion ? '/complete-profile' : '/', { replace: true });
     } catch (error) {
       setGoogleAuthError(error.message || 'Google sign-in failed. Please try again.');
     } finally {
