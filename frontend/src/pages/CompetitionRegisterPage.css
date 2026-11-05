@@ -209,6 +209,11 @@
   width: 100%;
 }
 
+.comp-form-desktop-layout.is-solo .comp-form-right-col {
+  padding-top: 48px;
+  box-sizing: border-box;
+}
+
 .comp-form-left-col,
 .comp-form-right-col {
   flex: 1;

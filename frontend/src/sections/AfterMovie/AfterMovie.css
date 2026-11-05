@@ -38,16 +38,18 @@
     border: 0;
 }
 
-/* Crop YouTube's top video title overlay and bottom watermark by scaling */
+/* Keep the YouTube player at its native ratio so wide frames crop the video
+   vertically instead of showing black pillar bars at the sides. */
 .am-media--youtube {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
     min-width: 100%;
     min-height: 100%;
-    transform: translate(-50%, -50%) scale(1.36);
+    transform: translate(-50%, -50%);
     border: 0;
     pointer-events: none;
 }

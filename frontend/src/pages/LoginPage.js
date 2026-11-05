@@ -1,16 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CommonBackground from '../sections/Common_Background';
 import { googleLoginApi, loginApi, setAuthData } from '../utils/api';
 import './LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const requestedPath = location.state?.from;
-  const returnPath = requestedPath
-    ? requestedPath.pathname + (requestedPath.search || '') + (requestedPath.hash || '')
-    : '/';
   const googleButtonRef = useRef(null);
   const googleAuthBusyRef = useRef(false);
   const [googleAuthError, setGoogleAuthError] = useState('');
@@ -33,14 +28,14 @@ function LoginPage() {
       if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
       const needsCompletion = Boolean(auth.needs_completion);
       localStorage.setItem('alcher_needs_completion', String(needsCompletion));
-      navigate(needsCompletion ? '/complete-profile' : returnPath, { replace: true, state: needsCompletion ? { from: requestedPath } : undefined });
+      navigate(needsCompletion ? '/complete-profile' : '/profile', { replace: true });
     } catch (error) {
       setGoogleAuthError(error.message || 'Google sign-in failed. Please try again.');
     } finally {
       googleAuthBusyRef.current = false;
       setGoogleAuthBusy(false);
     }
-  }, [navigate, requestedPath, returnPath]);
+  }, [navigate]);
 
   useEffect(() => {
     const buttonHost = googleButtonRef.current;
@@ -117,7 +112,7 @@ function LoginPage() {
       if (!auth.access) throw new Error('The server did not return an access token.');
       setAuthData(auth.access, auth.user);
       if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
-      navigate(returnPath, { replace: true });
+      navigate('/profile', { replace: true });
     } catch (error) {
       setLoginError(error.message || 'Sign in failed. Please try again.');
     } finally {

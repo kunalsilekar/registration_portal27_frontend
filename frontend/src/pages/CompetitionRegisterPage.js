@@ -11,6 +11,7 @@ import {
   addTeamMemberApi,
   fetchMyRegisteredCompetitionsApi,
   getMediaUrl,
+  getStoredUser,
 } from '../utils/api';
 import './CompetitionRegisterPage.css';
 
@@ -41,6 +42,7 @@ function CompetitionRegisterPage() {
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [newMemberPhone, setNewMemberPhone] = useState('');
   const [modalError, setModalError] = useState('');
+  const storedUser = getStoredUser() || {};
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -154,10 +156,39 @@ function CompetitionRegisterPage() {
       return;
     }
 
+    const isSoloCompetition = String(competition?.solo_or_group || '').trim().toLowerCase().includes('solo');
+    if (!isSoloCompetition) {
+      const selectedCount = selectedMembers.length;
+      const minimum = Number(competition?.min_members);
+      const maximum = Number(competition?.max_members);
+
+      if (Number.isFinite(minimum) && minimum > 0 && selectedCount < minimum) {
+        setErrorMessage(`Select at least ${minimum} team member${minimum === 1 ? '' : 's'} to register.`);
+        return;
+      }
+
+      if (Number.isFinite(maximum) && maximum > 0 && selectedCount > maximum) {
+        setErrorMessage(`You can select no more than ${maximum} team member${maximum === 1 ? '' : 's'}.`);
+        return;
+      }
+    }
+
     setSubmitting(true);
 
-    // Backend RegisterCompSerializer expects member names (matched against user.team.members)
-    const memberNames = selectedMembers.map((m) => m.name.trim());
+    const participantName =
+      profileData?.fullname || profileData?.name ||
+      storedUser.fullname || storedUser.name || '';
+
+    if (isSoloCompetition && !participantName.trim()) {
+      setErrorMessage('Your profile name is missing. Complete your profile before registering.');
+      setSubmitting(false);
+      return;
+    }
+
+    // Solo events register the signed-in user as the participant automatically.
+    const memberNames = isSoloCompetition
+      ? [participantName.trim()]
+      : selectedMembers.map((m) => m.name.trim());
 
     const payload = {
       competition_id: competitionId,
@@ -184,10 +215,16 @@ function CompetitionRegisterPage() {
   const eventMode = competition?.event_mode || 'Not specified';
   const minMembers = competition?.min_members ?? 0;
   const maxMembers = competition?.max_members ?? 0;
+  const isSoloCompetition = String(soloOrGroup).trim().toLowerCase().includes('solo');
+  const participantName =
+    profileData?.fullname || profileData?.name ||
+    storedUser.fullname || storedUser.name || '';
 
-  const currentTeamDisplay = selectedMembers.length > 0
-    ? selectedMembers.map((member) => member.name).join(', ')
-    : (profileTeamName || 'Team information unavailable');
+  const currentTeamDisplay = isSoloCompetition
+    ? participantName || 'Your profile name is unavailable'
+    : selectedMembers.length > 0
+      ? selectedMembers.map((member) => member.name).join(', ')
+      : (profileTeamName || 'Team information unavailable');
 
   /* ========================================================
      REUSABLE FIELD RENDERERS (Ensures zero duplicate logic)
@@ -208,7 +245,7 @@ function CompetitionRegisterPage() {
   const renderCurrentTeam = () => (
     <div className="comp-field-group comp-field-current-team">
       <label className="comp-field-label">
-        Current Team for {competitionName}
+        {isSoloCompetition ? 'Participant' : `Current Team for ${competitionName}`}
       </label>
       <div className="comp-input-readonly-wrap">
         <input
@@ -445,10 +482,11 @@ function CompetitionRegisterPage() {
             {/* Form Section */}
             <form onSubmit={handleSubmit} className="comp-register-form">
               {/* DESKTOP FORM LAYOUT: Natural 2-Column Flex with exact compact spacing */}
-              <div className="comp-form-desktop-layout">
+              <div className={`comp-form-desktop-layout${isSoloCompetition ? ' is-solo' : ''}`}>
                 <div className="comp-form-left-col">
                   {renderMetaChips()}
-                  {renderTeamMembers()}
+                  {!isSoloCompetition && renderTeamMembers()}
+                  {isSoloCompetition && renderCurrentTeam()}
                   {renderPerformance()}
                   {renderDescription()}
                   {renderSubmit()}
@@ -456,7 +494,7 @@ function CompetitionRegisterPage() {
                 </div>
 
                 <div className="comp-form-right-col">
-                  {renderCurrentTeam()}
+                  {!isSoloCompetition && renderCurrentTeam()}
                   {renderGuidelines()}
                 </div>
               </div>
@@ -464,8 +502,9 @@ function CompetitionRegisterPage() {
               {/* MOBILE FORM LAYOUT: Exact 1-Column Skeleton Order */}
               <div className="comp-form-mobile-layout">
                 {renderMetaChips()}
-                {renderCurrentTeam()}
-                {renderTeamMembers()}
+                {!isSoloCompetition && renderCurrentTeam()}
+                {!isSoloCompetition && renderTeamMembers()}
+                {isSoloCompetition && renderCurrentTeam()}
                 {renderPerformance()}
                 {renderDescription()}
                 {renderGuidelines()}

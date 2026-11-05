@@ -59,8 +59,9 @@ export default function AfterMovie() {
                 const size = small ? 'small' : medium ? 'medium' : 'large';
                 const end = finalFrame(size);
 
-                // Reduced motion: show the final, framed layout straight away
-                if (reduce) {
+                // Mobile and reduced-motion users see the final layout without
+                // the pinned scroll animation.
+                if (reduce || small) {
                     gsap.set(frameRef.current, end);
                     gsap.set(headingRef.current, { opacity: 1, y: 0, color: '#0F3027' });
                     gsap.set(titleRef.current, { x: 0, color: '#0F3027' });
