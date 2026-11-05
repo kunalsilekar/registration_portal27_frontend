@@ -212,7 +212,7 @@
   z-index: 1;
   inset: 0;
   overflow: hidden;
-  opacity: 0;
+  opacity: 1;
 }
 
 .google-sign-in-host iframe {
