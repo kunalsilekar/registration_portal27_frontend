@@ -125,6 +125,9 @@ export const getApiMediaUrl = (path) => {
     return "";
   }
 };
+
+// Backwards-compatible alias used by competition and registration pages.
+export const getMediaUrl = getApiMediaUrl;
 export const getAuthToken = () => {
   return (
     localStorage.getItem("alcher_token") ||
@@ -443,3 +446,4 @@ export const registerCompetitionApi = async (payload) => {
   }
   return data;
 };
+
