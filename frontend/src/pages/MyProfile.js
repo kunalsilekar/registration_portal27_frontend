@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import "./MyProfile.css";
 import MyTeam from "./MyTeam";
@@ -6,8 +7,10 @@ import Registrations from "./MyRegistrations";
 import Navbar from "../components/Navbar";
 import Footer from "../sections/Footer";
 import { clearAuthData, getAuthToken } from "../utils/api";
+import Cropper from "react-easy-crop";
+import getCroppedImg from "../utils/CropImage";
 
-const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_API_BASE_URL;
 
 const defaultDetails = {
   name: "",
@@ -25,7 +28,7 @@ const defaultDetails = {
 
 const Profile = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("registrations");
+  const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -38,6 +41,20 @@ const Profile = () => {
 
   const [touched, setTouched] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
+  const imageInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+  // Image cropper states
+  const [cropperOpen, setCropperOpen] = useState(false);
+  const [tempImageSrc, setTempImageSrc] = useState(null);
+
+  const [crop, setCrop] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
   const fields = [
     {
@@ -153,6 +170,7 @@ const Profile = () => {
 
         const data = await response.json();
         const profileData = mapProfileData(data);
+        console.log("MAPPED PROFILE DATA:", profileData);
 
         setDetails(profileData);
         setOriginalDetails(profileData);
@@ -306,7 +324,78 @@ const Profile = () => {
       [name]: message,
     }));
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
 
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image.");
+      e.target.value = "";
+      return;
+    }
+
+    const imageDataUrl = URL.createObjectURL(file);
+
+    setTempImageSrc(imageDataUrl);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCroppedAreaPixels(null);
+
+    setCropperOpen(true);
+
+    // Allows selecting the same image again
+    e.target.value = "";
+  };
+  // Store the completed crop coordinates
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  // Generate the actual cropped image
+  const showCroppedImage = useCallback(async () => {
+    try {
+      if (!tempImageSrc || !croppedAreaPixels) {
+        setError("Please select a crop area.");
+        return;
+      }
+
+      const croppedImageBlob = await getCroppedImg(
+        tempImageSrc,
+        croppedAreaPixels,
+      );
+
+      const croppedFile = new File([croppedImageBlob], "profile_cropped.jpg", {
+        type: "image/jpeg",
+      });
+
+      setSelectedImage(croppedFile);
+
+      setImagePreview(URL.createObjectURL(croppedImageBlob));
+
+      setCropperOpen(false);
+      setError("");
+      setSuccess("");
+      if (tempImageSrc) {
+        URL.revokeObjectURL(tempImageSrc);
+        setTempImageSrc(null);
+      }
+    } catch (err) {
+      console.error("Cropping error:", err);
+      setError("Failed to crop image.");
+    }
+  }, [tempImageSrc, croppedAreaPixels]);
+
+  // Close cropper without applying changes
+  const handleCropperClose = () => {
+    setCropperOpen(false);
+
+    if (tempImageSrc) {
+      URL.revokeObjectURL(tempImageSrc);
+    }
+
+    setTempImageSrc(null);
+  };
   // Handle Edit button
   const handleEdit = () => {
     setOriginalDetails({ ...details });
@@ -318,11 +407,27 @@ const Profile = () => {
   };
 
   // Handle Cancel button
+
   const handleCancel = () => {
     setDetails({ ...originalDetails });
+
     setIsEditing(false);
     setTouched({});
     setFieldErrors({});
+
+    setSelectedImage(null);
+    setImagePreview("");
+
+    if (tempImageSrc) {
+      URL.revokeObjectURL(tempImageSrc);
+    }
+
+    setTempImageSrc(null);
+    setCropperOpen(false);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCroppedAreaPixels(null);
+
     setError("");
     setSuccess("");
   };
@@ -387,7 +492,9 @@ const Profile = () => {
       formData.append("city", details.city);
       formData.append("state", details.state);
       formData.append("team_name", details.team);
-
+      if (selectedImage) {
+        formData.append("img", selectedImage);
+      }
       const response = await fetch(`${API_URL}/auth/edit-profile/`, {
         method: "PATCH",
         headers: {
@@ -422,6 +529,8 @@ const Profile = () => {
       setIsEditing(false);
       setTouched({});
       setFieldErrors({});
+      setSelectedImage(null);
+      setImagePreview("");
       setSuccess("Profile updated successfully!");
     } catch (err) {
       setError(err.message);
@@ -437,6 +546,59 @@ const Profile = () => {
 
   return (
     <div className="bg">
+      {cropperOpen &&
+        createPortal(
+          <div className="cropper-overlay">
+            <div className="cropper-modal">
+              <h2>Crop Profile Image</h2>
+
+              <div className="cropper-container">
+                <Cropper
+                  image={tempImageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  onCropChange={setCrop}
+                  onCropComplete={onCropComplete}
+                  onZoomChange={setZoom}
+                />
+              </div>
+
+              <div className="cropper-zoom">
+                <label htmlFor="crop-zoom">Zoom</label>
+
+                <input
+                  id="crop-zoom"
+                  type="range"
+                  min={1}
+                  max={3}
+                  step={0.1}
+                  value={zoom}
+                  onChange={(e) => setZoom(Number(e.target.value))}
+                />
+              </div>
+
+              <div className="cropper-actions">
+                <button
+                  type="button"
+                  className="crop-cancel"
+                  onClick={handleCropperClose}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  className="crop-done"
+                  onClick={showCroppedImage}
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )}
       <div className="navbar-slot">
         <Navbar />
       </div>
@@ -450,11 +612,8 @@ const Profile = () => {
         <div className="pi">
           <img
             src={
-              details.img
-                ? details.img.startsWith("http")
-                  ? details.img
-                  : `${API_URL}/${details.img.replace(/^\/+/, "")}`
-                : require("../asset/Ppic.png")
+              imagePreview ||
+              (details.img ? details.img : require("../asset/Ppic.png"))
             }
             alt="Profile"
             onError={(e) => {
@@ -579,11 +738,25 @@ const Profile = () => {
                 <div className="form-bottom">
                   {/* ERROR AND SUCCESS MESSAGES */}
                   {isEditing && (
-                    <button type="button" className="upload-image-button">
-                      Update Profile Image
-                    </button>
-                  )}
+                    <>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={imageInputRef}
+                        onChange={handleImageChange}
+                        style={{ display: "none" }}
+                      />
 
+                      <button
+                        type="button"
+                        className="upload-image-button"
+                        disabled={isSaving}
+                        onClick={() => imageInputRef.current.click()}
+                      >
+                        Update Profile Image
+                      </button>
+                    </>
+                  )}
                   <div className="form-message">
                     {error && <p className="error-message">{error}</p>}
                     {success && <p className="success-message">{success}</p>}
