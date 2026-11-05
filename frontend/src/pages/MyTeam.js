@@ -11,6 +11,7 @@ const MyTeam = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiError, setApiError] = useState("");
   const [fetchError, setFetchError] = useState("");
+  const [genderOpen, setGenderOpen] = useState(false);
 
   const [newMember, setNewMember] = useState({
     name: "",
@@ -385,22 +386,56 @@ const MyTeam = () => {
               <div className="member-form-field">
                 <label htmlFor="gender">Gender</label>
 
-                <input
-                  id="gender"
-                  name="gender"
-                  value={newMember.gender}
-                  placeholder="Enter Gender"
-                  autoComplete="off"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className={
-                    fieldErrors.gender && touched.gender
-                      ? "invalid-input"
-                      : touched.gender && !fieldErrors.gender
-                        ? "valid-input"
-                        : ""
-                  }
-                />
+                <div className="gender-dropdown">
+                  <button
+                    type="button"
+                    id="gender"
+                    className={`gender-dropdown-btn ${
+                      fieldErrors.gender && touched.gender
+                        ? "invalid-input"
+                        : touched.gender && !fieldErrors.gender
+                          ? "valid-input"
+                          : ""
+                    }`}
+                    onClick={() => setGenderOpen((prev) => !prev)}
+                  >
+                    <span>{newMember.gender || "Select Gender"}</span>
+                    <span className="gender-arrow">
+                      {genderOpen ? "▲" : "▼"}
+                    </span>
+                  </button>
+
+                  {genderOpen && (
+                    <div className="gender-dropdown-menu">
+                      {["Male", "Female", "Other"].map((gender) => (
+                        <button
+                          type="button"
+                          key={gender}
+                          onClick={() => {
+                            setNewMember((prev) => ({
+                              ...prev,
+                              gender,
+                            }));
+
+                            setTouched((prev) => ({
+                              ...prev,
+                              gender: true,
+                            }));
+
+                            setFieldErrors((prev) => ({
+                              ...prev,
+                              gender: validateField("gender", gender),
+                            }));
+
+                            setGenderOpen(false);
+                          }}
+                        >
+                          {gender}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
                 {touched.gender && fieldErrors.gender && (
                   <p className="field-error">{fieldErrors.gender}</p>

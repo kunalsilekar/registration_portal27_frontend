@@ -147,7 +147,79 @@
 .member-form-field input:focus {
   border-color: #063a35;
 }
+/* GENDER DROPDOWN */
 
+.gender-dropdown {
+  width: 95%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.gender-dropdown-btn {
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 17px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 1px solid #d6c9b4;
+  border-radius: 7px;
+
+  background: #f3e9d8;
+  color: #063a35;
+
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.gender-arrow {
+  font-size: 10px;
+}
+
+.gender-dropdown-menu {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  background: #f3e9d8;
+  border: 1px solid #d6c9b4;
+  border-radius: 7px;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.gender-dropdown-menu button {
+  width: 100%;
+  padding: 9px 17px;
+
+  border: none;
+  background: transparent;
+
+  color: #063a35;
+  font-size: 13px;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.gender-dropdown-menu button:hover {
+  background: #e8d8bf;
+}
+
+/* VALIDATION */
+
+.gender-dropdown-btn.valid-input {
+  border: 1.5px solid #064b1f;
+}
+
+.gender-dropdown-btn.invalid-input {
+  border: 1.5px solid #a00d0d;
+}
 /* FORM BUTTONS */
 
 .member-form-actions {
@@ -520,10 +592,20 @@
 
     box-sizing: border-box;
   }
+  .gender-dropdown {
+    width: 100%;
+  }
 
-  .member-form-field .field-error {
-    font-size: 9px;
-    margin: 3px 0 0;
+  .gender-dropdown-btn {
+    width: 100%;
+    min-height: 33px;
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+
+  .gender-dropdown-menu button {
+    padding: 8px 9px;
+    font-size: 10px;
   }
 
   /* CANCEL AND DONE */
@@ -673,7 +755,6 @@
     height: 36px;
     font-size: 12px;
   }
-
   /* Buttons */
   .member-form-actions {
     width: 100%;
