@@ -4,7 +4,6 @@ import GoogleProfileCompletionPage from "./pages/GoogleProfileCompletionPage";
 import { Routes, Route } from "react-router-dom";
 import CommonBackground from "./sections/Common_Background";
 import MyProfile from "./pages/MyProfile";
-
 import Errorpage from "./pages/Errorpage";
 import DelayedFallback from "./components/DelayedFallback";
 
