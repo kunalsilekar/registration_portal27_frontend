@@ -75,7 +75,7 @@ function RegistrationPage() {
       window.google.accounts.id.renderButton(buttonHost, {
         theme: 'outline',
         size: window.matchMedia('(max-width: 768px)').matches ? 'large' : 'medium',
-        text: 'signup_with',
+        text: 'continue_with',
         shape: 'rectangular',
         logo_alignment: 'left',
         width,
@@ -255,10 +255,6 @@ function RegistrationPage() {
             {step === 1 && (
               <>
                 <div className={`google-sign-in-control${googleAuthBusy ? ' is-busy' : ''}`}>
-                  <div className="sign-in-google-visual" aria-hidden="true">
-                    <img src="/assets/google.svg" alt="" />
-                    <span>Continue with Google</span>
-                  </div>
                   <div className="google-sign-in-host" ref={googleButtonRef} aria-label="Continue with Google to sign up" aria-busy={googleAuthBusy} />
                 </div>
                 {googleAuthError && <p className="google-sign-in-message" role="alert">{googleAuthError}</p>}

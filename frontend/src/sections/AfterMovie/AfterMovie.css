@@ -20,10 +20,10 @@
    Defaults below are the final framed layout, so it still looks right if JS fails. */
 .am-frame {
     position: absolute;
-    top: 20vh;
-    bottom: 22vh;
-    left: 18%;
-    right: 18%;
+    top: 18vh;
+    bottom: 24vh;
+    left: 14%;
+    right: 14.5%;
     overflow: hidden;
     border-radius: 16px;
     background: #000;
@@ -97,8 +97,8 @@
 .am-heading {
     position: absolute;
     z-index: 2;
-    top: 14vh;
-    right: 12%;
+    top: 10vh;
+    right: 9%;
     margin: 0;
     font-family: 'Ellak', sans-serif;
     font-weight: 400;
@@ -111,8 +111,8 @@
 .am-title {
     position: absolute;
     z-index: 2;
-    bottom: 10vh;
-    left: 14%;
+    bottom: 8vh;
+    left: 8%;
     margin: 0;
     font-family: 'Ellak', sans-serif;
     font-weight: 400;

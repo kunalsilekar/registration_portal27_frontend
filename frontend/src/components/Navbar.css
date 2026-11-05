@@ -366,7 +366,16 @@
         box-shadow: 0 8px 24px rgb(15 48 39 / 12%);
     }
 
+    .navbar-mobile-account-actions {
+        display: contents;
+    }
+
+    .navbar-mobile-account-actions a {
+        order: 1;
+    }
+
     .navbar-links {
+        order: 2;
         position: static;
         left: auto;
         display: flex;
@@ -404,12 +413,6 @@
         display: none;
     }
 
-    .navbar-mobile-account-actions {
-        display: grid;
-        gap: 4px;
-        width: 100%;
-    }
-
     .navbar-mobile-account-actions a,
     .navbar-mobile-account-actions button {
         display: flex;
@@ -429,6 +432,7 @@
     }
 
     .navbar-mobile-account-actions button {
+        order: 3;
         color: #FCF8EB;
         background: #0F3027;
     }

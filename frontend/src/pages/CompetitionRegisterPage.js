@@ -101,11 +101,7 @@ function CompetitionRegisterPage() {
   };
 
   const handleOpenModal = () => {
-    setNewMemberName('');
-    setNewMemberEmail('');
-    setNewMemberPhone('');
-    setModalError('');
-    setIsModalOpen(true);
+    navigate('/profile', { state: { activeTab: 'team' } });
   };
 
   const handleCloseModal = () => {

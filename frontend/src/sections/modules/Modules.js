@@ -145,13 +145,14 @@ export default function Module() {
         const section = sectionRef.current;
         const mm = gsap.matchMedia();
 
-        // Reduced motion: no pin, no stack. Cards are simply there.
-        mm.add('(prefers-reduced-motion: reduce)', () => {
+        // Phones and reduced-motion users see the cards immediately, without
+        // the pinned scroll / fan-out animation that can feel laggy on mobile.
+        mm.add('(max-width: 767px), (prefers-reduced-motion: reduce)', () => {
             section.classList.add('is-ready');
             gsap.set(arrowsRef.current, { opacity: 1 });
         });
 
-        mm.add('(prefers-reduced-motion: no-preference)', () => {
+        mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
             const cards = gsap.utils.toArray('.card', section);
 
             const tl = gsap.timeline({

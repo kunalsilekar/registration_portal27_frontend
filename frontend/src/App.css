@@ -320,7 +320,7 @@ body {
   .hero-title {
     width: min(271px, calc(100% - 40px));
     margin: 0 75px;
-    padding-top: 310px;
+    padding-top: 240px;
     font-size: clamp(40px, 11.94vw, 48px);
   }
 
