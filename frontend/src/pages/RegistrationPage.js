@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import validator from 'validator';
 import CommonBackground from '../sections/Common_Background';
 import { googleLoginApi, registerApi, setAuthData } from '../utils/api';
 import './LoginPage.css';
@@ -151,8 +150,8 @@ function RegistrationPage() {
       return;
     }
 
-    // Validate email format with validator package
-    if (!validator.isEmail(formData.email.trim())) {
+    // Validate email format without loading a separate validator vendor chunk.
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(formData.email.trim())) {
       setEmailError('Please enter a valid email address');
       return;
     }

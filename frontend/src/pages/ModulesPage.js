@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Loader2, AlertCircle, RefreshCw, ArrowLeft } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Loader2, AlertCircle, RefreshCw, ArrowLeft, Search } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../sections/Footer';
 import CompetitionCard from '../components/CompetitionCard';
@@ -11,7 +11,11 @@ const textureImage = '/assets/texture.jpg';
 
 function ModulesPage() {
   const { moduleSlug } = useParams();
+  const navigate = useNavigate();
   const [competitions, setCompetitions] = useState([]);
+  const [modules, setModules] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modeFilter, setModeFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentModuleName, setCurrentModuleName] = useState('');
@@ -26,6 +30,7 @@ function ModulesPage() {
         ? data
         : (data.allcomp || data.competitions || []);
       setCompetitions(compList);
+      setModules(Array.isArray(data.modules) ? data.modules : []);
 
       if (data.modules && moduleSlug) {
         const normalized = moduleSlug.replace(/[^a-z0-9]/gi, '').toLowerCase();
@@ -39,6 +44,7 @@ function ModulesPage() {
       }
     } catch (err) {
       setCompetitions([]);
+      setModules([]);
       setCurrentModuleName('');
       setError(err.message || 'Could not load competitions from the backend.');
     } finally {
@@ -51,8 +57,34 @@ function ModulesPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [loadCompetitions]);
 
-  // Compute centered heading:
-  // If specific module is active, display its name; otherwise display "MODULE NAME" matching the reference mockup
+  const normalizedModuleSlug = (moduleSlug || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const selectedModuleQuery = moduleSlug
+    ? modules.find((item) =>
+        item.module_query_name_without_spaces_all_small === normalizedModuleSlug ||
+        (item.module && item.module.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedModuleSlug)
+      )?.module_query_name_without_spaces_all_small || moduleSlug
+    : 'all';
+
+  const filteredCompetitions = competitions.filter((competition) => {
+    const rawMode = String(competition.event_mode || '').trim().toLowerCase();
+    const isOnline = rawMode === 'true' || rawMode === '1' || rawMode === 'online';
+    const isOffline = rawMode === 'false' || rawMode === '0' || rawMode === 'offline';
+    const modeMatches =
+      modeFilter === 'all' ||
+      (modeFilter === 'online' && isOnline) ||
+      (modeFilter === 'offline' && isOffline);
+    const searchText = Object.values(competition)
+      .map((value) => (typeof value === 'object' ? JSON.stringify(value) : String(value || '')))
+      .join(' ')
+      .toLowerCase();
+    return modeMatches && searchText.includes(searchTerm.trim().toLowerCase());
+  });
+
+  const handleModuleChange = (event) => {
+    const nextModule = event.target.value;
+    navigate(nextModule === 'all' ? '/modules' : '/modules/' + nextModule);
+  };
+
   const displayHeading = currentModuleName
     ? currentModuleName.toUpperCase()
     : moduleSlug
@@ -75,6 +107,47 @@ function ModulesPage() {
           <h1 className="modules-page-title">{displayHeading}</h1>
           <p className="modules-page-subtitle">Pick a competition, check the details and register your team.</p>
         </div>
+
+        {!loading && !error && modules.length > 0 && (
+          <section className="modules-filter-bar" aria-label="Filter competitions">
+            <label className="modules-filter-module">
+              <span>Module</span>
+              <select value={selectedModuleQuery} onChange={handleModuleChange} aria-label="Filter by module">
+                <option value="all">All Modules</option>
+                {modules.map((module) => (
+                  <option key={module.id} value={module.module_query_name_without_spaces_all_small}>
+                    {module.module}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="modules-filter-search">
+              <Search size={18} aria-hidden="true" />
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Search competitions..."
+                aria-label="Search competitions"
+              />
+            </label>
+
+            <div className="modules-mode-tabs" role="group" aria-label="Filter by event mode">
+              {['all', 'online', 'offline'].map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  className={modeFilter === mode ? 'is-active' : ''}
+                  aria-pressed={modeFilter === mode}
+                  onClick={() => setModeFilter(mode)}
+                >
+                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Loading State */}
         {loading && (
@@ -115,11 +188,18 @@ function ModulesPage() {
           </div>
         )}
 
+        {!loading && !error && competitions.length > 0 && filteredCompetitions.length === 0 && (
+          <div className="modules-state-container modules-empty-state">
+            <h2 className="modules-state-title">No Matching Competitions</h2>
+            <p className="modules-state-text">Try a different search or filter.</p>
+          </div>
+        )}
+
         {/* Competitions Grid (3 Desktop, 2 Tablet, 1 Mobile) */}
-        {!loading && !error && competitions.length > 0 && (
+        {!loading && !error && filteredCompetitions.length > 0 && (
           <section className="competitions-grid-section" aria-label="Competitions List">
             <div className="competitions-grid">
-              {competitions.map((comp) => (
+              {filteredCompetitions.map((comp) => (
                 <CompetitionCard key={comp.id} competition={comp} />
               ))}
             </div>

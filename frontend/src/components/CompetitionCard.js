@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { getMediaUrl } from '../utils/api';
+import { getAuthToken, getMediaUrl } from '../utils/api';
 import './CompetitionCard.css';
 
+const FALLBACK_COMPETITION_IMAGE = '/assets/modules/dance.jpg';
+
 function CompetitionCard({ competition }) {
+  const navigate = useNavigate();
   const rawImage = competition?.image || competition?.img || competition?.cover;
   const initialImage = rawImage ? getMediaUrl(rawImage) : '';
 
-  const [imgSrc, setImgSrc] = useState(initialImage);
+  const [imgSrc, setImgSrc] = useState(initialImage || FALLBACK_COMPETITION_IMAGE);
+
+  const handleImageError = () => {
+    if (imgSrc !== FALLBACK_COMPETITION_IMAGE) setImgSrc(FALLBACK_COMPETITION_IMAGE);
+  };
 
   if (!competition) return null;
 
@@ -31,12 +38,21 @@ function CompetitionCard({ competition }) {
     ? `Prize Pool - ${String(competition.prize_worth).trim().startsWith('₹') ? competition.prize_worth : '₹' + competition.prize_worth}`
     : 'Prize Pool details unavailable';
 
+  const competitionPath = '/competitions/' + competitionId;
+  const handleCompetitionClick = (event) => {
+    if (!getAuthToken()) {
+      event.preventDefault();
+      navigate('/login', { state: { from: { pathname: competitionPath } } });
+    }
+  };
+
   // Generate safe unique clip-path ID for desktop
   const clipId = `card-cutout-${competitionId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   return (
     <Link
-      to={`/competitions/${competitionId}`}
+      to={competitionPath}
+      onClick={handleCompetitionClick}
       className="competition-card"
       aria-label={`View competition ${title}`}
     >
@@ -76,7 +92,7 @@ function CompetitionCard({ competition }) {
               preserveAspectRatio="xMidYMid slice"
               clipPath={`url(#${clipId})`}
               className="competition-card-image"
-              onError={() => setImgSrc('')}
+              onError={handleImageError}
             />
           </svg>
 
@@ -95,7 +111,7 @@ function CompetitionCard({ competition }) {
             alt=""
             className="mobile-card-bg-img"
             loading="lazy"
-            onError={() => setImgSrc('')}
+            onError={handleImageError}
           />
           <div className="mobile-card-gradient-overlay" />
         </div>

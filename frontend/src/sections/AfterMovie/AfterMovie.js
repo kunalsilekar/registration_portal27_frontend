@@ -141,7 +141,12 @@ export default function AfterMovie() {
     }, []);
 
     return (
-        <section className="aftermovie-section" id="aftermovie" ref={sectionRef}>
+        <section
+            className="aftermovie-section"
+            id="aftermovie"
+            ref={sectionRef}
+            style={{ backgroundImage: `url("${process.env.PUBLIC_URL}/assets/texture.jpg")` }}
+        >
             <h2 className="am-heading" ref={headingRef}>
                 Check out the after movie
             </h2>

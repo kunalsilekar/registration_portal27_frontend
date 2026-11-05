@@ -1,11 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CommonBackground from '../sections/Common_Background';
 import { googleLoginApi, loginApi, setAuthData } from '../utils/api';
 import './LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const requestedPath = location.state?.from;
+  const returnPath = requestedPath
+    ? requestedPath.pathname + (requestedPath.search || '') + (requestedPath.hash || '')
+    : '/';
   const googleButtonRef = useRef(null);
   const googleAuthBusyRef = useRef(false);
   const [googleAuthError, setGoogleAuthError] = useState('');
@@ -28,14 +33,14 @@ function LoginPage() {
       if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
       const needsCompletion = Boolean(auth.needs_completion);
       localStorage.setItem('alcher_needs_completion', String(needsCompletion));
-      navigate(needsCompletion ? '/complete-profile' : '/', { replace: true });
+      navigate(needsCompletion ? '/complete-profile' : returnPath, { replace: true, state: needsCompletion ? { from: requestedPath } : undefined });
     } catch (error) {
       setGoogleAuthError(error.message || 'Google sign-in failed. Please try again.');
     } finally {
       googleAuthBusyRef.current = false;
       setGoogleAuthBusy(false);
     }
-  }, [navigate]);
+  }, [navigate, requestedPath, returnPath]);
 
   useEffect(() => {
     const buttonHost = googleButtonRef.current;
@@ -112,7 +117,7 @@ function LoginPage() {
       if (!auth.access) throw new Error('The server did not return an access token.');
       setAuthData(auth.access, auth.user);
       if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
-      navigate('/', { replace: true });
+      navigate(returnPath, { replace: true });
     } catch (error) {
       setLoginError(error.message || 'Sign in failed. Please try again.');
     } finally {
@@ -142,9 +147,6 @@ function LoginPage() {
           <form className="sign-in-form" onSubmit={handleSubmit}>
             <header className="sign-in-heading">
               <h2>SIGN IN</h2>
-              <p>
-                Don’t have an account ? <Link to="/signup">Sign Up</Link>
-              </p>
             </header>
 
             <div className={`google-sign-in-control${googleAuthBusy ? ' is-busy' : ''}`}>

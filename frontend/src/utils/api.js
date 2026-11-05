@@ -191,6 +191,7 @@ export const clearAuthData = () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("alcher_user");
   localStorage.removeItem("user");
+  window.dispatchEvent(new Event("alcher-auth-changed"));
 };
 
 export const submitUserQueryApi = async (question) => {

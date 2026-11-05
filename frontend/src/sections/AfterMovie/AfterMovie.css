@@ -9,7 +9,10 @@
     height: 100svh;
     overflow: hidden;       /* section clips the full-bleed image; it is pinned, never scrolls itself */
     overflow: clip;
-    background: #F5E3CD;    /* page cream, shows around the frame */
+    background-color: #F5E3CD;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 /* ---------- the photo / video frame ---------- */

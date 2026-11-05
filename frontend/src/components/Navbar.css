@@ -236,6 +236,19 @@
     white-space: nowrap;
 }
 
+.navbar-profile-menu a {
+    display: block;
+    padding: 8px 10px;
+    border-radius: 8px;
+    color: #0F3027;
+    font: 500 13px 'Gotham', sans-serif;
+    text-decoration: none;
+}
+
+.navbar-profile-menu a:hover {
+    background: #F4EEDC;
+}
+
 .navbar-profile-menu button {
     padding: 8px 10px;
     border: 0;
@@ -247,6 +260,10 @@
 }
 
 .navbar-menu-toggle {
+    display: none;
+}
+
+.navbar-mobile-account-actions {
     display: none;
 }
 
@@ -383,14 +400,43 @@
         font-size: 14px;
     }
 
-    .navbar-profile-wrap {
-        display: flex;
-        justify-content: flex-start;
+    .navbar-actions.is-authenticated {
+        display: none;
     }
 
-    .navbar-profile-button {
-        width: 40px;
-        height: 40px;
+    .navbar-mobile-account-actions {
+        display: grid;
+        gap: 4px;
+        width: 100%;
+    }
+
+    .navbar-mobile-account-actions a,
+    .navbar-mobile-account-actions button {
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+        padding: 0 12px;
+        border: 0;
+        border-radius: 10px;
+        color: #0F3027;
+        background: transparent;
+        font-family: 'Gotham', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: left;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .navbar-mobile-account-actions button {
+        color: #FCF8EB;
+        background: #0F3027;
+    }
+
+    .navbar-mobile-account-actions a:focus-visible,
+    .navbar-mobile-account-actions button:focus-visible {
+        outline: 2px solid #0F3027;
+        outline-offset: 2px;
     }
 
     .navbar-profile-menu {
