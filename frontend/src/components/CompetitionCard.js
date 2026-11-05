@@ -4,12 +4,18 @@ import { ChevronRight } from 'lucide-react';
 import { getAuthToken, getMediaUrl } from '../utils/api';
 import './CompetitionCard.css';
 
+const FALLBACK_COMPETITION_IMAGE = '/assets/modules/dance.jpg';
+
 function CompetitionCard({ competition }) {
   const navigate = useNavigate();
   const rawImage = competition?.image || competition?.img || competition?.cover;
   const initialImage = rawImage ? getMediaUrl(rawImage) : '';
 
-  const [imgSrc, setImgSrc] = useState(initialImage);
+  const [imgSrc, setImgSrc] = useState(initialImage || FALLBACK_COMPETITION_IMAGE);
+
+  const handleImageError = () => {
+    if (imgSrc !== FALLBACK_COMPETITION_IMAGE) setImgSrc(FALLBACK_COMPETITION_IMAGE);
+  };
 
   if (!competition) return null;
 
@@ -86,7 +92,7 @@ function CompetitionCard({ competition }) {
               preserveAspectRatio="xMidYMid slice"
               clipPath={`url(#${clipId})`}
               className="competition-card-image"
-              onError={() => setImgSrc('')}
+              onError={handleImageError}
             />
           </svg>
 
@@ -105,7 +111,7 @@ function CompetitionCard({ competition }) {
             alt=""
             className="mobile-card-bg-img"
             loading="lazy"
-            onError={() => setImgSrc('')}
+            onError={handleImageError}
           />
           <div className="mobile-card-gradient-overlay" />
         </div>

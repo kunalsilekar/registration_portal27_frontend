@@ -50,7 +50,7 @@ function App() {
         />
         <Route path="/profile" element={<MyProfile />} />
          <Route path="/modules" element={<ModulesPage />} />
-      <Route path="/modules/:moduleSlug" element={<RequireAuth><ModulesPage /></RequireAuth>} />
+      <Route path="/modules/:moduleSlug" element={<ModulesPage />} />
       <Route path="/competitions" element={<ModulesPage />} />
       <Route path="/competitions/:competitionId" element={<RequireAuth><CompetitionRegisterPage /></RequireAuth>} />
       <Route path="/register/:competitionId" element={<RequireAuth><CompetitionRegisterPage /></RequireAuth>} />
