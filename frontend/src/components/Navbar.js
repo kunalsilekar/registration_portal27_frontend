@@ -1,19 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { clearAuthData, getAuthToken, getStoredUser } from '../utils/api';
+import { getAuthToken } from '../utils/api';
 import './Navbar.css';
 
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [profileOpen, setProfileOpen] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(() => Boolean(getAuthToken()));
-    const [user, setUser] = useState(() => getStoredUser());
 
     useEffect(() => {
         const syncAuthState = () => {
             setIsAuthenticated(Boolean(getAuthToken()));
-            setUser(getStoredUser());
-            setProfileOpen(false);
         };
 
         window.addEventListener('storage', syncAuthState);
@@ -32,15 +28,6 @@ function Navbar() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
-    const signOut = () => {
-        clearAuthData();
-        setIsAuthenticated(false);
-        setUser(null);
-        setProfileOpen(false);
-        closeMenu();
-    };
-
-    const displayName = user?.full_name || user?.name || user?.email || 'Your account';
 
     return (
         <nav className="navbar" aria-label="Main navigation">
@@ -71,31 +58,25 @@ function Navbar() {
 
                 <div className="navbar-actions">
                     {isAuthenticated ? (
-                        <div className="navbar-profile-wrap">
-                            <button
-                                type="button"
-                                className="navbar-profile-button"
-                                aria-label="Open account menu"
-                                aria-expanded={profileOpen}
-                                aria-haspopup="menu"
-                                onClick={() => setProfileOpen((open) => !open)}
-                            >
-                                <svg viewBox="0 0 24 24" aria-hidden="true">
-                                    <circle cx="12" cy="8" r="3.2" />
-                                    <path d="M5.5 19c.5-3.2 2.8-5 6.5-5s6 1.8 6.5 5" />
-                                </svg>
-                            </button>
-                            {profileOpen && (
-                                <div className="navbar-profile-menu" role="menu">
-                                    <span className="navbar-profile-name">{displayName}</span>
-                                    <button type="button" role="menuitem" onClick={signOut}>Sign out</button>
-                                </div>
-                            )}
-                        </div>
+                        <a
+                            href="#profile"
+                            className="navbar-profile-button"
+                            aria-label="Open profile"
+                            onClick={closeMenu}
+                        >
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="8" r="3.2" />
+                                <path d="M5.5 19c.5-3.2 2.8-5 6.5-5s6 1.8 6.5 5" />
+                            </svg>
+                        </a>
                     ) : (
                         <Link to="/login" className="login-button" onClick={closeMenu}>Login</Link>
                     )}
-                    <a href="#modules" className="register-button" onClick={closeMenu}>Register</a>
+                    {!isAuthenticated && (
+                        <Link to="/signup" className="register-button" onClick={closeMenu}>
+                            Register
+                        </Link>
+                    )}
                 </div>
             </div>
         </nav>
