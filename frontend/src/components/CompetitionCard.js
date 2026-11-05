@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { getMediaUrl } from '../utils/api';
+import { getAuthToken, getMediaUrl } from '../utils/api';
 import './CompetitionCard.css';
 
 function CompetitionCard({ competition }) {
+  const navigate = useNavigate();
   const rawImage = competition?.image || competition?.img || competition?.cover;
   const initialImage = rawImage ? getMediaUrl(rawImage) : '';
 
@@ -31,12 +32,21 @@ function CompetitionCard({ competition }) {
     ? `Prize Pool - ${String(competition.prize_worth).trim().startsWith('₹') ? competition.prize_worth : '₹' + competition.prize_worth}`
     : 'Prize Pool details unavailable';
 
+  const competitionPath = '/competitions/' + competitionId;
+  const handleCompetitionClick = (event) => {
+    if (!getAuthToken()) {
+      event.preventDefault();
+      navigate('/login', { state: { from: { pathname: competitionPath } } });
+    }
+  };
+
   // Generate safe unique clip-path ID for desktop
   const clipId = `card-cutout-${competitionId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   return (
     <Link
-      to={`/competitions/${competitionId}`}
+      to={competitionPath}
+      onClick={handleCompetitionClick}
       className="competition-card"
       aria-label={`View competition ${title}`}
     >

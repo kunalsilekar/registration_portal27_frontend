@@ -1,7 +1,8 @@
 import "./App.css";
 import { lazy, Suspense } from "react";
 import GoogleProfileCompletionPage from "./pages/GoogleProfileCompletionPage";
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route, useLocation } from "react-router-dom";
+import { getAuthToken } from "./utils/api";
 import CommonBackground from "./sections/Common_Background";
 import MyProfile from "./pages/MyProfile";
 import Errorpage from "./pages/Errorpage";
@@ -19,6 +20,13 @@ const SetNewPasswordPage = lazy(() => import("./pages/SetNewPasswordPage"));
 const PasswordResetCompletePage = lazy(
   () => import("./pages/PasswordResetCompletePage"),
 );
+
+function RequireAuth({ children }) {
+  const location = useLocation();
+  return getAuthToken() ? children : (
+    <Navigate to="/login" replace state={{ from: location }} />
+  );
+}
 
 function App() {
   return (
@@ -42,18 +50,15 @@ function App() {
         />
         <Route path="/profile" element={<MyProfile />} />
          <Route path="/modules" element={<ModulesPage />} />
-      <Route path="/modules/:moduleSlug" element={<ModulesPage />} />
+      <Route path="/modules/:moduleSlug" element={<RequireAuth><ModulesPage /></RequireAuth>} />
       <Route path="/competitions" element={<ModulesPage />} />
-      <Route path="/competitions/:competitionId" element={<CompetitionRegisterPage />} />
-      <Route path="/register/:competitionId" element={<CompetitionRegisterPage />} />
-      <Route path="/competitions/:competitionId/success" element={<RegistrationSuccessPage />} />
-      <Route path="/registration-success/:competitionId" element={<RegistrationSuccessPage />} />
-      <Route path="/registration-success" element={<RegistrationSuccessPage />} />
+      <Route path="/competitions/:competitionId" element={<RequireAuth><CompetitionRegisterPage /></RequireAuth>} />
+      <Route path="/register/:competitionId" element={<RequireAuth><CompetitionRegisterPage /></RequireAuth>} />
+      <Route path="/competitions/:competitionId/success" element={<RequireAuth><RegistrationSuccessPage /></RequireAuth>} />
+      <Route path="/registration-success/:competitionId" element={<RequireAuth><RegistrationSuccessPage /></RequireAuth>} />
+      <Route path="/registration-success" element={<RequireAuth><RegistrationSuccessPage /></RequireAuth>} />
       </Routes>
     </Suspense>
-  
-      
-     
   
   );
 }

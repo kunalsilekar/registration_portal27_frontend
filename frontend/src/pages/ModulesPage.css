@@ -223,3 +223,138 @@
   }
 }
 
+/* Backend-powered module, search, and event-mode filters */
+.modules-filter-bar {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(240px, 1.2fr) auto;
+  align-items: end;
+  gap: 14px;
+  width: 100%;
+  max-width: 1020px;
+  margin: -12px auto 32px;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid rgba(15, 48, 39, 0.14);
+  border-radius: 16px;
+  background: rgba(252, 248, 235, 0.88);
+  box-shadow: 0 5px 20px rgba(34, 25, 14, 0.06);
+}
+
+.modules-filter-module,
+.modules-filter-search {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  color: #0F3027;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modules-filter-module select,
+.modules-filter-search input {
+  width: 100%;
+  height: 42px;
+  box-sizing: border-box;
+  border: 1px solid rgba(15, 48, 39, 0.22);
+  border-radius: 10px;
+  color: #0F3027;
+  background: #FCF8EB;
+  font: 500 14px 'Plus Jakarta Sans', sans-serif;
+}
+
+.modules-filter-module select {
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.modules-filter-search {
+  position: relative;
+}
+
+.modules-filter-search svg {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  color: #63746b;
+  pointer-events: none;
+}
+
+.modules-filter-search input {
+  padding: 0 12px 0 38px;
+  outline: none;
+}
+
+.modules-filter-search input:focus,
+.modules-filter-module select:focus {
+  border-color: #0F3027;
+  box-shadow: 0 0 0 2px rgba(15, 48, 39, 0.12);
+  outline: none;
+}
+
+.modules-filter-search input::placeholder {
+  color: #7c8179;
+  opacity: 1;
+}
+
+.modules-mode-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 42px;
+  padding: 4px;
+  border: 1px solid rgba(15, 48, 39, 0.16);
+  border-radius: 12px;
+  background: #f4eedc;
+}
+
+.modules-mode-tabs button {
+  min-height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #0F3027;
+  background: transparent;
+  font: 600 12px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: color 0.18s ease, background-color 0.18s ease;
+}
+
+.modules-mode-tabs button:hover {
+  background: rgba(15, 48, 39, 0.08);
+}
+
+.modules-mode-tabs button.is-active {
+  color: #FCF8EB;
+  background: #0F3027;
+}
+
+.modules-mode-tabs button:focus-visible {
+  outline: 2px solid #0F3027;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .modules-filter-bar {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0 auto 24px;
+    padding: 12px;
+  }
+
+  .modules-filter-module,
+  .modules-filter-search {
+    grid-column: 1 / -1;
+  }
+
+  .modules-mode-tabs {
+    grid-column: 1 / -1;
+    justify-content: stretch;
+  }
+
+  .modules-mode-tabs button {
+    flex: 1;
+  }
+}
+

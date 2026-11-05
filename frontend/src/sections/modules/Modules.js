@@ -1,9 +1,9 @@
 import './Module.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { getApiMediaUrl, getExploreModulesApi } from '../../utils/api';
+import { getApiMediaUrl, getAuthToken, getExploreModulesApi } from '../../utils/api';
 
 gsap.registerPlugin(ScrollTrigger);
 // stop the pin from re-calculating every time the mobile URL bar shows/hides
@@ -24,6 +24,7 @@ const ChevronIcon = () => (
 const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
 export default function Module() {
+    const navigate = useNavigate();
     const sectionRef = useRef(null);
     const headerRef = useRef(null);
     const wrapRef = useRef(null);
@@ -226,6 +227,13 @@ export default function Module() {
     useEffect(() => {
         if (modulesLoaded) syncEdges();
     }, [modulesLoaded, moduleCards]);
+    const handleModuleExplore = (event, destination) => {
+        if (!getAuthToken()) {
+            event.preventDefault();
+            navigate('/login', { state: { from: { pathname: destination } } });
+        }
+    };
+
     const scrollCards = (dir) => {
         const el = cardsRef.current;
         const card = el.querySelector('.card');
@@ -293,7 +301,14 @@ export default function Module() {
                                             <li key={competition.id || competition.name}>{competition.name}</li>
                                         ))}
                                     </ul>
-                                    <Link className="explore-btn" to={'/modules/' + (module.queryName || slugify(module.category))}>
+                                    <Link
+                                        className="explore-btn"
+                                        to={'/modules/' + (module.queryName || slugify(module.category))}
+                                        onClick={(event) => handleModuleExplore(
+                                            event,
+                                            '/modules/' + (module.queryName || slugify(module.category))
+                                        )}
+                                    >
                                         <span className="eb-icon" aria-hidden="true">
                                             <ChevronIcon />
                                         </span>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CommonBackground from '../sections/Common_Background';
 import {
   completeGoogleProfileApi,
@@ -15,6 +15,7 @@ const COUNTRY_CODES = ['+91', '+1', '+44', '+61', '+971', '+65', '+49', '+33', '
 
 function GoogleProfileCompletionPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const googleUser = getStoredUser() || {};
   const [formData, setFormData] = useState(() => ({
     fullname: googleUser.fullname || '',
@@ -73,7 +74,11 @@ function GoogleProfileCompletionPage() {
 
       if (result.user) setAuthData(getAuthToken(), result.user);
       localStorage.removeItem('alcher_needs_completion');
-      navigate('/', { replace: true });
+      const requestedPath = location.state?.from;
+      const returnPath = requestedPath
+        ? requestedPath.pathname + (requestedPath.search || '') + (requestedPath.hash || '')
+        : '/';
+      navigate(returnPath, { replace: true });
     } catch (submitError) {
       setError(submitError.message || 'Could not save your profile details.');
     } finally {
