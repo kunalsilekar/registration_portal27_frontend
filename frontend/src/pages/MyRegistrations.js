@@ -1,48 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyRegistrations.css";
-import { clearAuthData, getAuthToken } from "../utils/api";
+import { clearAuthData, getAuthToken, getMediaUrl } from "../utils/api";
 const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
-/*const dummyRegistrations = [
-  {
-    id: 1,
-    event: {
-      event_name: "Robotics Challenge",
-      event_desc:
-        "Participate in an exciting robotics competition and showcase your engineering skills.",
-      prize_worth: "₹50,000",
-      image: "/media/robotics.png",
-    },
-  },
-  {
-    id: 2,
-    event: {
-      event_name: "Code Combat",
-      event_desc:
-        "Test your coding skills and compete with the best programmers.",
-      prize_worth: "₹30,000",
-      image: "/media/coding.png",
-    },
-  },
-  {
-    id: 3,
-    event: {
-      event_name: "Robo Wars",
-      event_desc: "Build your robot and battle against other teams.",
-      prize_worth: "₹40,000",
-      image: "/media/robowars.png",
-    },
-  },
-  {
-    id: 4,
-    event: {
-      event_name: "Tech Quiz",
-      event_desc: "Challenge your technical knowledge and win exciting prizes.",
-      prize_worth: "₹20,000",
-      image: "/media/quiz.png",
-    },
-  },
-];*/
 const Registrations = () => {
   const navigate = useNavigate();
 
@@ -110,19 +70,6 @@ const Registrations = () => {
   useEffect(() => {
     fetchRegistrations();
   }, [fetchRegistrations]);
-  /*useEffect(() => {
-    setRegistrations(dummyRegistrations);
-    setLoading(false);
-  }, []);*/
-
-  const getImageUrl = (image) => {
-    if (!image) return "";
-
-    return image.startsWith("http")
-      ? image
-      : `${API_URL}${image.startsWith("/") ? "" : "/"}${image}`;
-  };
-
   return (
     <div className="registrations-container">
       <div className="registrations-grid">
@@ -155,8 +102,7 @@ const Registrations = () => {
                 className="registration-card"
                 key={registration.id}
                 style={{
-                  backgroundImage: `url("${getImageUrl(event.image)}")`,
-                  /*backgroundImage: `url(${require("../asset/image.png")})`,*/
+                  backgroundImage: `url("${getMediaUrl(event.image)}")`,
                 }}
               >
                 <div className="registration-card-content">

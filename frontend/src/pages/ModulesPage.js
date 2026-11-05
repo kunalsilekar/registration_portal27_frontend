@@ -5,7 +5,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../sections/Footer';
 import CompetitionCard from '../components/CompetitionCard';
 import { fetchCompetitionsApi } from '../utils/api';
-import { getMockCompetitions } from '../utils/mockCompetitions';
 import './ModulesPage.css';
 
 const textureImage = '/assets/texture.jpg';
@@ -21,47 +20,30 @@ function ModulesPage() {
     setLoading(true);
     setError(null);
 
-    const mock = getMockCompetitions(moduleSlug);
-
     try {
       const data = await fetchCompetitionsApi(moduleSlug);
-
       const compList = Array.isArray(data)
         ? data
         : (data.allcomp || data.competitions || []);
+      setCompetitions(compList);
 
-      if (compList && compList.length > 0) {
-        setCompetitions(compList);
-
-        if (data.modulename) {
-          setCurrentModuleName(data.modulename);
-        } else if (data.modules && moduleSlug) {
-          const normalized = moduleSlug.replace(/-/g, '').toLowerCase();
-          const found = data.modules.find(
-            (m) =>
-              m.module_query_name_without_spaces_all_small === normalized ||
-              (m.module && m.module.toLowerCase().replace(/[^a-z0-9]/g, '') === normalized)
-          );
-          if (found) {
-            setCurrentModuleName(found.module);
-          } else {
-            setCurrentModuleName(mock.moduleName);
-          }
-        } else {
-          setCurrentModuleName(mock.moduleName);
-        }
-        setLoading(false);
-        return;
+      if (data.modules && moduleSlug) {
+        const normalized = moduleSlug.replace(/[^a-z0-9]/gi, '').toLowerCase();
+        const found = data.modules.find((item) =>
+          item.module_query_name_without_spaces_all_small === normalized ||
+          (item.module && item.module.toLowerCase().replace(/[^a-z0-9]/g, '') === normalized)
+        );
+        setCurrentModuleName(found?.module || '');
+      } else {
+        setCurrentModuleName('');
       }
     } catch (err) {
-      // Backend is unavailable or request failed; fall back to fake mock data
-      console.info('Backend unreachable, displaying demo competitions data:', err.message);
+      setCompetitions([]);
+      setCurrentModuleName('');
+      setError(err.message || 'Could not load competitions from the backend.');
+    } finally {
+      setLoading(false);
     }
-
-    // Display fake competitions data so competitions are visible
-    setCompetitions(mock.competitions);
-    setCurrentModuleName(mock.moduleName);
-    setLoading(false);
   }, [moduleSlug]);
 
   useEffect(() => {
@@ -152,4 +134,3 @@ function ModulesPage() {
 }
 
 export default ModulesPage;
-

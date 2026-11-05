@@ -3,11 +3,9 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../sections/Footer';
 import { fetchCompetitionDetailApi, getMediaUrl } from '../utils/api';
-import { findCompetitionById } from '../utils/mockCompetitions';
 import './RegistrationSuccessPage.css';
 
 const bgImage = '/assets/competition_Register_bg.jpg';
-const defaultBannerImage = '/assets/form_banner_bg.jpg';
 const textureImage = '/assets/texture.png';
 const successLogo = '/assets/successful_logo.svg';
 
@@ -16,6 +14,7 @@ function RegistrationSuccessPage() {
   const location = useLocation();
 
   const [competition, setCompetition] = useState(location.state?.competition || null);
+  const [loadError, setLoadError] = useState('');
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -26,18 +25,12 @@ function RegistrationSuccessPage() {
       if (!competitionId) return;
       try {
         const data = await fetchCompetitionDetailApi(competitionId);
-        if (data && (data.event_name || data.name)) {
-          setCompetition(data);
-          return;
-        }
+        if (!data || !(data.event_name || data.name)) throw new Error('The backend did not return this competition.');
+        setCompetition(data);
       } catch (err) {
-        console.info('Backend unreachable, using mock details:', err.message);
+        setLoadError(err.message || 'Could not load competition details from the backend.');
       }
-
-      const mock = findCompetitionById(competitionId);
-      setCompetition(mock);
     }
-
     loadCompetition();
   }, [competitionId, competition]);
 
@@ -45,18 +38,18 @@ function RegistrationSuccessPage() {
     competition?.event_name ||
     competition?.name ||
     competition?.competetion ||
-    'COMPETITION NAME';
+    '';
 
   const moduleName =
     competition?.moduleName ||
     competition?.module?.module ||
     competition?.module ||
-    'MODULE';
+    '';
 
   const eventDesc =
     competition?.event_desc ||
     competition?.desc ||
-    'Cheesecake shortbread bonbon bonbon cake croissant jelly beans cake. Cookie tootsie roll muffin pie chupa chups dessert marshmallow chocolate bar. Powder chocolate cake toffee pie gingerbread.';
+    'Competition details are not available.';
 
   return (
     <div
@@ -79,7 +72,7 @@ function RegistrationSuccessPage() {
             className="comp-success-banner"
             style={{
               backgroundImage: `url(${
-                competition?.image ? getMediaUrl(competition.image) : process.env.PUBLIC_URL + defaultBannerImage
+                competition?.image ? getMediaUrl(competition.image) : undefined
               })`,
             }}
           >
@@ -101,6 +94,8 @@ function RegistrationSuccessPage() {
                 className="comp-success-tick-icon"
               />
             </div>
+
+            {loadError && <p className="comp-success-desc" role="alert">{loadError}</p>}
 
             <h2 className="comp-success-title">
               Registration Submitted Successfully!
@@ -124,4 +119,3 @@ function RegistrationSuccessPage() {
 }
 
 export default RegistrationSuccessPage;
-

@@ -289,59 +289,44 @@ export const fetchProfileApi = async () => {
   const token = getAuthToken();
   if (!token) return null;
 
+  let response;
   try {
-    const response = await fetch(`${API_BASE_URL}/api/profile/`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+    response = await fetch(`${API_BASE_URL}/api/profile/`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        clearAuthData();
-      }
-      return null;
-    }
-    return await response.json();
-  } catch (err) {
-    console.info('Could not reach profile endpoint:', err.message);
-    return null;
+  } catch (error) {
+    throw new Error('Could not reach the backend while loading your profile.');
   }
-};
 
-/**
- * Fetches the logged-in user's saved team members from backend.
- * Endpoint: GET /api/Participant/
- */
+  if (response.status === 401) {
+    clearAuthData();
+    throw new Error('Your session has expired. Please log in again.');
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(getApiErrorMessage(data, 'Could not load your profile.'));
+  return data;
+};
 export const fetchMyTeamMembersApi = async () => {
   const token = getAuthToken();
   if (!token) return [];
 
+  let response;
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Participant/`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+    response = await fetch(`${API_BASE_URL}/api/Participant/`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        clearAuthData();
-      }
-      return [];
-    }
-    const data = await response.json();
-    return Array.isArray(data) ? data : (data.results || []);
-  } catch (err) {
-    console.info('Could not reach Participant endpoint:', err.message);
-    return [];
+  } catch (error) {
+    throw new Error('Could not reach the backend while loading team members.');
   }
-};
 
-/**
- * Adds a new team member to the user's team in the database.
- * Endpoint: POST /api/Participant/
- */
+  if (response.status === 401) {
+    clearAuthData();
+    throw new Error('Your session has expired. Please log in again.');
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(getApiErrorMessage(data, 'Could not load your team members.'));
+  return Array.isArray(data) ? data : (data.results || []);
+};
 export const addTeamMemberApi = async (memberData) => {
   const token = getAuthToken();
   if (!token) {
@@ -352,10 +337,10 @@ export const addTeamMemberApi = async (memberData) => {
     name: memberData.name,
     email: memberData.email,
     phone: memberData.phone,
-    gender: memberData.gender || 'M',
-    collegename: memberData.collegename || 'Alcheringa Participant College',
-    city: memberData.city || 'Guwahati',
-    state: memberData.state || 'Assam',
+    gender: memberData.gender,
+    collegename: memberData.collegename,
+    city: memberData.city,
+    state: memberData.state,
   };
 
   const response = await fetch(`${API_BASE_URL}/api/Participant/`, {
@@ -387,33 +372,23 @@ export const fetchMyRegisteredCompetitionsApi = async () => {
   const token = getAuthToken();
   if (!token) return [];
 
+  let response;
   try {
-    const response = await fetch(`${API_BASE_URL}/api/my-registered-competitions/`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+    response = await fetch(`${API_BASE_URL}/api/my-registered-competitions/`, {
+      headers: { Authorization: `Bearer ${token}` },
     });
-
-    if (!response.ok) return [];
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
-  } catch (err) {
-    return [];
+  } catch (error) {
+    throw new Error('Could not reach the backend while checking your registrations.');
   }
-};
 
-/**
- * Registers a team for a competition.
- * Endpoint: POST /api/register-competition/
- *
- * Payload:
- * {
- *   competition_id: string,
- *   team_members: string[], // list of member names matched against user.team.members
- *   team_video: string,     // performance URL
- *   description: string     // video description
- * }
- */
+  if (response.status === 401) {
+    clearAuthData();
+    throw new Error('Your session has expired. Please log in again.');
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(getApiErrorMessage(data, 'Could not load your registrations.'));
+  return Array.isArray(data) ? data : [];
+};
 export const registerCompetitionApi = async (payload) => {
   const token = getAuthToken();
   if (!token) {
@@ -446,4 +421,3 @@ export const registerCompetitionApi = async (payload) => {
   }
   return data;
 };
-

@@ -12,19 +12,10 @@ import {
   fetchMyRegisteredCompetitionsApi,
   getMediaUrl,
 } from '../utils/api';
-import { findCompetitionById } from '../utils/mockCompetitions';
 import './CompetitionRegisterPage.css';
 
 const bgImage = '/assets/competition_Register_bg.jpg';
-const defaultBannerImage = '/assets/form_banner_bg.jpg';
 const textureImage = '/assets/texture.png';
-
-const INITIAL_TEAM_MEMBERS = [
-  { id: 'm1', name: 'Lorem Ipsum', email: 'loremipsum@gmail.com', phone: '9111000111' },
-  { id: 'm2', name: 'Lorem Ipsum', email: 'loremipsum@gmail.com', phone: '9111000111' },
-  { id: 'm3', name: 'Lorem Ipsum', email: 'loremipsum@gmail.com', phone: '9111000111' },
-  { id: 'm4', name: 'Lorem Ipsum', email: 'loremipsum@gmail.com', phone: '9111000111' },
-];
 
 function CompetitionRegisterPage() {
   const { competitionId } = useParams();
@@ -33,15 +24,15 @@ function CompetitionRegisterPage() {
   const [competition, setCompetition] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileTeamName, setProfileTeamName] = useState('');
+  const [profileData, setProfileData] = useState(null);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [performanceLink, setPerformanceLink] = useState('');
   const [description, setDescription] = useState('');
-  const [availableMembers, setAvailableMembers] = useState(INITIAL_TEAM_MEMBERS);
+  const [availableMembers, setAvailableMembers] = useState([]);
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [guidelinesAgreed, setGuidelinesAgreed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   // Modal State for "Add New Team Member"
@@ -56,59 +47,48 @@ function CompetitionRegisterPage() {
 
     async function loadData() {
       setLoading(true);
+      setErrorMessage(null);
 
-      // 1. Fetch competition details
       try {
         const data = await fetchCompetitionDetailApi(competitionId);
-        if (data && (data.event_name || data.name)) {
-          setCompetition(data);
-        } else {
-          setCompetition(findCompetitionById(competitionId));
-        }
+        if (!data || !(data.event_name || data.name)) throw new Error('The backend did not return this competition.');
+        setCompetition(data);
       } catch (err) {
-        console.info('Backend unreachable, using mock competition details:', err.message);
-        setCompetition(findCompetitionById(competitionId));
+        setCompetition(null);
+        setErrorMessage(err.message || 'Could not load competition details from the backend.');
+        setLoading(false);
+        return;
       }
 
-      // 2. Fetch logged-in user profile (for team_name)
       try {
         const profile = await fetchProfileApi();
-        if (profile && profile.team_name) {
-          setProfileTeamName(profile.team_name);
+        if (profile) {
+          setProfileData(profile);
+          setProfileTeamName(profile.team_name || '');
         }
       } catch (err) {
-        console.info('Profile API skipped (not logged in or offline)');
+        setProfileData(null);
       }
 
-      // 3. Fetch user's saved team members from /api/Participant/
       try {
         const members = await fetchMyTeamMembersApi();
-        if (Array.isArray(members) && members.length > 0) {
-          setAvailableMembers(members);
-        }
+        setAvailableMembers(Array.isArray(members) ? members : []);
       } catch (err) {
-        console.info('Participant API skipped (using fallback demo members)');
+        setErrorMessage(err.message || 'Could not load your saved team members.');
       }
 
-      // 4. Check if user already registered for this competition
       try {
         const registeredList = await fetchMyRegisteredCompetitionsApi();
-        if (Array.isArray(registeredList)) {
-          const isRegistered = registeredList.some(
-            (reg) =>
-              String(reg.event?.id || reg.event) === String(competitionId)
-          );
-          if (isRegistered) {
-            setAlreadyRegistered(true);
-          }
-        }
+        const isRegistered = registeredList.some(
+          (registration) => String(registration.event?.id || registration.event) === String(competitionId)
+        );
+        setAlreadyRegistered(isRegistered);
       } catch (err) {
-        // Ignore check if offline
+        setErrorMessage(err.message || 'Could not check your competition registrations.');
       }
 
       setLoading(false);
     }
-
     loadData();
   }, [competitionId]);
 
@@ -135,49 +115,38 @@ function CompetitionRegisterPage() {
 
   const handleDoneModal = async (e) => {
     e.preventDefault();
-    if (!newMemberName.trim()) {
-      setModalError('Please enter member name.');
+    if (!newMemberName.trim() || !newMemberEmail.trim() || !newMemberPhone.trim()) {
+      setModalError('Enter the member’s name, email and phone number.');
       return;
     }
+    if (!profileData?.collegename) {
+      setModalError('Complete your college details in your profile before adding a team member.');
+      return;
+    }
+
     const memberPayload = {
       name: newMemberName.trim(),
-      email: newMemberEmail.trim() || `${newMemberName.trim().toLowerCase().replace(/\s+/g, '')}@gmail.com`,
-      phone: newMemberPhone.trim() || '+919111000111',
-      gender: 'M',
-      collegename: 'Alcheringa Participant College',
-      city: 'Guwahati',
-      state: 'Assam',
+      email: newMemberEmail.trim(),
+      phone: '+91' + newMemberPhone.trim(),
+      gender: profileData.gender || 'M',
+      collegename: profileData.collegename,
+      city: profileData.city || '',
+      state: profileData.state || '',
     };
 
     try {
       const saved = await addTeamMemberApi(memberPayload);
-      const newMember = {
-        id: saved?.id || `member-${Date.now()}`,
-        name: saved?.name || memberPayload.name,
-        email: saved?.email || memberPayload.email,
-        phone: saved?.phone || memberPayload.phone,
-      };
-      setAvailableMembers([newMember, ...availableMembers]);
-      setSelectedMembers([newMember, ...selectedMembers]);
+      const addedMember = { id: saved.id, name: saved.name, email: saved.email, phone: saved.phone };
+      setAvailableMembers((members) => [addedMember, ...members]);
+      setSelectedMembers((members) => [addedMember, ...members]);
       setIsModalOpen(false);
     } catch (err) {
-      console.info('Backend API skipped, adding member locally:', err.message);
-      const localMember = {
-        id: `member-${Date.now()}`,
-        name: memberPayload.name,
-        email: memberPayload.email,
-        phone: memberPayload.phone,
-      };
-      setAvailableMembers([localMember, ...availableMembers]);
-      setSelectedMembers([localMember, ...selectedMembers]);
-      setIsModalOpen(false);
+      setModalError(err.message || 'Could not save this team member. Please try again.');
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(null);
-    setSuccessMessage(null);
 
     if (alreadyRegistered) {
       setErrorMessage('You have already registered for this competition.');
@@ -205,39 +174,24 @@ function CompetitionRegisterPage() {
       await registerCompetitionApi(payload);
       navigate(`/registration-success/${competitionId}`, { state: { competition } });
     } catch (err) {
-      if (
-        err.message &&
-        (err.message.includes('already registered') ||
-          err.message.includes('log in') ||
-          err.message.includes('expired'))
-      ) {
-        setErrorMessage(err.message);
-      } else {
-        console.info('Simulated submission (backend offline/mock):', payload);
-        navigate(`/registration-success/${competitionId}`, { state: { competition } });
-      }
+      setErrorMessage(err.message || 'Registration failed. Please try again.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const competitionName = competition?.event_name || competition?.name || competition?.competetion || 'COMPETITION NAME';
-  const moduleName = competition?.moduleName || competition?.module?.module || competition?.module || 'MODULE';
+  const competitionName = competition?.event_name || competition?.name || competition?.competetion || '';
+  const moduleName = competition?.moduleName || competition?.module?.module || competition?.module || '';
   const eventDesc =
-    competition?.event_desc ||
-    competition?.desc ||
-    'Bring your best act to the Alcheringa stage and go head to head with teams from 500+ colleges across India.';
-  const soloOrGroup = competition?.solo_or_group || 'Group';
-  const eventMode = competition?.event_mode || 'On Ground';
-  const minMembers = competition?.min_members || 5;
-  const maxMembers = competition?.max_members || 10;
+    competition?.event_desc || competition?.desc || 'Competition details are not available.';
+  const soloOrGroup = competition?.solo_or_group || 'Not specified';
+  const eventMode = competition?.event_mode || 'Not specified';
+  const minMembers = competition?.min_members ?? 0;
+  const maxMembers = competition?.max_members ?? 0;
 
-  const currentTeamDisplay =
-    selectedMembers.length > 0
-      ? selectedMembers.map((m) => m.name).join(', ')
-      : profileTeamName
-      ? profileTeamName
-      : 'Lorem Ipsum, Lorem Ipsum';
+  const currentTeamDisplay = selectedMembers.length > 0
+    ? selectedMembers.map((member) => member.name).join(', ')
+    : (profileTeamName || 'Team information unavailable');
 
   /* ========================================================
      REUSABLE FIELD RENDERERS (Ensures zero duplicate logic)
@@ -355,7 +309,7 @@ function CompetitionRegisterPage() {
       <div className="comp-input-with-icon">
         <input
           type="text"
-          placeholder="Lorem Ipsum"
+          placeholder="Paste a link"
           value={performanceLink}
           onChange={(e) => setPerformanceLink(e.target.value)}
           className="comp-input"
@@ -369,7 +323,7 @@ function CompetitionRegisterPage() {
     <div className="comp-field-group comp-field-description">
       <label className="comp-field-label">Description</label>
       <textarea
-        placeholder="Lorem Ipsum"
+        placeholder="Add a description"
         rows={4}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -448,6 +402,12 @@ function CompetitionRegisterPage() {
             <Loader2 className="comp-register-spin" size={40} />
             <p>Loading competition details...</p>
           </div>
+        ) : !competition ? (
+          <div className="comp-register-loading-box" role="alert">
+            <AlertCircle size={32} />
+            <p>{errorMessage || 'This competition could not be loaded from the backend.'}</p>
+            <Link to="/modules" className="comp-register-back-link">Back to Modules</Link>
+          </div>
         ) : (
           <div
             className="comp-register-card"
@@ -465,7 +425,7 @@ function CompetitionRegisterPage() {
               className="comp-register-banner"
               style={{
                 backgroundImage: `url(${
-                  competition?.image ? getMediaUrl(competition.image) : process.env.PUBLIC_URL + defaultBannerImage
+                  competition?.image ? getMediaUrl(competition.image) : undefined
                 })`,
               }}
             >
@@ -479,12 +439,6 @@ function CompetitionRegisterPage() {
             </div>
 
             {/* Success and Error Alerts */}
-            {successMessage && (
-              <div className="comp-register-alert comp-register-alert-success">
-                <Check size={20} className="comp-alert-icon" />
-                <span>{successMessage}</span>
-              </div>
-            )}
             {errorMessage && (
               <div className="comp-register-alert comp-register-alert-error">
                 <AlertCircle size={20} className="comp-alert-icon" />
@@ -554,7 +508,7 @@ function CompetitionRegisterPage() {
                 <label className="comp-modal-label">Name of New Member</label>
                 <input
                   type="text"
-                  placeholder="Lorem Ipsum"
+                  placeholder="Enter member name"
                   value={newMemberName}
                   onChange={(e) => setNewMemberName(e.target.value)}
                   className="comp-modal-input"
@@ -566,7 +520,7 @@ function CompetitionRegisterPage() {
                 <label className="comp-modal-label">Email</label>
                 <input
                   type="email"
-                  placeholder="loremipsum@gmail.com"
+                  placeholder="Enter email"
                   value={newMemberEmail}
                   onChange={(e) => setNewMemberEmail(e.target.value)}
                   className="comp-modal-input"
@@ -579,7 +533,7 @@ function CompetitionRegisterPage() {
                   <span className="comp-modal-country-code">+91</span>
                   <input
                     type="tel"
-                    placeholder="9111000111"
+                    placeholder="10-digit phone number"
                     value={newMemberPhone}
                     onChange={(e) => setNewMemberPhone(e.target.value)}
                     className="comp-modal-input comp-modal-phone-input"

@@ -4,31 +4,9 @@ import { ChevronRight } from 'lucide-react';
 import { getMediaUrl } from '../utils/api';
 import './CompetitionCard.css';
 
-const defaultImage = '/assets/competetion_img.png';
-
-const getDefaultDesc = (title) => {
-  const t = (title || '').toUpperCase();
-  if (t.includes('STAGE') || t.includes('THEAT') || t.includes('DRAMA')) {
-    return 'Theatre that hits harder than a punchline. Stage your best act, from monologue to full ensemble.';
-  }
-  if (t.includes('DANCE') || t.includes('ABCD') || t.includes('STEP')) {
-    return 'Anybody can dance, but can you own the floor? Solo and crew rounds, all styles welcome.';
-  }
-  if (t.includes('MUSIC') || t.includes('VOICE') || t.includes('ROCK')) {
-    return 'From acoustic harmonies to thunderous rock riffs, bring your melody to life on the grand stage.';
-  }
-  if (t.includes('VOGUE') || t.includes('COUTURE') || t.includes('DRESS')) {
-    return 'High fashion meets fierce attitude. Strut the runway with sheer elegance and bespoke style.';
-  }
-  if (t.includes('ART') || t.includes('SKETCH') || t.includes('PAINT')) {
-    return 'Unleash your creativity on canvas, clay, and walls with strokes of pure imagination.';
-  }
-  return "Talent that doesn't fit in a box. Beatbox, stand-up, magic, whatever makes you you.";
-};
-
 function CompetitionCard({ competition }) {
   const rawImage = competition?.image || competition?.img || competition?.cover;
-  const initialImage = rawImage ? getMediaUrl(rawImage) : defaultImage;
+  const initialImage = rawImage ? getMediaUrl(rawImage) : '';
 
   const [imgSrc, setImgSrc] = useState(initialImage);
 
@@ -47,11 +25,11 @@ function CompetitionCard({ competition }) {
     competition.event_desc ||
     competition.desc ||
     competition.description ||
-    getDefaultDesc(title);
+    'Details coming soon.';
 
   const prizePool = competition.prize_worth
     ? `Prize Pool - ${String(competition.prize_worth).trim().startsWith('₹') ? competition.prize_worth : '₹' + competition.prize_worth}`
-    : 'Prize Pool - ₹[TBD]';
+    : 'Prize Pool details unavailable';
 
   // Generate safe unique clip-path ID for desktop
   const clipId = `card-cutout-${competitionId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
@@ -98,11 +76,7 @@ function CompetitionCard({ competition }) {
               preserveAspectRatio="xMidYMid slice"
               clipPath={`url(#${clipId})`}
               className="competition-card-image"
-              onError={() => {
-                if (imgSrc !== defaultImage) {
-                  setImgSrc(defaultImage);
-                }
-              }}
+              onError={() => setImgSrc('')}
             />
           </svg>
 
@@ -121,11 +95,7 @@ function CompetitionCard({ competition }) {
             alt=""
             className="mobile-card-bg-img"
             loading="lazy"
-            onError={() => {
-              if (imgSrc !== defaultImage) {
-                setImgSrc(defaultImage);
-              }
-            }}
+            onError={() => setImgSrc('')}
           />
           <div className="mobile-card-gradient-overlay" />
         </div>
