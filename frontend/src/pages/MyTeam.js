@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./MyTeam.css";
+import defaultPhoto from "../asset/Ppic.png";
 import { getAuthToken, getMediaUrl } from "../utils/api";
+
 const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 const MyTeam = () => {
   const [members, setMembers] = useState([]);
@@ -287,7 +289,10 @@ const MyTeam = () => {
           members.map((member) => (
             <div className="member-card" key={member.id}>
               <div className="member-image">
-                {member.img ? <img src={getMediaUrl(member.img)} alt={member.name} /> : null}
+                <img
+                  src={member.img ? getMediaUrl(member.img) : defaultPhoto}
+                  alt={member.name}
+                />
               </div>
 
               <h4>{member.name}</h4>
