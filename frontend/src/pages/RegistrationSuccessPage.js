@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../sections/Footer';
-import { fetchCompetitionDetailApi } from '../utils/api';
+import { fetchCompetitionDetailApi, getMediaUrl } from '../utils/api';
 import { findCompetitionById } from '../utils/mockCompetitions';
 import './RegistrationSuccessPage.css';
 
 const bgImage = '/assets/competition_Register_bg.jpg';
-const bannerImage = '/assets/form_banner_bg.jpg';
+const defaultBannerImage = '/assets/form_banner_bg.jpg';
 const textureImage = '/assets/texture.png';
 const successLogo = '/assets/successful_logo.svg';
 
@@ -77,7 +77,11 @@ function RegistrationSuccessPage() {
           {/* Top Banner */}
           <div
             className="comp-success-banner"
-            style={{ backgroundImage: `url(${process.env.PUBLIC_URL + bannerImage})` }}
+            style={{
+              backgroundImage: `url(${
+                competition?.image ? getMediaUrl(competition.image) : process.env.PUBLIC_URL + defaultBannerImage
+              })`,
+            }}
           >
             <div className="comp-banner-overlay">
               <div className="comp-banner-content">

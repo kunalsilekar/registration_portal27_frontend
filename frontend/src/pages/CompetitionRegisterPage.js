@@ -3,12 +3,20 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { MapPin, Users, Link2, ChevronDown, Plus, Check, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../sections/Footer';
-import { fetchCompetitionDetailApi, registerCompetitionApi } from '../utils/api';
+import {
+  fetchCompetitionDetailApi,
+  registerCompetitionApi,
+  fetchProfileApi,
+  fetchMyTeamMembersApi,
+  addTeamMemberApi,
+  fetchMyRegisteredCompetitionsApi,
+  getMediaUrl,
+} from '../utils/api';
 import { findCompetitionById } from '../utils/mockCompetitions';
 import './CompetitionRegisterPage.css';
 
 const bgImage = '/assets/competition_Register_bg.jpg';
-const bannerImage = '/assets/form_banner_bg.jpg';
+const defaultBannerImage = '/assets/form_banner_bg.jpg';
 const textureImage = '/assets/texture.png';
 
 const INITIAL_TEAM_MEMBERS = [
@@ -24,6 +32,8 @@ function CompetitionRegisterPage() {
 
   const [competition, setCompetition] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profileTeamName, setProfileTeamName] = useState('');
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [performanceLink, setPerformanceLink] = useState('');
   const [description, setDescription] = useState('');
   const [availableMembers, setAvailableMembers] = useState(INITIAL_TEAM_MEMBERS);
@@ -44,25 +54,62 @@ function CompetitionRegisterPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    async function loadCompetition() {
+    async function loadData() {
       setLoading(true);
+
+      // 1. Fetch competition details
       try {
         const data = await fetchCompetitionDetailApi(competitionId);
         if (data && (data.event_name || data.name)) {
           setCompetition(data);
-          setLoading(false);
-          return;
+        } else {
+          setCompetition(findCompetitionById(competitionId));
         }
       } catch (err) {
         console.info('Backend unreachable, using mock competition details:', err.message);
+        setCompetition(findCompetitionById(competitionId));
       }
 
-      const mock = findCompetitionById(competitionId);
-      setCompetition(mock);
+      // 2. Fetch logged-in user profile (for team_name)
+      try {
+        const profile = await fetchProfileApi();
+        if (profile && profile.team_name) {
+          setProfileTeamName(profile.team_name);
+        }
+      } catch (err) {
+        console.info('Profile API skipped (not logged in or offline)');
+      }
+
+      // 3. Fetch user's saved team members from /api/Participant/
+      try {
+        const members = await fetchMyTeamMembersApi();
+        if (Array.isArray(members) && members.length > 0) {
+          setAvailableMembers(members);
+        }
+      } catch (err) {
+        console.info('Participant API skipped (using fallback demo members)');
+      }
+
+      // 4. Check if user already registered for this competition
+      try {
+        const registeredList = await fetchMyRegisteredCompetitionsApi();
+        if (Array.isArray(registeredList)) {
+          const isRegistered = registeredList.some(
+            (reg) =>
+              String(reg.event?.id || reg.event) === String(competitionId)
+          );
+          if (isRegistered) {
+            setAlreadyRegistered(true);
+          }
+        }
+      } catch (err) {
+        // Ignore check if offline
+      }
+
       setLoading(false);
     }
 
-    loadCompetition();
+    loadData();
   }, [competitionId]);
 
   const toggleMember = (member) => {
@@ -86,28 +133,56 @@ function CompetitionRegisterPage() {
     setModalError('');
   };
 
-  const handleDoneModal = (e) => {
+  const handleDoneModal = async (e) => {
     e.preventDefault();
     if (!newMemberName.trim()) {
       setModalError('Please enter member name.');
       return;
     }
-    const newMember = {
-      id: `member-${Date.now()}`,
+    const memberPayload = {
       name: newMemberName.trim(),
       email: newMemberEmail.trim() || `${newMemberName.trim().toLowerCase().replace(/\s+/g, '')}@gmail.com`,
-      phone: newMemberPhone.trim() || '9111000111',
+      phone: newMemberPhone.trim() || '+919111000111',
+      gender: 'M',
+      collegename: 'Alcheringa Participant College',
+      city: 'Guwahati',
+      state: 'Assam',
     };
 
-    setAvailableMembers([newMember, ...availableMembers]);
-    setSelectedMembers([newMember, ...selectedMembers]);
-    setIsModalOpen(false);
+    try {
+      const saved = await addTeamMemberApi(memberPayload);
+      const newMember = {
+        id: saved?.id || `member-${Date.now()}`,
+        name: saved?.name || memberPayload.name,
+        email: saved?.email || memberPayload.email,
+        phone: saved?.phone || memberPayload.phone,
+      };
+      setAvailableMembers([newMember, ...availableMembers]);
+      setSelectedMembers([newMember, ...selectedMembers]);
+      setIsModalOpen(false);
+    } catch (err) {
+      console.info('Backend API skipped, adding member locally:', err.message);
+      const localMember = {
+        id: `member-${Date.now()}`,
+        name: memberPayload.name,
+        email: memberPayload.email,
+        phone: memberPayload.phone,
+      };
+      setAvailableMembers([localMember, ...availableMembers]);
+      setSelectedMembers([localMember, ...selectedMembers]);
+      setIsModalOpen(false);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
+
+    if (alreadyRegistered) {
+      setErrorMessage('You have already registered for this competition.');
+      return;
+    }
 
     if (!guidelinesAgreed) {
       setErrorMessage('Please agree to the Competition Guidelines before registering.');
@@ -116,9 +191,12 @@ function CompetitionRegisterPage() {
 
     setSubmitting(true);
 
+    // Backend RegisterCompSerializer expects member names (matched against user.team.members)
+    const memberNames = selectedMembers.map((m) => m.name.trim());
+
     const payload = {
       competition_id: competitionId,
-      team_members: selectedMembers.map((m) => m.id),
+      team_members: memberNames,
       team_video: performanceLink,
       description: description,
     };
@@ -127,8 +205,17 @@ function CompetitionRegisterPage() {
       await registerCompetitionApi(payload);
       navigate(`/registration-success/${competitionId}`, { state: { competition } });
     } catch (err) {
-      console.info('Simulated submission (backend offline):', payload);
-      navigate(`/registration-success/${competitionId}`, { state: { competition } });
+      if (
+        err.message &&
+        (err.message.includes('already registered') ||
+          err.message.includes('log in') ||
+          err.message.includes('expired'))
+      ) {
+        setErrorMessage(err.message);
+      } else {
+        console.info('Simulated submission (backend offline/mock):', payload);
+        navigate(`/registration-success/${competitionId}`, { state: { competition } });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -148,6 +235,8 @@ function CompetitionRegisterPage() {
   const currentTeamDisplay =
     selectedMembers.length > 0
       ? selectedMembers.map((m) => m.name).join(', ')
+      : profileTeamName
+      ? profileTeamName
       : 'Lorem Ipsum, Lorem Ipsum';
 
   /* ========================================================
@@ -320,10 +409,14 @@ function CompetitionRegisterPage() {
     <div className="comp-submit-block">
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || alreadyRegistered}
         className="comp-register-btn"
       >
-        {submitting ? 'Registering...' : 'Register'}
+        {alreadyRegistered
+          ? 'Already Registered ✓'
+          : submitting
+          ? 'Registering...'
+          : 'Register'}
       </button>
     </div>
   );
@@ -370,7 +463,11 @@ function CompetitionRegisterPage() {
             {/* Top Banner */}
             <div
               className="comp-register-banner"
-              style={{ backgroundImage: `url(${process.env.PUBLIC_URL + bannerImage})` }}
+              style={{
+                backgroundImage: `url(${
+                  competition?.image ? getMediaUrl(competition.image) : process.env.PUBLIC_URL + defaultBannerImage
+                })`,
+              }}
             >
               <div className="comp-banner-overlay">
                 <div className="comp-banner-content">

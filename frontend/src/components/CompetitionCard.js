@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
+import { getMediaUrl } from '../utils/api';
 import './CompetitionCard.css';
 
 const defaultImage = '/assets/competetion_img.png';
@@ -26,8 +27,8 @@ const getDefaultDesc = (title) => {
 };
 
 function CompetitionCard({ competition }) {
-  const initialImage =
-    competition?.image || competition?.img || competition?.cover || defaultImage;
+  const rawImage = competition?.image || competition?.img || competition?.cover;
+  const initialImage = rawImage ? getMediaUrl(rawImage) : defaultImage;
 
   const [imgSrc, setImgSrc] = useState(initialImage);
 

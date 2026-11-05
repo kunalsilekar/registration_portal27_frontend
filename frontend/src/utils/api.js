@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
 
 // Configurable login route / URL (can be customized via REACT_APP_LOGIN_URL)
 export const LOGIN_URL = process.env.REACT_APP_LOGIN_URL || '/login';
@@ -41,6 +41,21 @@ export const clearAuthData = () => {
   localStorage.removeItem('user');
 };
 
+/**
+ * Resolves media URLs returned by the backend.
+ * Prepend API_BASE_URL for relative /media/ paths.
+ */
+export const getMediaUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  if (url.startsWith('/assets/')) return url;
+  if (url.startsWith('/media/')) return `${API_BASE_URL}${url}`;
+  return `${API_BASE_URL}/media/${url.replace(/^\/+/, '')}`;
+};
+
+/* ========================================================
+   QUERIES APIS
+   ======================================================== */
 export const submitUserQueryApi = async (question) => {
   const token = getAuthToken();
   if (!token) {
@@ -91,8 +106,15 @@ export const getMyQueriesApi = async () => {
   return await response.json();
 };
 
+/* ========================================================
+   COMPETITIONS & MODULES APIS
+   ======================================================== */
+/**
+ * Fetches all competitions or competitions filtered by module slug.
+ * Endpoint: GET /api/competitions/?module=<slug>
+ */
 export const fetchCompetitionsApi = async (moduleQuery = null) => {
-  const normalized = moduleQuery ? moduleQuery.replace(/-/g, '').toLowerCase() : '';
+  const normalized = moduleQuery ? moduleQuery.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() : '';
   const url = normalized
     ? `${API_BASE_URL}/api/competitions/?module=${encodeURIComponent(normalized)}`
     : `${API_BASE_URL}/api/competitions/`;
@@ -104,6 +126,10 @@ export const fetchCompetitionsApi = async (moduleQuery = null) => {
   return await response.json();
 };
 
+/**
+ * Fetches details for a single competition by UUID.
+ * Endpoint: GET /api/competitions/<uuid>/
+ */
 export const fetchCompetitionDetailApi = async (competitionId) => {
   const response = await fetch(`${API_BASE_URL}/api/competitions/${competitionId}/`);
   if (!response.ok) {
@@ -112,15 +138,152 @@ export const fetchCompetitionDetailApi = async (competitionId) => {
   return await response.json();
 };
 
+/* ========================================================
+   USER PROFILE & TEAM MANAGEMENT APIS
+   ======================================================== */
+/**
+ * Fetches the logged-in user profile, including team_name.
+ * Endpoint: GET /api/profile/
+ */
+export const fetchProfileApi = async () => {
+  const token = getAuthToken();
+  if (!token) return null;
 
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/profile/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        clearAuthData();
+      }
+      return null;
+    }
+    return await response.json();
+  } catch (err) {
+    console.info('Could not reach profile endpoint:', err.message);
+    return null;
+  }
+};
+
+/**
+ * Fetches the logged-in user's saved team members from backend.
+ * Endpoint: GET /api/Participant/
+ */
+export const fetchMyTeamMembersApi = async () => {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Participant/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        clearAuthData();
+      }
+      return [];
+    }
+    const data = await response.json();
+    return Array.isArray(data) ? data : (data.results || []);
+  } catch (err) {
+    console.info('Could not reach Participant endpoint:', err.message);
+    return [];
+  }
+};
+
+/**
+ * Adds a new team member to the user's team in the database.
+ * Endpoint: POST /api/Participant/
+ */
+export const addTeamMemberApi = async (memberData) => {
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('Please log in to save team members.');
+  }
+
+  const payload = {
+    name: memberData.name,
+    email: memberData.email,
+    phone: memberData.phone,
+    gender: memberData.gender || 'M',
+    collegename: memberData.collegename || 'Alcheringa Participant College',
+    city: memberData.city || 'Guwahati',
+    state: memberData.state || 'Assam',
+  };
+
+  const response = await fetch(`${API_BASE_URL}/api/Participant/`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const msg =
+      data.error ||
+      data.detail ||
+      (typeof data === 'object' && Object.values(data).flat().join(', ')) ||
+      'Failed to add team member.';
+    throw new Error(msg);
+  }
+  return data;
+};
+
+/**
+ * Fetches competitions the logged-in user has already registered for.
+ * Endpoint: GET /api/my-registered-competitions/
+ */
+export const fetchMyRegisteredCompetitionsApi = async () => {
+  const token = getAuthToken();
+  if (!token) return [];
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/my-registered-competitions/`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) return [];
+    const data = await response.json();
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    return [];
+  }
+};
+
+/**
+ * Registers a team for a competition.
+ * Endpoint: POST /api/register-competition/
+ *
+ * Payload:
+ * {
+ *   competition_id: string,
+ *   team_members: string[], // list of member names matched against user.team.members
+ *   team_video: string,     // performance URL
+ *   description: string     // video description
+ * }
+ */
 export const registerCompetitionApi = async (payload) => {
   const token = getAuthToken();
+  if (!token) {
+    throw new Error('Please log in to register for this competition.');
+  }
+
   const headers = {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`,
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
   const response = await fetch(`${API_BASE_URL}/api/register-competition/`, {
     method: 'POST',
@@ -130,7 +293,16 @@ export const registerCompetitionApi = async (payload) => {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.error || data.detail || 'Failed to submit registration.');
+    if (response.status === 401) {
+      clearAuthData();
+      throw new Error('Your session has expired. Please log in again.');
+    }
+    const errorMsg =
+      data.error ||
+      data.detail ||
+      (typeof data === 'object' && Object.values(data).flat().join(', ')) ||
+      'Failed to submit registration.';
+    throw new Error(errorMsg);
   }
   return data;
 };
