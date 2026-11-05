@@ -293,7 +293,7 @@ export default function Module() {
                                             <li key={competition.id || competition.name}>{competition.name}</li>
                                         ))}
                                     </ul>
-                                    <a className="explore-btn" href={'/modules/' + (module.queryName || slugify(module.category))}>
+                                    <Link className="explore-btn" to={'/modules/' + (module.queryName || slugify(module.category))}>
                                         <span className="eb-icon" aria-hidden="true">
                                             <ChevronIcon />
                                         </span>

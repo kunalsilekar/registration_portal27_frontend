@@ -6,6 +6,9 @@ import CommonBackground from "./sections/Common_Background";
 import MyProfile from "./pages/MyProfile";
 import Errorpage from "./pages/Errorpage";
 import DelayedFallback from "./components/DelayedFallback";
+import ModulesPage from "./pages/ModulesPage";
+import CompetitionRegisterPage from "./pages/CompetitionRegisterPage";
+import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -16,12 +19,6 @@ const SetNewPasswordPage = lazy(() => import("./pages/SetNewPasswordPage"));
 const PasswordResetCompletePage = lazy(
   () => import("./pages/PasswordResetCompletePage"),
 );
-import React from 'react';
-import LandingPage from './pages/LandingPage';
-import ModulesPage from './pages/ModulesPage';
-import CompetitionRegisterPage from './pages/CompetitionRegisterPage';
-import RegistrationSuccessPage from './pages/RegistrationSuccessPage';
-import { Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
