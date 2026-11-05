@@ -146,6 +146,7 @@
     width: var(--card-w);
     height: var(--card-h);
     overflow: hidden;
+    background-color: var(--green);
     background-size: cover;
     background-position: center;
     cursor: pointer;
@@ -347,4 +348,13 @@
     .title { padding-top: 72px; font-size: 28px; }
     .title > span { font-size: 56px; }
     .module-section { gap: 1.25rem; }
+}
+
+.module-data-error {
+    align-self: center;
+    margin: 0 auto;
+    padding: 1rem;
+    color: var(--green);
+    font-family: 'Gotham', sans-serif;
+    text-align: center;
 }
