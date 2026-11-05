@@ -127,7 +127,7 @@ const Registrations = () => {
       <div className="explore-more-wrapper">
         <button
           className="explore-more-btn"
-          onClick={() => navigate("/#modules")}
+          onClick={() => navigate("/modules")}
         >
           Explore More
         </button>

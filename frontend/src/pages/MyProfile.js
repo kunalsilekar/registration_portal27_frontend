@@ -610,18 +610,20 @@ const Profile = () => {
       <div className="profile-content">
         {/* LEFT PROFILE SECTION */}
         <div className="pi">
-          <img
-            src={
-              imagePreview ||
-              (details.img ? details.img : require("../asset/Ppic.png"))
-            }
-            alt="Profile"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = require("../asset/Ppic.png");
-            }}
-          />
-
+          {imagePreview ? (
+            <img src={imagePreview} alt="Profile" />
+          ) : details.img ? (
+            <img
+              src={details.img}
+              alt="Profile"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = require("../asset/Ppic.png");
+              }}
+            />
+          ) : !isLoading && error ? (
+            <img src={require("../asset/Ppic.png")} alt="Default Profile" />
+          ) : null}
           <div className="profile-info">
             <h2>{details.name || "Your Name"}</h2>
             <p className="email-id">{details.email || "Your Email"}</p>
@@ -633,7 +635,6 @@ const Profile = () => {
         <div
           className={`right-section ${activeTab === "team" ? "team-view" : ""}`}
         >
-          {/* TABS */}
           {/* TABS */}
           <div className="tabs">
             <div

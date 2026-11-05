@@ -354,6 +354,113 @@
   font-size: 14px;
 }
 
+.member-modal-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.add-another-member-btn {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: #e8d5b9;
+  color: #003d36;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.add-another-member-btn:hover {
+  background: #d9c3a3;
+}
+
+.member-form-section {
+  padding: 12px 0;
+  border-bottom: 1px solid #d6c9b4;
+}
+
+.member-form-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.member-form-section-heading h3 {
+  margin: 0;
+  color: #003d36;
+  font-size: 15px;
+}
+
+.remove-member-btn {
+  border: none;
+  background: transparent;
+  color: #a00d0d;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.member-modal {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.add-another-member-btn:disabled,
+.remove-member-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+/* Modal heading */
+.member-modal-heading {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.member-modal-heading h2 {
+  text-align: center;
+  margin: 0;
+  width: 100%;
+}
+
+.add-another-member-btn {
+  position: absolute;
+  right: 0;
+  top: calc(50% + 7px);
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  font-size: 25px;
+}
+
+/* Form action buttons */
+.member-form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.member-form-actions button {
+  min-width: 110px;
+  min-height: 42px;
+  font-size: 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  padding: 6px 22px 10px;
+}
 @keyframes team-spin {
   to {
     transform: rotate(360deg);
