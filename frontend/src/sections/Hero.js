@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { animate } from 'framer-motion';
-import Navbar from '../components/Navbar';
 import About from './About/About';
 import '../App.css';
+import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from '../utils/api';
 
 function AnimatedStatNumber({ value, suffix = '', started }) {
     const [display, setDisplay] = useState('0');
@@ -54,6 +55,7 @@ function Hero() {
     const heroCopyRef = useRef(null);
     const statsRef = useRef(null);
     const [statsStarted, setStatsStarted] = useState(false);
+    const navigate = useNavigate()
 
     const spring = {
         type: 'spring',
@@ -112,6 +114,24 @@ function Hero() {
             .filter((i) => i >= 0 && i < titleText.length)
             .forEach((i) => animateLetter(i, baseAnimation));
     };
+
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        () => Boolean(getAuthToken())
+    );
+
+    useEffect(() => {
+        const syncAuthState = () => {
+            setIsAuthenticated(Boolean(getAuthToken()));
+        };
+
+        window.addEventListener('storage', syncAuthState);
+        window.addEventListener('alcher-auth-changed', syncAuthState);
+
+        return () => {
+            window.removeEventListener('storage', syncAuthState);
+            window.removeEventListener('alcher-auth-changed', syncAuthState);
+        };
+    }, []);
 
     useEffect(() => {
         const stats = statsRef.current;
@@ -184,9 +204,15 @@ function Hero() {
                     <p className="hero-tagline">
                         Northeast India’s biggest cultural fest is back. Bring your crew, bring your craft.
                     </p>
-                    <button type="button" className="hero-register-button">
-                        <span className="hero-register-label">REGISTER</span>
-                    </button>
+                    {!isAuthenticated && (
+                        <button
+                            type="button"
+                            className="hero-register-button"
+                            onClick={() => navigate('/signup')}
+                        >
+                            <span className="hero-register-label">REGISTER</span>
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -211,12 +237,6 @@ function Hero() {
                     <AnimatedStatNumber value={3000} suffix="+" started={statsStarted} />
                     <span className="hero-stat-label">PARTICIPANTS</span>
                 </div>
-            </div>
-
-
-
-            <div className="navbar-animation-wrapper">
-                <Navbar />
             </div>
 
             <About />

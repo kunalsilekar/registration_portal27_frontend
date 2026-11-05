@@ -1,0 +1,84 @@
+.error-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #fff;
+  font-family: "Gotham", "Montserrat", Arial, sans-serif;
+}
+
+/* Darkens the left side so text stays readable on any part of the photo. */
+.error-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.55), transparent 70%);
+  pointer-events: none;
+}
+
+.error-text {
+  position: absolute;
+  left: 10vw;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 45ch;
+}
+
+.error-title {
+  margin: 0;
+  font-family: "Ellak", sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 2px;
+}
+
+.error-message {
+  margin: 0.5rem 0 1.5rem;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+}
+
+.error-home-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #fff;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 1px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.error-home-btn:hover,
+.error-home-btn:focus-visible {
+  background-color: #fff;
+  color: #111;
+}
+
+.error-rhino {
+  position: absolute;
+  right: 9vw;
+  bottom: 10%;
+  height: 85vh;
+  width: auto;
+  max-width: 45vw;
+  object-fit: contain;
+  object-position: right bottom;
+  transform: scaleX(-1);
+}
+
+@media (max-width: 1000px) {
+  .error-text {
+    left: 6vw;
+    right: 6vw;
+    top: 12%;
+    transform: none;
+    max-width: none;
+  }
+
+  .error-rhino {
+    right: 0;
+    height: 40vh;
+    max-width: 70vw;
+  }
+}

@@ -1,0 +1,255 @@
+/* RegistrationPage.css - Styling for the 2-step registration flow.
+   Layout, fonts, background, and base card styles are inherited from LoginPage.css. */
+
+.reg-form {
+  max-width: 380px;
+}
+
+/* Allow the registration card to dynamically accommodate the fields without overflow */
+.sign-in-layout .sign-in-card {
+  height: auto;
+  min-height: 618px;
+  align-items: stretch;
+}
+
+.sign-in-layout .sign-in-promo {
+  height: auto;
+  min-height: 570px;
+}
+
+/* Ensure button-based back navigation (Step 2) matches link-based back navigation (Step 1) */
+button.sign-in-back {
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+/* Headline fit for "CREATE NEW ACCOUNT" */
+.reg-form .sign-in-heading {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.reg-form .sign-in-heading h2 {
+  font-size: clamp(26px, 2.3vw, 32px);
+  white-space: nowrap;
+}
+
+/* Spacing and border radius for registration inputs */
+.reg-form .sign-in-field {
+  gap: 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.reg-form .sign-in-field input {
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Phone input group with country dial code select */
+.reg-phone-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.reg-country-select {
+  flex: 0 0 68px;
+  height: 35px;
+  padding: 0 4px;
+  border: 1px solid #cfbd9d;
+  border-radius: 8px;
+  background: rgb(246 235 218 / 65%);
+  color: #0f3027;
+  font-family: 'Gotham', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reg-phone-group input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Border color #125650CC on select / focus for input boxes */
+.reg-form .sign-in-field input:focus,
+.reg-form .sign-in-field select:focus,
+.reg-country-select:focus,
+.reg-phone-group input:focus {
+  outline: none;
+  border-color: #125650CC !important;
+  box-shadow: 0 0 0 1px #125650CC;
+}
+
+/* Invalid email state matching mobile preview */
+.reg-form input.is-invalid {
+  border-color: #c95245 !important;
+  background-color: rgba(201, 82, 69, 0.08) !important;
+  color: #c95245;
+}
+
+.reg-form input.is-invalid::placeholder {
+  color: #c95245;
+}
+
+.reg-inline-error {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #c95245;
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.3;
+}
+
+/* Field helper and mandatory notices */
+.reg-field-hint {
+  display: block;
+  text-align: right;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #7b7264;
+}
+
+.reg-mandatory-note {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #7b7264;
+  font-style: italic;
+}
+
+/* Full-width action button */
+.reg-submit-btn {
+  width: 100%;
+  height: 38px;
+  margin-top: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  background: #053430;
+  color: #f6e6cf;
+}
+
+/* 3-step progress bar indicator */
+.reg-progress {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.reg-progress span {
+  flex: 1;
+  height: 3px;
+  border-radius: 4px;
+  background: #e1d2bc;
+  transition: background-color 0.2s ease;
+}
+
+.reg-progress span.is-active {
+  background: #967954;
+}
+
+/* ==========================================================================
+   Mobile / Phone Design (Screens <= 768px)
+   Strictly matched with mobile design preview
+   ========================================================================== */
+@media (max-width: 768px) {
+  .sign-in-layout .sign-in-page {
+    padding: 72px 18px 36px;
+    align-items: center;
+  }
+
+  .sign-in-layout .sign-in-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: min(402px, 100%);
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .sign-in-layout .sign-in-promo {
+    height: clamp(190px, 53vw, 220px);
+    min-height: 0;
+    border-radius: 16px;
+  }
+
+  .reg-form {
+    max-width: none;
+    padding: 24px 20px 24px;
+    border-radius: 20px;
+    background: #f4e7d5;
+    box-shadow: 0 5px 18px rgb(0 0 0 / 12%);
+  }
+
+  .reg-form .sign-in-heading {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .reg-form .sign-in-heading h2 {
+    font-size: 26px;
+    white-space: normal;
+  }
+
+  .reg-form .sign-in-heading p {
+    font-size: 12px;
+  }
+
+  .reg-form .sign-in-field {
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .reg-form .sign-in-field input {
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 0 14px;
+  }
+
+  .reg-phone-group .reg-country-select {
+    flex: 0 0 74px;
+    height: 48px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  .reg-phone-group input {
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  .reg-field-hint {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+
+  .reg-mandatory-note {
+    margin-top: 8px;
+    font-size: 11px;
+  }
+
+  .reg-submit-btn {
+    height: 48px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-top: 16px;
+  }
+
+  .reg-progress {
+    margin-top: 18px;
+  }
+}

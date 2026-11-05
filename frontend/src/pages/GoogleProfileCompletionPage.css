@@ -1,0 +1,80 @@
+.google-profile-completion-layout .sign-in-card {
+  height: auto;
+  min-height: 618px;
+  align-items: stretch;
+}
+
+.google-profile-form {
+  max-width: 366px;
+  align-self: center;
+}
+
+.google-profile-form .sign-in-heading {
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.google-profile-form .sign-in-heading h2 {
+  font-size: clamp(25px, 2vw, 32px);
+}
+
+.google-profile-form .sign-in-field {
+  gap: 5px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.google-profile-form .sign-in-field input {
+  height: 35px;
+}
+
+.google-profile-form .sign-in-field input[readonly] {
+  opacity: 0.78;
+}
+
+.google-profile-form .sign-in-field small {
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.google-profile-form .reg-phone-group input {
+  height: 35px;
+}
+
+.google-profile-form .reg-mandatory-note {
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .google-profile-completion-layout .sign-in-page {
+    padding-top: 24px;
+  }
+
+  .google-profile-form {
+    width: 100%;
+    max-width: none;
+    padding: 22px 20px;
+    border-radius: 18px;
+    background: #f4e7d5;
+    box-shadow: 0 5px 18px rgb(0 0 0 / 12%);
+  }
+
+  .google-profile-form .sign-in-heading {
+    margin-bottom: 16px;
+  }
+
+  .google-profile-form .sign-in-field {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .google-profile-form .sign-in-field input,
+  .google-profile-form .reg-phone-group input {
+    height: 44px;
+  }
+
+  .google-profile-form .reg-country-select {
+    height: 44px;
+  }
+}

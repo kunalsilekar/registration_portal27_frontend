@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { getApiMediaUrl, getExploreModulesApi } from '../../utils/api';
 
 gsap.registerPlugin(ScrollTrigger);
 // stop the pin from re-calculating every time the mobile URL bar shows/hides
@@ -10,22 +11,6 @@ ScrollTrigger.config({ ignoreMobileResize: true });
 
 // hovered / tapped card size relative to its resting size (305x390 -> 345x445 in the design)
 const ACTIVE_SCALE = { w: 345 / 305, h: 445 / 390 };
-
-const img = (name) => `${process.env.PUBLIC_URL}/assets/modules/${name}`;
-
-const moduleCards = [
-    { category: 'Dance', image: img('dance.jpg'), competitions: ['Electric Heels', 'Step Up', 'Navras', 'SUTUCD', 'Dancing Duo'] },
-    { category: 'Music', image: img('music.jpg'), competitions: ['Voice of Alcheringa', 'Unplugged'] },
-    { category: 'Drama', image: img('drama.jpg'), competitions: ['Theatrix', 'Halla Bol', 'Monodrama'] },
-    { category: 'Class Apart', image: img('vogue.jpg'), competitions: ['Rap Battle', 'BeatBash', 'Rock-o-phonix', 'Mr & Ms Alcheringa', 'Crossfade', 'Alcher Con'] },
-    { category: 'Vogue Nation', image: img('vogue.jpg'), competitions: ['Haute Couture', 'State of Dress', 'Glamour Nova'] },
-    { category: 'Art Talkies', image: img('art.jpg'), competitions: ['Live Sketching', 'Clay Modelling', 'Who is it?', 'Ink the tee', 'Face Art', 'Rangoli', 'Graffiti'] },
-    { category: 'Literary', image: img('vogue.jpg'), competitions: ['Comic Clash', 'Parliamentary Debate', 'Poetry Slam-Hindi', 'Poetry Slam-English', 'Zephyr', 'Mehfil-E-Alcheringa'] },
-    { category: 'Sports', image: img('vogue.jpg'), competitions: ['5 on 5 Football', 'Arm Wrestling', 'Gully Cricket', '3 on 3 Basketball', '3 on 3 Volleyball'] },
-    { category: 'Digital', image: img('vogue.jpg'), competitions: ['Headline Hustle', 'Alcher Diva/Hunk', 'Doodle Pad', 'Custom Brush'] },
-    { category: 'LCA', image: img('vogue.jpg'), competitions: ['AlcherFrame', 'Just reel it', 'Vlog Verse', "Director's Cut", 'Snapthrillz'] },
-    { category: 'Quiz', image: img('vogue.jpg'), competitions: ['General Quiz', 'Business Quiz', 'Comic Quiz'] },
-];
 
 // fixed tilts so the stacked deck looks hand-placed (matches the prototype frame)
 const STACK_TILTS = [-12, 8, -5, 11, -9, 4, -7, 10];
@@ -48,12 +33,57 @@ export default function Module() {
     const hoverTls = useRef([]);      // one reversible timeline per card
     const openIndex = useRef(null);
     const [edge, setEdge] = useState({ start: true, end: false });
+    const [moduleCards, setModuleCards] = useState([]);
+    const [modulesLoaded, setModulesLoaded] = useState(false);
+    const [moduleLoadError, setModuleLoadError] = useState('');
 
     const canHover = () => window.matchMedia('(hover: hover)').matches;
     const isReady = () => sectionRef.current?.classList.contains('is-ready');
 
+    useEffect(() => {
+        let cancelled = false;
+
+        getExploreModulesApi()
+            .then(({ modules, allcomp }) => {
+                if (cancelled) return;
+
+                const competitionsByModule = new Map();
+                allcomp.forEach((competition) => {
+                    const moduleId = competition.module?.id;
+                    if (!moduleId) return;
+                    const key = String(moduleId);
+                    if (!competitionsByModule.has(key)) competitionsByModule.set(key, []);
+                    if (competition.event_name) competitionsByModule.get(key).push({
+                        id: competition.id,
+                        name: competition.event_name,
+                    });
+                });
+
+                const cards = modules.map((backendModule, index) => ({
+                    id: backendModule.id || backendModule.module_query_name_without_spaces_all_small || 'module-' + index,
+                    category: backendModule.module || 'Module',
+                    queryName: backendModule.module_query_name_without_spaces_all_small || '',
+                    image: getApiMediaUrl(backendModule.module_icon),
+                    activeImage: getApiMediaUrl(backendModule.module_icon_active),
+                    competitions: competitionsByModule.get(String(backendModule.id)) || [],
+                }));
+                setModuleCards(cards);
+                setModuleLoadError('');
+            })
+            .catch((error) => {
+                if (!cancelled) setModuleLoadError(error.message || 'Could not load modules.');
+            })
+            .finally(() => {
+                if (!cancelled) setModulesLoaded(true);
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
     /* ---------- hover / open / close ---------- */
     useEffect(() => {
+        if (!modulesLoaded) return undefined;
         const section = sectionRef.current;
 
         const ctx = gsap.context(() => {
@@ -78,12 +108,14 @@ export default function Module() {
         }, section);
 
         return () => ctx.revert();
-    }, []);
+    }, [modulesLoaded, moduleCards]);
 
     const openCard = (i, el) => {
         if (!isReady() || openIndex.current === i) return;
         if (openIndex.current !== null) closeCard(openIndex.current);
         const tl = hoverTls.current[i];
+        const module = moduleCards[i];
+        if (module?.activeImage && el) el.style.backgroundImage = 'url("' + module.activeImage + '")';
         if (!tl) return;
         if (tl.progress() === 0) {
             // drop the old inline px sizes (they go stale after a resize / rotate),
@@ -98,7 +130,9 @@ export default function Module() {
 
     const closeCard = (i) => {
         const tl = hoverTls.current[i];
+        const module = moduleCards[i];
         const el = cardsRef.current?.children[i];
+        if (el) el.style.backgroundImage = module?.image ? 'url("' + module.image + '")' : '';
         if (!tl) return;
         el?.classList.remove('is-open');
         tl.timeScale(1.6).reverse(); // reversing = exact mirror of the open animation
@@ -107,6 +141,7 @@ export default function Module() {
 
     /* ---------- scroll animation (pinned + scrubbed) ---------- */
     useEffect(() => {
+        if (!modulesLoaded) return undefined;
         const section = sectionRef.current;
         const mm = gsap.matchMedia();
 
@@ -176,7 +211,7 @@ export default function Module() {
             cancelled = true;
             mm.revert();
         };
-    }, []);
+    }, [modulesLoaded, moduleCards]);
 
     /* ---------- carousel arrows ---------- */
     const syncEdges = () => {
@@ -188,6 +223,9 @@ export default function Module() {
         });
     };
 
+    useEffect(() => {
+        if (modulesLoaded) syncEdges();
+    }, [modulesLoaded, moduleCards]);
     const scrollCards = (dir) => {
         const el = cardsRef.current;
         const card = el.querySelector('.card');
@@ -196,7 +234,7 @@ export default function Module() {
     };
 
     return (
-        <section className="module-section" id="modules" ref={sectionRef}>
+        <section className="module-section" id="modules" ref={sectionRef} aria-busy={!modulesLoaded}>
             <div className="module-header" ref={headerRef}>
                 <h2 className="title">
                     Explore
@@ -225,11 +263,13 @@ export default function Module() {
                 </div>
 
                 <div className="cards" ref={cardsRef} onScroll={syncEdges}>
-                    {moduleCards.map((module, index) => (
+                    {moduleLoadError ? (
+                        <p className="module-data-error" role="alert">{moduleLoadError}</p>
+                    ) : moduleCards.map((module, index) => (
                         <div
-                            key={module.category}
+                            key={module.id}
                             className="card"
-                            style={{ backgroundImage: `url(${module.image})` }}
+                            style={{ backgroundImage: module.image ? 'url("' + module.image + '")' : undefined }}
                             tabIndex={0}
                             onMouseEnter={(e) => canHover() && openCard(index, e.currentTarget)}
                             onMouseLeave={() => canHover() && closeCard(index)}
@@ -250,10 +290,10 @@ export default function Module() {
                                 <div className="card-reveal">
                                     <ul className="competition-list">
                                         {module.competitions.map((competition) => (
-                                            <li key={competition}>{competition}</li>
+                                            <li key={competition.id || competition.name}>{competition.name}</li>
                                         ))}
                                     </ul>
-                                    <Link className="explore-btn" to={`/modules/${slugify(module.category)}`}>
+                                    <a className="explore-btn" href={'/modules/' + (module.queryName || slugify(module.category))}>
                                         <span className="eb-icon" aria-hidden="true">
                                             <ChevronIcon />
                                         </span>

@@ -1,0 +1,376 @@
+.registrations-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  padding: 20px 20px 30px;
+  box-sizing: border-box;
+}
+.explore-more-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 2px;
+  box-sizing: border-box;
+}
+/* Registration grid */
+
+.registrations-grid {
+  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+  row-gap: 24px;
+  align-items: start;
+  justify-items: stretch;
+}
+
+/* Registration card */
+
+.registration-card {
+  width: 100%;
+  height: 175px;
+  min-height: 175px;
+
+  display: flex;
+  align-items: flex-start;
+
+  position: relative;
+  overflow: hidden;
+
+  padding: 18px 18px;
+  box-sizing: border-box;
+  border-radius: 10px;
+
+  background-color: #244c45;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color: #e8d5b9;
+}
+
+/* Dark gradient overlay */
+
+.registration-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.1)
+  );
+
+  z-index: 0;
+}
+
+/* Card content */
+
+.registration-card-content {
+  position: relative;
+  z-index: 1;
+
+  width: 65%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 8px;
+}
+
+.registration-card-content h2 {
+  font-size: 28px;
+  font-family: "Ellak", sans-serif;
+  margin: 0;
+  font-weight: normal;
+  line-height: 1.15;
+}
+
+.registration-card-content p {
+  font-size: 12px;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.registration-card-content h3 {
+  font-size: 11px;
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* View Application button */
+
+.view-application-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 7px;
+  padding: 0;
+
+  border: none;
+  background: transparent;
+  color: #e8d5b9;
+
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.application-arrow {
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e8d5b9;
+  color: #003d36;
+
+  border-radius: 7px;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.view-application-btn:hover {
+  opacity: 0.85;
+}
+
+/* Explore More */
+.explore-more-btn,
+.registration-retry-btn {
+  min-width: 125px;
+  padding: 9px 20px;
+
+  border: none;
+  border-radius: 7px;
+
+  background-color: #003d36;
+  color: #e8d5b9;
+
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.explore-more-btn:hover,
+.registration-retry-btn:hover {
+  background-color: #e8d5b9;
+  color: #003d36;
+}
+
+/* Loading, error and empty states */
+
+.registrations-message {
+  grid-column: 1 / -1;
+
+  width: 100%;
+  min-height: 330px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  color: #003d36;
+  font-size: 14px;
+
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 12px;
+}
+
+.registrations-message p {
+  margin: 0;
+}
+.registration-card-content {
+  position: relative;
+  z-index: 1;
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+
+  max-height: 139px;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+  box-sizing: border-box;
+
+  scrollbar-width: thin;
+  scrollbar-color: #e8d5b9 transparent;
+}
+
+.registration-card-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.registration-card-content::-webkit-scrollbar-thumb {
+  background: #e8d5b9;
+  border-radius: 8px;
+}
+.registration-card-content {
+  max-height: 139px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.registration-card-content::-webkit-scrollbar {
+  display: none;
+}
+.view-application-btn {
+  font-size: 16px;
+
+  min-width: 150px;
+  min-height: 40px;
+}
+
+@media (max-width: 760px) {
+  .registrations-container {
+    width: 100%;
+    padding: 12px 10px 18px;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  /* ONE CARD PER ROW */
+
+  .registrations-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+    row-gap: 10px;
+    justify-items: stretch;
+  }
+
+  /* REGISTRATION CARD */
+
+  .registration-card {
+    width: 100%;
+    height: 125px;
+    min-height: 125px;
+
+    padding: 9px 10px;
+    border-radius: 8px;
+
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* CARD CONTENT */
+
+  .registration-card-content {
+    width: 78%;
+    max-height: 107px;
+
+    padding: 3px 5px;
+    gap: 2px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .registration-card-content h2 {
+    font-size: 19px;
+    line-height: 1.15;
+  }
+
+  .registration-card-content p {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .registration-card-content h3 {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  /* VIEW APPLICATION */
+
+  .view-application-btn {
+    font-size: 11px;
+    min-width: 0;
+    min-height: 25px;
+
+    gap: 6px;
+    margin-top: 3px;
+  }
+
+  .application-arrow {
+    width: 18px;
+    height: 18px;
+
+    font-size: 19px;
+    border-radius: 5px;
+  }
+
+  /* EXPLORE MORE */
+
+  .explore-more-wrapper {
+    width: 100%;
+    padding: 2px 0;
+  }
+
+  .explore-more-btn {
+    min-width: 105px;
+    padding: 8px 15px;
+    font-size: 11px;
+  }
+
+  /* LOADING / ERROR */
+
+  .registrations-message {
+    min-height: 150px;
+    padding: 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 400px) {
+  .registrations-container {
+    padding: 10px 8px 15px;
+  }
+
+  .registrations-grid {
+    row-gap: 9px;
+  }
+
+  .registration-card {
+    height: 115px;
+    min-height: 115px;
+    padding: 7px 8px;
+  }
+
+  .registration-card-content {
+    width: 82%;
+    max-height: 101px;
+  }
+
+  .registration-card-content h2 {
+    font-size: 17px;
+  }
+
+  .registration-card-content p {
+    font-size: 9px;
+  }
+
+  .registration-card-content h3 {
+    font-size: 9px;
+  }
+
+  .view-application-btn {
+    font-size: 10px;
+  }
+}
