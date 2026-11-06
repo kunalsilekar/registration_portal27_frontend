@@ -7,9 +7,6 @@ import CommonBackground from "./sections/Common_Background";
 import MyProfile from "./pages/MyProfile";
 import Errorpage from "./pages/Errorpage";
 import DelayedFallback from "./components/DelayedFallback";
-import ModulesPage from "./pages/ModulesPage";
-import CompetitionRegisterPage from "./pages/CompetitionRegisterPage";
-import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
 
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -20,10 +17,19 @@ const SetNewPasswordPage = lazy(() => import("./pages/SetNewPasswordPage"));
 const PasswordResetCompletePage = lazy(
   () => import("./pages/PasswordResetCompletePage"),
 );
+const ModulesPage = lazy(() => import("./pages/ModulesPage"));
+const CompetitionRegisterPage = lazy(
+  () => import("./pages/CompetitionRegisterPage"),
+);
+const RegistrationSuccessPage = lazy(
+  () => import("./pages/RegistrationSuccessPage"),
+);
 
 function RequireAuth({ children }) {
   const location = useLocation();
-  return getAuthToken() ? children : (
+  return getAuthToken() ? (
+    children
+  ) : (
     <Navigate to="/login" replace state={{ from: location }} />
   );
 }
@@ -49,18 +55,51 @@ function App() {
           element={<GoogleProfileCompletionPage />}
         />
         <Route path="/profile" element={<MyProfile />} />
-         <Route path="/modules" element={<ModulesPage />} />
-      <Route path="/modules/:moduleSlug" element={<ModulesPage />} />
-      <Route path="/competitions" element={<ModulesPage />} />
-      <Route path="/competitions/:competitionId" element={<RequireAuth><CompetitionRegisterPage /></RequireAuth>} />
-      <Route path="/register/:competitionId" element={<RequireAuth><CompetitionRegisterPage /></RequireAuth>} />
-      <Route path="/competitions/:competitionId/success" element={<RequireAuth><RegistrationSuccessPage /></RequireAuth>} />
-      <Route path="/registration-success/:competitionId" element={<RequireAuth><RegistrationSuccessPage /></RequireAuth>} />
-      <Route path="/registration-success" element={<RequireAuth><RegistrationSuccessPage /></RequireAuth>} />
+        <Route path="/modules" element={<ModulesPage />} />
+        <Route path="/modules/:moduleSlug" element={<ModulesPage />} />
+        <Route path="/competitions" element={<ModulesPage />} />
+        <Route
+          path="/competitions/:competitionId"
+          element={
+            <RequireAuth>
+              <CompetitionRegisterPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/register/:competitionId"
+          element={
+            <RequireAuth>
+              <CompetitionRegisterPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/competitions/:competitionId/success"
+          element={
+            <RequireAuth>
+              <RegistrationSuccessPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/registration-success/:competitionId"
+          element={
+            <RequireAuth>
+              <RegistrationSuccessPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/registration-success"
+          element={
+            <RequireAuth>
+              <RegistrationSuccessPage />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </Suspense>
-  
   );
 }
-
 export default App;
