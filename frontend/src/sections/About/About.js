@@ -41,7 +41,12 @@ function About() {
 
          <div className="about-cta">
           <Ornament />
-          <button type="button" className="about-button">
+          <a
+            className="about-button"
+            href="https://alcheringa.co.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className="about-button-bg" />
             <span className="about-button-label">Explore More</span>
             <span className="about-button-icon" aria-hidden="true">
@@ -49,7 +54,7 @@ function About() {
                 <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
-          </button>
+          </a>
           <Ornament />
         </div>
       </div>

@@ -9,7 +9,8 @@ const alcherLogoMobile = '/assets/alcherLogo_mobile.svg';
 
 /* Team members displayed on hover (names only) */
 const CREATIVES_TEAM = [
-'Karan - Head'
+'Karan - Head',
+'Shruti Khichi'
 ];
 
 const WEBOPS_TEAM = [

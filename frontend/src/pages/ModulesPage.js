@@ -8,6 +8,16 @@ import { fetchCompetitionsApi } from '../utils/api';
 import './ModulesPage.css';
 
 const textureImage = '/assets/texture.jpg';
+const normalizeModuleName = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+const getCompetitionModuleName = (competition) => {
+  const module = competition?.module;
+  if (module && typeof module === 'object') {
+    return module.module_query_name_without_spaces_all_small || module.module || module.name || '';
+  }
+  return competition?.module_query_name_without_spaces_all_small ||
+    competition?.module_name || competition?.moduleName || module || '';
+};
 
 function ModulesPage() {
   const { moduleSlug } = useParams();
@@ -25,6 +35,8 @@ function ModulesPage() {
     setError(null);
 
     try {
+      // Use the backend's module query parameter, then apply the same module
+      // match locally to keep the list consistent with the selected filter.
       const data = await fetchCompetitionsApi(moduleSlug);
       const compList = Array.isArray(data)
         ? data
@@ -57,15 +69,20 @@ function ModulesPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [loadCompetitions]);
 
-  const normalizedModuleSlug = (moduleSlug || '').replace(/[^a-z0-9]/gi, '').toLowerCase();
+  const normalizedModuleSlug = normalizeModuleName(moduleSlug);
+  const selectedModule = modules.find((item) =>
+    normalizeModuleName(item.module_query_name_without_spaces_all_small || item.module) === normalizedModuleSlug
+  );
   const selectedModuleQuery = moduleSlug
-    ? modules.find((item) =>
-        item.module_query_name_without_spaces_all_small === normalizedModuleSlug ||
-        (item.module && item.module.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedModuleSlug)
-      )?.module_query_name_without_spaces_all_small || moduleSlug
+    ? selectedModule?.module_query_name_without_spaces_all_small || moduleSlug
     : 'all';
 
+  const normalizedSearch = normalizeModuleName(searchTerm);
   const filteredCompetitions = competitions.filter((competition) => {
+    const competitionModuleSlug = normalizeModuleName(getCompetitionModuleName(competition));
+    const moduleMatches = !normalizedModuleSlug ||
+      competitionModuleSlug === normalizedModuleSlug ||
+      (selectedModule?.id && String(competition.module?.id) === String(selectedModule.id));
     const rawMode = String(competition.event_mode || '').trim().toLowerCase();
     const isOnline = rawMode === 'true' || rawMode === '1' || rawMode === 'online';
     const isOffline = rawMode === 'false' || rawMode === '0' || rawMode === 'offline';
@@ -73,11 +90,12 @@ function ModulesPage() {
       modeFilter === 'all' ||
       (modeFilter === 'online' && isOnline) ||
       (modeFilter === 'offline' && isOffline);
-    const searchText = Object.values(competition)
-      .map((value) => (typeof value === 'object' ? JSON.stringify(value) : String(value || '')))
-      .join(' ')
-      .toLowerCase();
-    return modeMatches && searchText.includes(searchTerm.trim().toLowerCase());
+    const competitionName =
+      competition.event_name || competition.name || competition.competetion || competition.title || '';
+    const searchMatches = !normalizedSearch || [competitionName, getCompetitionModuleName(competition)]
+      .some((value) => normalizeModuleName(value).includes(normalizedSearch));
+
+    return moduleMatches && modeMatches && searchMatches;
   });
 
   const handleModuleChange = (event) => {

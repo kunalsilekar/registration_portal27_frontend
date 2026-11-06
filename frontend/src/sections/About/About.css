@@ -78,6 +78,7 @@
   --time: 0.55s;
 
   position: relative;
+  display: block;
   width: var(--w);
   height: var(--h);
   padding: 0;
@@ -88,6 +89,7 @@
   font-size: 18px;
   font-weight: 700;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 

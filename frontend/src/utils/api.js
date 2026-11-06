@@ -255,7 +255,7 @@ export const getMyQueriesApi = async () => {
  * Endpoint: GET /api/competitions/?module=<slug>
  */
 export const fetchCompetitionsApi = async (moduleQuery = null) => {
-  const normalized = moduleQuery ? moduleQuery.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() : '';
+  const normalized = moduleQuery ? moduleQuery.replace(/[^a-zA-Z0-9_]/g, '').toLowerCase() : '';
   const url = normalized
     ? `${API_BASE_URL}/api/competitions/?module=${encodeURIComponent(normalized)}`
     : `${API_BASE_URL}/api/competitions/`;
