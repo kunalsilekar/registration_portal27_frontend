@@ -84,8 +84,8 @@ function ModulesPage() {
       competitionModuleSlug === normalizedModuleSlug ||
       (selectedModule?.id && String(competition.module?.id) === String(selectedModule.id));
     const rawMode = String(competition.event_mode || '').trim().toLowerCase();
-    const isOnline = rawMode === 'true' || rawMode === '1' || rawMode === 'online';
-    const isOffline = rawMode === 'false' || rawMode === '0' || rawMode === 'offline';
+    const isOnline = rawMode === '1' || rawMode === 'online';
+    const isOffline = rawMode === 'true' || rawMode === 'false' || rawMode === '0' || rawMode === 'offline';
     const modeMatches =
       modeFilter === 'all' ||
       (modeFilter === 'online' && isOnline) ||
