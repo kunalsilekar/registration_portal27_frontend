@@ -1019,6 +1019,12 @@ body {
   overflow: hidden;
   border-radius: 8px;
 }
+.error-message {
+  color: #ca192a !important;
+  font-size: 15px !important;
+  margin: 4px 8px !important;
+  line-height: 1.2 !important;
+}
 @media (max-width: 760px) {
   /* FIX MOBILE RIGHT-SIDE WHITE SPACE */
 

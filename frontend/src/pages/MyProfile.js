@@ -25,12 +25,83 @@ const defaultDetails = {
   img: "",
   email: "",
 };
+const compressCroppedImage = async (imageBlob) => {
+  const MAX_TARGET_SIZE = 150 * 1024;
+  const MAX_ALLOWED_SIZE = 500 * 1024;
+
+  const imageUrl = URL.createObjectURL(imageBlob);
+
+  try {
+    const image = new Image();
+
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = reject;
+      image.src = imageUrl;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = image.width;
+    canvas.height = image.height;
+
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      throw new Error("Unable to process image.");
+    }
+
+    ctx.drawImage(image, 0, 0);
+
+    const convertToJpeg = (quality) =>
+      new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error("Image compression failed."));
+            }
+          },
+          "image/jpeg",
+          quality,
+        );
+      });
+
+    let bestImage = null;
+
+    for (let quality = 0.95; quality >= 0.5; quality -= 0.05) {
+      const compressedBlob = await convertToJpeg(quality);
+
+      // Keep the highest-quality version that is within 500 KB.
+      if (compressedBlob.size <= MAX_ALLOWED_SIZE) {
+        bestImage = compressedBlob;
+      }
+
+      // Prefer an image of 150 KB or less.
+      if (compressedBlob.size <= MAX_TARGET_SIZE) {
+        return compressedBlob;
+      }
+    }
+
+    // If 150 KB cannot be reached without too much quality loss,
+    // use the best-quality version that is within 500 KB.
+    if (bestImage) {
+      return bestImage;
+    }
+
+    throw new Error(
+      "Unable to compress image below 500 KB. Please try another image.",
+    );
+  } finally {
+    URL.revokeObjectURL(imageUrl);
+  }
+};
 
 const Profile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState(
-    location.state?.activeTab === "team" ? "team" : "profile"
+    location.state?.activeTab === "team" ? "team" : "profile",
   );
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -337,6 +408,13 @@ const Profile = () => {
       e.target.value = "";
       return;
     }
+    const MAX_ORIGINAL_SIZE = 2 * 1024 * 1024;
+
+    if (file.size > MAX_ORIGINAL_SIZE) {
+      setError("Image size must not exceed 2 MB.");
+      e.target.value = "";
+      return;
+    }
 
     const imageDataUrl = URL.createObjectURL(file);
 
@@ -368,24 +446,37 @@ const Profile = () => {
         croppedAreaPixels,
       );
 
-      const croppedFile = new File([croppedImageBlob], "profile_cropped.jpg", {
+      if (!croppedImageBlob) {
+        throw new Error("Failed to crop image.");
+      }
+
+      // Compress cropped image dynamically
+      const compressedBlob = await compressCroppedImage(croppedImageBlob);
+
+      const croppedFile = new File([compressedBlob], "profile_cropped.jpg", {
         type: "image/jpeg",
       });
 
       setSelectedImage(croppedFile);
 
-      setImagePreview(URL.createObjectURL(croppedImageBlob));
+      // Use compressed image for preview
+      setImagePreview(URL.createObjectURL(compressedBlob));
 
       setCropperOpen(false);
       setError("");
       setSuccess("");
+
       if (tempImageSrc) {
         URL.revokeObjectURL(tempImageSrc);
         setTempImageSrc(null);
       }
     } catch (err) {
-      console.error("Cropping error:", err);
-      setError("Failed to crop image.");
+      console.error("Cropping/compression error:", err);
+      setError(
+        err.message?.includes("500 KB")
+          ? "Image size is too large. Please try another image."
+          : "Failed to crop image. Please try again.",
+      );
     }
   }, [tempImageSrc, croppedAreaPixels]);
 
@@ -452,6 +543,9 @@ const Profile = () => {
 
   // Save updated profile to Django
   const handleSubmit = async (e) => {
+    console.log("Selected image:", selectedImage);
+    console.log("Selected image name:", selectedImage?.name);
+    console.log("Selected image size:", selectedImage?.size);
     e.preventDefault();
 
     if (!validateForm()) {
@@ -498,6 +592,7 @@ const Profile = () => {
       if (selectedImage) {
         formData.append("img", selectedImage);
       }
+      console.log("Image being uploaded:", formData.get("img"));
       const response = await fetch(`${API_URL}/auth/edit-profile/`, {
         method: "PATCH",
         headers: {
