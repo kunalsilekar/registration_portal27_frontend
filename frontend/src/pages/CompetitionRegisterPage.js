@@ -233,11 +233,13 @@ function CompetitionRegisterPage() {
     <div className="comp-meta-row">
       <div className="comp-meta-chip">
         <MapPin size={18} className="comp-meta-icon" />
-        <span className="comp-meta-label">{soloOrGroup}</span>
+        <span className="comp-meta-label">
+          {String(eventMode).trim().toLowerCase() === 'true' ? 'On Ground' : 'Online'}
+        </span>
       </div>
       <div className="comp-meta-chip">
         <Users size={18} className="comp-meta-icon" />
-        <span className="comp-meta-label">{eventMode}</span>
+        <span className="comp-meta-label">{soloOrGroup}</span>
       </div>
     </div>
   );
@@ -402,8 +404,8 @@ function CompetitionRegisterPage() {
         {alreadyRegistered
           ? 'Already Registered ✓'
           : submitting
-          ? 'Registering...'
-          : 'Register'}
+            ? 'Registering...'
+            : 'Register'}
       </button>
     </div>
   );
@@ -457,9 +459,8 @@ function CompetitionRegisterPage() {
             <div
               className="comp-register-banner"
               style={{
-                backgroundImage: `url(${
-                  competition?.image ? getMediaUrl(competition.image) : undefined
-                })`,
+                backgroundImage: `url(${competition?.image ? getMediaUrl(competition.image) : undefined
+                  })`,
               }}
             >
               <div className="comp-banner-overlay">
