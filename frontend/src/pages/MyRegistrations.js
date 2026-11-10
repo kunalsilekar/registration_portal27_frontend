@@ -111,12 +111,6 @@ const Registrations = () => {
                   <p>{event.event_desc}</p>
 
                   <h3>Prize - {event.prize_worth}</h3>
-
-                  <button type="button" className="view-application-btn">
-                    <span className="application-arrow">›</span>
-
-                    <span>View Application</span>
-                  </button>
                 </div>
               </div>
             );
