@@ -1,4 +1,5 @@
 import "./App.css";
+import PageMetadata from "./components/PageMetadata";
 import { lazy, Suspense } from "react";
 import GoogleProfileCompletionPage from "./pages/GoogleProfileCompletionPage";
 import { Navigate, Routes, Route, useLocation } from "react-router-dom";
@@ -36,6 +37,8 @@ function RequireAuth({ children }) {
 
 function App() {
   return (
+    <>
+    <PageMetadata />
     <Suspense fallback={<DelayedFallback />}>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -100,6 +103,7 @@ function App() {
         />
       </Routes>
     </Suspense>
+    </>
   );
 }
 export default App;
