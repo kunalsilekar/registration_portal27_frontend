@@ -181,18 +181,10 @@
   width: 191px;
   min-height: 35px;
   align-self: center;
-  overflow: hidden;
+  overflow: visible;
   border: 0;
-  border-radius: 6px;
+  border-radius: 0;
   background: transparent;
-  box-shadow: 0 1px 2px rgb(15 48 39 / 10%);
-  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-}
-
-.google-sign-in-control:hover {
-  border-color: #9d8260;
-  box-shadow: 0 3px 8px rgb(15 48 39 / 14%);
-  transform: translateY(-1px);
 }
 
 .google-sign-in-control:focus-within {
@@ -230,13 +222,12 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
   opacity: 1;
 }
 
 .google-sign-in-host iframe {
   display: block;
-  max-width: 100%;
 }
 
 .google-sign-in-control.is-busy {
