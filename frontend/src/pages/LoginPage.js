@@ -145,10 +145,6 @@ function LoginPage() {
             </header>
 
             <div className={`google-sign-in-control${googleAuthBusy ? ' is-busy' : ''}`}>
-              <div className="google-sign-in-visual" aria-hidden="true">
-                <img src="/assets/google.svg" alt="" />
-                <span>Signup with Google</span>
-              </div>
               <div className="google-sign-in-host"
                 ref={googleButtonRef}
                 aria-label="Sign up or sign in with Google"
