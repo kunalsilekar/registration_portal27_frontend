@@ -162,16 +162,34 @@
 }
 
 .comp-banner-desc {
+  display: -webkit-box;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 12.5px;
   font-weight: 400;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.86);
   margin: 0;
-  display: -webkit-box;
+  text-align: left;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.comp-register-banner.is-description-expanded .comp-banner-overlay {
+  position: relative;
+  height: auto;
+  min-height: 100%;
+}
+
+.comp-register-banner.is-description-expanded .comp-banner-desc {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
 }
 
 /* Alerts */

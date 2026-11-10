@@ -22,6 +22,7 @@ function CompetitionRegisterPage() {
   const navigate = useNavigate();
 
   const [competition, setCompetition] = useState(null);
+  const [isBannerDescriptionExpanded, setIsBannerDescriptionExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [profileTeamName, setProfileTeamName] = useState('');
   const [profileData, setProfileData] = useState(null);
@@ -415,7 +416,7 @@ function CompetitionRegisterPage() {
 
             {/* Top Banner */}
             <div
-              className="comp-register-banner"
+              className={`comp-register-banner${isBannerDescriptionExpanded ? ' is-description-expanded' : ''}`}
               style={{
                 backgroundImage: competition?.image
                   ? `url("${getMediaUrl(competition.image)}"), url("/assets/form_banner_bg.jpg")`
@@ -426,7 +427,15 @@ function CompetitionRegisterPage() {
                 <div className="comp-banner-content">
                   <h1 className="comp-banner-title">{competitionName.toUpperCase()}</h1>
                   <h2 className="comp-banner-module">{String(moduleName).toUpperCase()}</h2>
-                  <p className="comp-banner-desc">{eventDesc}</p>
+                  <button
+                    type="button"
+                    className="comp-banner-desc"
+                    aria-expanded={isBannerDescriptionExpanded}
+                    aria-label={isBannerDescriptionExpanded ? 'Collapse competition description' : 'Show full competition description'}
+                    onClick={() => setIsBannerDescriptionExpanded((expanded) => !expanded)}
+                  >
+                    {eventDesc}
+                  </button>
                 </div>
               </div>
             </div>

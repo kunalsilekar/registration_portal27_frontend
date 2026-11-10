@@ -11,6 +11,7 @@ function LandingScene() {
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+    const isPhone = window.matchMedia('(max-width: 760px)').matches;
 
     // Tablet layout uses normal document flow; skip the scroll-driven scene
     // timeline so the About section does not slide or reveal as you scroll.
@@ -42,7 +43,9 @@ function LandingScene() {
           trigger: track,
           start: 'top top',
           end: () => '+=' + window.innerHeight * 1.8,
-          scrub: 1,
+          // Keep phone movement closely tied to the finger scroll; a full
+          // one-second scrub makes the layered scene visibly trail behind.
+          scrub: isPhone ? 0.2 : 1,
           invalidateOnRefresh: true,
         },
       });
