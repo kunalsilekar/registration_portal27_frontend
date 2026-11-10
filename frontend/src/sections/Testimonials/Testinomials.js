@@ -8,8 +8,9 @@ import React, {
 import gsap from "gsap";
 import "./Testinomials.css";
 
-const AVATAR =
-  "https://images.unsplash.com/photo-1507666405895-422eee7d517f?auto=format&fit=crop&w=300&q=80";
+
+// const AVATAR =
+//   "https://images.unsplash.com/photo-1507666405895-422eee7d517f?auto=format&fit=crop&w=300&q=80";
 
 const DEFAULT_TESTIMONIALS = [
   {
@@ -39,6 +40,7 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
     avatar: "/assets/testimonials/Deepanshu.jpg",
   },
+  /*
   {
     id: 4,
     quote:
@@ -57,6 +59,7 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
     avatar: AVATAR,
   },
+  */
 ];
 
 const MOBILE_BP = 820; // must match the CSS media query

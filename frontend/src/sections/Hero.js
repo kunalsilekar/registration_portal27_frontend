@@ -202,7 +202,7 @@ function Hero() {
 
                 <div className="hero-intro">
                     <p className="hero-tagline">
-                        Northeast India’s biggest cultural fest is back. Bring your crew, bring your craft.
+                        Northeast India’s largest cultural fest is back. Bring your crew, bring your craft.
                     </p>
                     {!isAuthenticated && (
                         <button

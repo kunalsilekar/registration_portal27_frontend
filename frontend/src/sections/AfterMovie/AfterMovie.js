@@ -204,7 +204,7 @@ export default function AfterMovie() {
             </div>
 
             <p className="am-title" ref={titleRef}>
-                Alcheringa&rsquo;26
+                Alcheringa&rsquo;25
             </p>
         </section>
     );
