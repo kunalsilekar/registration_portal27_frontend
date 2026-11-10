@@ -259,7 +259,7 @@ const Footer = () => {
             <div className="footer-contacts-grid">
               <div className="contact-card">
                 <span className="contact-name">Mayank Sahu</span>
-                <span className="contact-role">PR Head</span>
+                <span className="contact-role">Public Relations Head</span>
                 <a href="tel:+918827412678" className="contact-phone-link">
                   <Phone size={14} />
                   <span>+91 88274 12678</span>
@@ -268,7 +268,7 @@ const Footer = () => {
 
               <div className="contact-card">
                 <span className="contact-name">Shubham Kumar</span>
-                <span className="contact-role">PR Head</span>
+                <span className="contact-role">Public Relations Head</span>
                 <a href="tel:+917209688170" className="contact-phone-link">
                   <Phone size={14} />
                   <span>+91 72096 88170</span>
@@ -368,7 +368,7 @@ const Footer = () => {
           <div className="footer-mobile-contacts">
             <div className="footer-mobile-contact-card">
               <span className="footer-mobile-contact-name">Mayank Sahu</span>
-              <span className="footer-mobile-contact-role">PR Head</span>
+              <span className="footer-mobile-contact-role">Public Relations Head</span>
               <a href="tel:+918827412678" className="footer-mobile-phone-link">
                 <Phone size={14} />
                 <span>+91 88274 12678</span>
@@ -377,7 +377,7 @@ const Footer = () => {
 
             <div className="footer-mobile-contact-card">
               <span className="footer-mobile-contact-name">Shubham Kumar</span>
-              <span className="footer-mobile-contact-role">PR Head</span>
+              <span className="footer-mobile-contact-role">Public Relations Head</span>
               <a href="tel:+917209688170" className="footer-mobile-phone-link">
                 <Phone size={14} />
                 <span>+91 72096 88170</span>
