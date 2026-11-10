@@ -12,6 +12,12 @@ function LandingScene() {
     const track = trackRef.current;
     if (!track) return;
 
+    // Tablet layout uses normal document flow; skip the scroll-driven scene
+    // timeline so the About section does not slide or reveal as you scroll.
+    if (window.matchMedia('(min-width: 761px) and (max-width: 1024px)').matches) {
+      return undefined;
+    }
+
     const ctx = gsap.context(() => {
       const navbar = document.querySelector('.landing-navbar-fixed .navbar');
       const foreground = track.querySelector('.foreground');
@@ -46,55 +52,52 @@ function LandingScene() {
         .to(foreground, { y: sceneTargetY, duration: 18 }, 0)
         .to(stats, { y: sceneTargetY, duration: 18 }, 0)
         .to(about, { y: sceneTargetY, duration: 18 }, 0)
-        .to('.hero-copy', { y: -50, duration: 18 }, 0)
-        .fromTo(
+        .to('.hero-copy', { y: -50, duration: 18 }, 0);
+
+      tl.fromTo(
           '.about-heading',
           { scale: 1.36, y: 100 },
           { scale: 1, y: 0, duration: 4 },
           10
         )
-        .fromTo(
-          '.about-text',
-          { y: 114, opacity: 0 },
-          { y: 0, opacity: 1, duration: 4 },
-          10.2
-        )
-        .fromTo(
-          photos,
-          {
-            x: (i, el) =>
-              isLeft(el)
-                ? -(el.offsetLeft + el.offsetWidth + 60)
-                : about.offsetWidth - el.offsetLeft + 60,
-          },
-          {
-            x: 0,
-            duration: 3.6,
-            stagger: 0.32,
-          },
-          12
-        )
-        .fromTo(
-          photoImages,
-          {
-            rotation: (i, el) => {
-              const frame = el.parentElement;
-              return tiltOf(frame) + (isLeft(frame) ? -30 : 30);
+          .fromTo(
+            '.about-text',
+            { y: 114, opacity: 0 },
+            { y: 0, opacity: 1, duration: 4 },
+            10.2
+          )
+          .fromTo(
+            photos,
+            {
+              x: (i, el) =>
+                isLeft(el)
+                  ? -(el.offsetLeft + el.offsetWidth + 60)
+                  : about.offsetWidth - el.offsetLeft + 60,
             },
-          },
-          {
-            rotation: (i, el) => tiltOf(el.parentElement),
-            duration: 3.6,
-            stagger: 0.32,
-          },
-          12
-        )
+            { x: 0, duration: 3.6, stagger: 0.32 },
+            12
+          )
+          .fromTo(
+            photoImages,
+            {
+              rotation: (i, el) => {
+                const frame = el.parentElement;
+                return tiltOf(frame) + (isLeft(frame) ? -30 : 30);
+              },
+            },
+            {
+              rotation: (i, el) => tiltOf(el.parentElement),
+              duration: 3.6,
+              stagger: 0.32,
+            },
+            12
+          )
         .fromTo(
-          '.about-cta',
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1.5 },
-          15
-        );
+            '.about-cta',
+            { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 1.5 },
+            15
+          );
     }, track);
 
     const refresh = () => ScrollTrigger.refresh();

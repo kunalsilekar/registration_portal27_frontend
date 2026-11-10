@@ -180,6 +180,28 @@
   will-change: transform;
 }
 
+@media (min-width: 761px) and (max-width: 1024px) {
+  .about-scene {
+    height: 80vh;
+  }
+
+  .about-copy {
+    transform: none;
+  }
+
+  .about-heading-small {
+    font-size: clamp(28px, 3.6vw, 40px);
+  }
+
+  .about-heading-big {
+    font-size: clamp(48px, 6.2vw, 72px);
+  }
+
+  .about-text {
+    width: min(680px, 92%);
+    font-size: clamp(15px, 1.65vw, 17px);
+  }
+}
 @media (max-width: 768px) {
   .about-photo {
     display: none;

@@ -168,7 +168,7 @@ function Hero() {
 
             <picture>
                 <source
-                    media="(max-width: 768px)"
+                    media="(max-width: 760px)"
                     srcSet="/assets/foreground-mobile.jpeg"
                 />
                 <img

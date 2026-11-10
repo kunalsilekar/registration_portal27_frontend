@@ -43,7 +43,7 @@ export default function AfterMovie() {
                 return { top: '28vh', bottom: '36vh', left: '6%', right: '6%', borderRadius: 14 };
             }
             if (size === 'medium') {
-                return { top: '21vh', bottom: '25vh', left: '8%', right: '8%', borderRadius: 16 };
+                return { top: '21vh', bottom: '18vh', left: '8%', right: '8%', borderRadius: 16 };
             }
             return { top: '20vh', bottom: '22vh', left: '18%', right: '18%', borderRadius: 16 };
         };
@@ -59,9 +59,9 @@ export default function AfterMovie() {
                 const size = small ? 'small' : medium ? 'medium' : 'large';
                 const end = finalFrame(size);
 
-                // Mobile and reduced-motion users see the final layout without
+                // Mobile, tablet, and reduced-motion users see the final layout without
                 // the pinned scroll animation.
-                if (reduce || small) {
+                if (reduce || small || medium) {
                     gsap.set(frameRef.current, end);
                     gsap.set(headingRef.current, { opacity: 1, y: 0, color: '#0F3027' });
                     gsap.set(titleRef.current, { x: 0, color: '#0F3027' });

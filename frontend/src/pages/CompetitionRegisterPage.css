@@ -116,12 +116,15 @@
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
   background: linear-gradient(
-    to right,
-    rgba(5, 10, 8, 0.95) 0%,
-    rgba(5, 10, 8, 0.88) 45%,
-    rgba(5, 10, 8, 0.45) 75%,
-    transparent 100%
+    90deg,
+    rgba(5, 10, 8, 0.96) 0%,
+    rgba(5, 10, 8, 0.9) 24%,
+    rgba(5, 10, 8, 0.68) 44%,
+    rgba(5, 10, 8, 0.32) 62%,
+    rgba(5, 10, 8, 0.08) 82%,
+    rgba(5, 10, 8, 0) 100%
   );
   display: flex;
   align-items: center;
@@ -130,6 +133,8 @@
 }
 
 .comp-banner-content {
+  position: relative;
+  z-index: 2;
   max-width: 480px;
 }
 

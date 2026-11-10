@@ -128,13 +128,20 @@
 @media (min-width: 768px) and (max-width: 1024px) {
     .am-frame {
         top: 21vh;
-        bottom: 25vh;
-        left: 8%;
-        right: 8%;
+        bottom: 18vh;
+        left: 6%;
+        right: 6%;
+    }
+    .am-media--youtube {
+        width: max(100%, 108.45vh);
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        aspect-ratio: auto;
     }
 
     .am-heading {
-        top: 8vh;
+        top: 16vh;
         right: 8%;
     }
 

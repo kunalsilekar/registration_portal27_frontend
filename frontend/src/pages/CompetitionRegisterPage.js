@@ -8,7 +8,6 @@ import {
   registerCompetitionApi,
   fetchProfileApi,
   fetchMyTeamMembersApi,
-  addTeamMemberApi,
   fetchMyRegisteredCompetitionsApi,
   getMediaUrl,
   getStoredUser,
@@ -37,11 +36,6 @@ function CompetitionRegisterPage() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   // Modal State for "Add New Team Member"
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newMemberName, setNewMemberName] = useState('');
-  const [newMemberEmail, setNewMemberEmail] = useState('');
-  const [newMemberPhone, setNewMemberPhone] = useState('');
-  const [modalError, setModalError] = useState('');
   const storedUser = getStoredUser() || {};
 
   useEffect(() => {
@@ -106,42 +100,6 @@ function CompetitionRegisterPage() {
     navigate('/profile', { state: { activeTab: 'team' } });
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setModalError('');
-  };
-
-  const handleDoneModal = async (e) => {
-    e.preventDefault();
-    if (!newMemberName.trim() || !newMemberEmail.trim() || !newMemberPhone.trim()) {
-      setModalError('Enter the member’s name, email and phone number.');
-      return;
-    }
-    if (!profileData?.collegename) {
-      setModalError('Complete your college details in your profile before adding a team member.');
-      return;
-    }
-
-    const memberPayload = {
-      name: newMemberName.trim(),
-      email: newMemberEmail.trim(),
-      phone: '+91' + newMemberPhone.trim(),
-      gender: profileData.gender || 'M',
-      collegename: profileData.collegename,
-      city: profileData.city || '',
-      state: profileData.state || '',
-    };
-
-    try {
-      const saved = await addTeamMemberApi(memberPayload);
-      const addedMember = { id: saved.id, name: saved.name, email: saved.email, phone: saved.phone };
-      setAvailableMembers((members) => [addedMember, ...members]);
-      setSelectedMembers((members) => [addedMember, ...members]);
-      setIsModalOpen(false);
-    } catch (err) {
-      setModalError(err.message || 'Could not save this team member. Please try again.');
-    }
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -459,8 +417,9 @@ function CompetitionRegisterPage() {
             <div
               className="comp-register-banner"
               style={{
-                backgroundImage: `url(${competition?.image ? getMediaUrl(competition.image) : undefined
-                  })`,
+                backgroundImage: competition?.image
+                  ? `url("${getMediaUrl(competition.image)}"), url("/assets/form_banner_bg.jpg")`
+                  : `url("/assets/form_banner_bg.jpg")`,
               }}
             >
               <div className="comp-banner-overlay">
@@ -519,83 +478,6 @@ function CompetitionRegisterPage() {
 
       {/* Website Footer */}
       <Footer />
-
-      {/* ADD NEW TEAM MEMBER MODAL / BOTTOM SHEET */}
-      {isModalOpen && (
-        <div className="comp-modal-backdrop" onClick={handleCloseModal}>
-          <div
-            className="comp-modal-card"
-            style={{ backgroundImage: `url(${process.env.PUBLIC_URL + textureImage})` }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Top pill drag handle visible on mobile */}
-            <div className="comp-modal-drag-handle" />
-
-            <h2 className="comp-modal-title">ADD NEW TEAM MEMBER</h2>
-
-            {modalError && (
-              <div className="comp-modal-error-msg">
-                <span>{modalError}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleDoneModal} className="comp-modal-form">
-              <div className="comp-modal-field">
-                <label className="comp-modal-label">Name of New Member</label>
-                <input
-                  type="text"
-                  placeholder="Enter member name"
-                  value={newMemberName}
-                  onChange={(e) => setNewMemberName(e.target.value)}
-                  className="comp-modal-input"
-                  autoFocus
-                />
-              </div>
-
-              <div className="comp-modal-field">
-                <label className="comp-modal-label">Email</label>
-                <input
-                  type="email"
-                  placeholder="Enter email"
-                  value={newMemberEmail}
-                  onChange={(e) => setNewMemberEmail(e.target.value)}
-                  className="comp-modal-input"
-                />
-              </div>
-
-              <div className="comp-modal-field">
-                <label className="comp-modal-label">Phone Number</label>
-                <div className="comp-modal-phone-row">
-                  <span className="comp-modal-country-code">+91</span>
-                  <input
-                    type="tel"
-                    placeholder="10-digit phone number"
-                    value={newMemberPhone}
-                    onChange={(e) => setNewMemberPhone(e.target.value)}
-                    className="comp-modal-input comp-modal-phone-input"
-                  />
-                </div>
-              </div>
-
-              <div className="comp-modal-actions">
-                <button
-                  type="button"
-                  className="comp-modal-cancel-btn"
-                  onClick={handleCloseModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="comp-modal-done-btn"
-                >
-                  Done
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { getAuthToken, getMediaUrl } from '../utils/api';
 import './CompetitionCard.css';
 
-const FALLBACK_COMPETITION_IMAGE = '/assets/modules/dance.jpg';
+const FALLBACK_COMPETITION_IMAGE = '/assets/competetion_img.png';
 
 function CompetitionCard({ competition }) {
   const navigate = useNavigate();

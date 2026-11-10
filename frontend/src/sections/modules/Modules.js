@@ -145,14 +145,14 @@ export default function Module() {
         const section = sectionRef.current;
         const mm = gsap.matchMedia();
 
-        // Phones and reduced-motion users see the cards immediately, without
-        // the pinned scroll / fan-out animation that can feel laggy on mobile.
-        mm.add('(max-width: 767px), (prefers-reduced-motion: reduce)', () => {
+        // Phones, tablets, and reduced-motion users see the cards immediately.
+        // The pinned scroll / fan-out animation is reserved for desktop screens.
+        mm.add('(max-width: 1024px), (prefers-reduced-motion: reduce)', () => {
             section.classList.add('is-ready');
             gsap.set(arrowsRef.current, { opacity: 1 });
         });
 
-        mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+        mm.add('(min-width: 1025px) and (prefers-reduced-motion: no-preference)', () => {
             const cards = gsap.utils.toArray('.card', section);
 
             const tl = gsap.timeline({
@@ -231,8 +231,12 @@ export default function Module() {
     }, [modulesLoaded, moduleCards]);
     const scrollCards = (dir) => {
         const el = cardsRef.current;
-        const card = el.querySelector('.card');
-        const step = (card.offsetWidth + parseFloat(getComputedStyle(el).columnGap || 32)) * 2;
+        const card = el?.querySelector('.card');
+        if (!el || !card) return;
+
+        const parsedGap = parseFloat(getComputedStyle(el).columnGap);
+        const gap = Number.isFinite(parsedGap) ? parsedGap : 32;
+        const step = (card.offsetWidth + gap) * 2;
         el.scrollBy({ left: dir * step, behavior: 'smooth' });
     };
 

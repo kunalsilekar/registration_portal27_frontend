@@ -317,6 +317,52 @@ body {
   width: 100%;
 }
 
+@media (min-width: 761px) and (max-width: 1024px) {
+  .landing-scene-track {
+    height: auto;
+  }
+
+  .landing-scene-panel {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    --foreground-height: 90vh;
+  }
+
+  .hero-scene {
+    position: relative;
+    inset: auto;
+    height: calc(var(--foreground-height) + 80vh);
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .landscape {
+    height: var(--foreground-height);
+  }
+
+  .about-scene {
+    position: absolute;
+    top: var(--foreground-height);
+    left: 0;
+    margin-top: 0;
+  }
+
+  .hero-stats {
+    top: calc(var(--foreground-height) - 130px);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    width: calc(100% - 32px);
+    min-height: 124px;
+    padding: 0;
+  }
+
+  .hero-stat {
+    height: 124px;
+  }
+}
 @media (max-width: 760px) {
   .hero-title {
     width: fit-content;
