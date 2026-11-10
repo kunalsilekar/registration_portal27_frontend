@@ -94,7 +94,7 @@ const Registrations = () => {
             <p>You haven't registered for any competitions yet.</p>
           </div>
         ) : (
-          registrations.slice(0, 4).map((registration) => {
+          registrations.map((registration) => {
             const event = registration.event || {};
 
             return (

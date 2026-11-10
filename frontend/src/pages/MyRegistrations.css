@@ -26,7 +26,23 @@
   align-items: start;
   justify-items: stretch;
 }
+/* Scroll registrations after 4 cards */
+.registrations-grid {
+  max-height: 374px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #003d36 transparent;
+}
 
+.registrations-grid::-webkit-scrollbar {
+  width: 5px;
+}
+
+.registrations-grid::-webkit-scrollbar-thumb {
+  background: #003d36;
+  border-radius: 10px;
+}
 /* Registration card */
 
 .registration-card {
@@ -372,5 +388,10 @@
 
   .view-application-btn {
     font-size: 10px;
+  }
+}
+@media (max-width: 760px) {
+  .registrations-grid {
+    max-height: 530px;
   }
 }

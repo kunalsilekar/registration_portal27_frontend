@@ -212,6 +212,7 @@ const Profile = () => {
     state: user.state || "",
     img: user.img || "",
     email: user.email || "",
+    googleProfilePic: user.profile_pic_url || "",
   });
 
   // Fetch profile when the page loads
@@ -708,7 +709,7 @@ const Profile = () => {
       <div className="profile-content">
         {/* LEFT PROFILE SECTION */}
         <div className="pi">
-          {imagePreview ? (
+          {/*imagePreview ? (
             <img src={imagePreview} alt="Profile" />
           ) : details.img ? (
             <img
@@ -721,7 +722,38 @@ const Profile = () => {
             />
           ) : !isLoading && error ? (
             <img src={require("../asset/Ppic.png")} alt="Default Profile" />
-          ) : null}
+          ) : null*/}
+          {isLoading ? null : imagePreview ? (
+            <img src={imagePreview} alt="Profile" />
+          ) : details.img && !details.img.includes("user-default.png") ? (
+            <img
+              src={details.img}
+              alt="Profile"
+              onError={(e) => {
+                if (details.googleProfilePic) {
+                  e.currentTarget.onerror = () => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = require("../asset/Ppic.png");
+                  };
+                  e.currentTarget.src = details.googleProfilePic;
+                } else {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = require("../asset/Ppic.png");
+                }
+              }}
+            />
+          ) : details.googleProfilePic ? (
+            <img
+              src={details.googleProfilePic}
+              alt="Google Profile"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = require("../asset/Ppic.png");
+              }}
+            />
+          ) : (
+            <img src={require("../asset/Ppic.png")} alt="Default Profile" />
+          )}
           <div className="profile-info">
             <h2>{details.name || "Your Name"}</h2>
             <p className="email-id">{details.email || "Your Email"}</p>
