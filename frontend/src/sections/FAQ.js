@@ -262,35 +262,32 @@ const FAQSection = () => {
                 <div
                   key={item.id}
                   className={`faq-item ${isOpen ? 'expanded' : 'collapsed'}`}
-                  onClick={() => !isOpen && toggleFAQ(item.id)}
                 >
                   <div className="faq-item-header">
                     <h4 className="faq-question">{item.question}</h4>
-                    {!isOpen && (
-                      <span className="faq-icon-collapsed">
-                        <Plus size={16} strokeWidth={2.4} />
-                      </span>
-                    )}
+                    <button
+                      type="button"
+                      className={`faq-toggle ${isOpen ? 'is-open' : ''}`}
+                      onClick={() => toggleFAQ(item.id)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${item.id}`}
+                      aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${item.question}`}
+                    >
+                      {isOpen ? <Minus size={16} strokeWidth={2.4} /> : <Plus size={16} strokeWidth={2.4} />}
+                    </button>
                   </div>
 
-                  {isOpen && (
-                    <div className="faq-answer-content">
-                      <p className="faq-answer-text">{item.answer}</p>
-                      <div className="faq-expanded-footer">
-                        <button
-                          type="button"
-                          className="faq-icon-expanded"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFAQ(item.id);
-                          }}
-                          aria-label="Collapse answer"
-                        >
-                          <Minus size={16} strokeWidth={2.8} />
-                        </button>
+                  <div
+                    id={`faq-answer-${item.id}`}
+                    className={`faq-answer-shell ${isOpen ? 'is-open' : ''}`}
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="faq-answer-inner">
+                      <div className="faq-answer-content">
+                        <p className="faq-answer-text">{item.answer}</p>
                       </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}

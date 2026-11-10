@@ -255,6 +255,10 @@ function RegistrationPage() {
             {step === 1 && (
               <>
                 <div className={`google-sign-in-control${googleAuthBusy ? ' is-busy' : ''}`}>
+                  <div className="google-sign-in-visual" aria-hidden="true">
+                    <img src="/assets/google.svg" alt="" />
+                    <span>Continue with Google</span>
+                  </div>
                   <div className="google-sign-in-host" ref={googleButtonRef} aria-label="Continue with Google to sign up" aria-busy={googleAuthBusy} />
                 </div>
                 {googleAuthError && <p className="google-sign-in-message" role="alert">{googleAuthError}</p>}

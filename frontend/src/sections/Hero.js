@@ -218,7 +218,7 @@ function Hero() {
 
             <div ref={statsRef} className="hero-stats">
                 <div className="hero-stat">
-                    <AnimatedStatNumber value={140} suffix="K" started={statsStarted} />
+                    <AnimatedStatNumber value={150} suffix="K" started={statsStarted} />
                     <span className="hero-stat-label">FOOTFALL</span>
                 </div>
                 <div className="hero-stat">
@@ -230,11 +230,11 @@ function Hero() {
                     <span className="hero-stat-label">COLLEGE</span>
                 </div>
                 <div className="hero-stat">
-                    <AnimatedStatNumber value={45} suffix="+" started={statsStarted} />
+                    <AnimatedStatNumber value={50} suffix="+" started={statsStarted} />
                     <span className="hero-stat-label">COMPETITIONS</span>
                 </div>
                 <div className="hero-stat hero-stat-featured">
-                    <AnimatedStatNumber value={3000} suffix="+" started={statsStarted} />
+                    <AnimatedStatNumber value={5000} suffix="+" started={statsStarted} />
                     <span className="hero-stat-label">PARTICIPANTS</span>
                 </div>
             </div>

@@ -59,21 +59,21 @@
 .about-cta {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 13px;
   margin-top: 40px;
 }
 
 .about-ornament {
-  width: 22px;
-  height: 22px;
-  fill: #e8c9a3;
-  opacity: 0.85;
+  width: 17px;
+  height: 17px;
+  fill: #d2a574;
+  opacity: 1;
   flex: none;
 }
 
 .about-button {
-  --h: 42px;   
-  --w: 204px;  
+  --h: 32px;
+  --w: 161px;
   --ease: cubic-bezier(0.65, 0, 0.35, 1);
   --time: 0.55s;
 
@@ -87,7 +87,7 @@
   cursor: pointer;
   font-family: 'Gotham', 'Montserrat', Arial, sans-serif;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
   white-space: nowrap;
   text-decoration: none;
 }
@@ -99,7 +99,7 @@
   left: 0;
   width: var(--h);
   height: 100%;
-  border-radius: 12px;
+  border-radius: 9px;
   background: #053430;
   transition: width var(--time) var(--ease);
 }
@@ -128,8 +128,8 @@
 }
 
 .about-button-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 17px;
 }
 
 .about-button:hover .about-button-bg,
@@ -151,7 +151,7 @@
 .about-button:focus-visible {
   outline: 2px solid #053430;
   outline-offset: 4px;
-  border-radius: 12px;
+  border-radius: 9px;
 }
 
 @media (prefers-reduced-motion: reduce) {

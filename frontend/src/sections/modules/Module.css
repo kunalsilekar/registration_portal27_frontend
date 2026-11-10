@@ -27,6 +27,18 @@
     gap: 3rem;
 }
 
+/* Keep the paper backdrop still while the desktop module cards animate. */
+@media (min-width: 768px) {
+    .module-section {
+        z-index: 2;
+        background-image: url('../../../public/assets/background.png');
+        background-attachment: fixed;
+        /* Skip the asset's thin blue edge at its top row. */
+        background-position: center -2px;
+        background-repeat: repeat;
+    }
+}
+
 /* ---------- heading ---------- */
 .module-header {
     transform-origin: center top;
@@ -34,7 +46,7 @@
 
 .title {
     margin: 0;
-    padding-top: 150px;
+    padding-top: 90px;
     font-family: 'Ellak', sans-serif;
     color: var(--green);
     text-align: center;
@@ -58,6 +70,13 @@
     position: relative;
     width: 80%;
     margin-left: auto;
+}
+
+@media (min-width: 768px) {
+    .cards-wrap {
+        margin-right: auto;
+        margin-left: 12%;
+    }
 }
 
 .cards-arrows {
@@ -235,14 +254,14 @@
     display: inline-flex;
     align-items: center;
     height: var(--eb-size);
-    padding: 0 14px 0 calc(var(--eb-size) + 14px);
+    padding: 0 12px 0 calc(var(--eb-size) + 12px);
     color: var(--cream);
     font-size: 18px;
-    font-weight: 600;                 /* same weight in both states: no width jump */
+    font-weight: 500;                 /* same weight in both states: no width jump */
     text-decoration: none;
     white-space: nowrap;
     cursor: pointer;
-    font-family: "Goutham";
+    font-family: "Gotham", sans-serif;
     transition: padding var(--eb-time) var(--eb-ease), color 0.3s ease 0.1s;
 }
 
@@ -279,7 +298,7 @@
 .explore-btn:hover,
 .explore-btn:focus-visible {
     color: var(--green);
-    padding: 0 calc(var(--eb-size) + 14px) 0 14px;
+    padding: 0 calc(var(--eb-size) + 12px) 0 12px;
 }
 
 .explore-btn:hover::before,

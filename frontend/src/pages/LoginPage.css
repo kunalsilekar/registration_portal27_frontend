@@ -177,16 +177,61 @@
 }
 
 .google-sign-in-control {
+  position: relative;
   width: 191px;
   height: 35px;
   align-self: center;
   overflow: hidden;
+  border: 1px solid #cfbd9d;
+  border-radius: 6px;
+  background: #f2e5d3;
+  box-shadow: 0 1px 2px rgb(15 48 39 / 10%);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.google-sign-in-control:hover {
+  border-color: #9d8260;
+  box-shadow: 0 3px 8px rgb(15 48 39 / 14%);
+  transform: translateY(-1px);
+}
+
+.google-sign-in-control:focus-within {
+  outline: 2px solid #125650;
+  outline-offset: 2px;
+}
+
+.google-sign-in-visual {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #0f3027;
+  font-family: 'Gotham', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.244;
+  pointer-events: none;
+}
+
+.google-sign-in-visual img {
+  display: block;
+  width: 19px;
+  height: 22px;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .google-sign-in-host {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  opacity: 0;
 }
 
 .google-sign-in-host iframe {
@@ -422,6 +467,16 @@
   .google-sign-in-control {
     width: 100%;
     height: 48px;
+  }
+
+  .google-sign-in-visual {
+    gap: 12px;
+    font-size: 14px;
+  }
+
+  .google-sign-in-visual img {
+    width: 19px;
+    height: 22px;
   }
 
   .sign-in-divider {

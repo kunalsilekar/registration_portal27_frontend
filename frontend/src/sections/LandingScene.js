@@ -42,7 +42,7 @@ function LandingScene() {
       });
 
       // Move the foreground, stats, and About together; on mobile they form one vertical stack.
-      tl.to('.landscape', { y: -140, duration: 18 }, 0)
+      tl.to('.landscape', { y: () => window.matchMedia('(max-width: 760px)').matches ? -140 : 0, duration: 18 }, 0)
         .to(foreground, { y: sceneTargetY, duration: 18 }, 0)
         .to(stats, { y: sceneTargetY, duration: 18 }, 0)
         .to(about, { y: sceneTargetY, duration: 18 }, 0)
@@ -69,10 +69,10 @@ function LandingScene() {
           },
           {
             x: 0,
-            duration: 1.2,
-            stagger: 0.2,
+            duration: 3.6,
+            stagger: 0.32,
           },
-          8
+          12
         )
         .fromTo(
           photoImages,
@@ -84,10 +84,10 @@ function LandingScene() {
           },
           {
             rotation: (i, el) => tiltOf(el.parentElement),
-            duration: 1.2,
-            stagger: 0.2,
+            duration: 3.6,
+            stagger: 0.32,
           },
-          8
+          12
         )
         .fromTo(
           '.about-cta',

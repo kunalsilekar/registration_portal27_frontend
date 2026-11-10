@@ -64,7 +64,7 @@ body {
 
 .landing-scene-track {
   position: relative;
-  height: 380vh;
+  height: 280vh;
 }
 
 .landing-scene-panel {
@@ -134,8 +134,8 @@ body {
 .hero-title {
   position: relative;
   z-index: 2;
-  width: 100%;
-  margin: 0;
+  width: fit-content;
+  margin: 0 auto;
   padding-top: calc(clamp(160px, 28vh, 258px) + 30px);
 
   color: #053430;
@@ -169,7 +169,7 @@ body {
 .hero-tagline {
   margin: 0;
   color: #000;
-  font-family: "Geist", sans-serif;
+  font-family: "Gotham", sans-serif;
   font-size: 18px;
   font-style: normal;
   font-weight: 500;
@@ -263,7 +263,7 @@ body {
   column-gap: 100px;
   align-items: center;
   width: min(998px, calc(100% - 48px));
-  min-height: 113px;
+  min-height: 124px;
   margin: 0 auto;
   color: #053430;
   text-align: center;
@@ -273,10 +273,11 @@ body {
 .hero-stat {
   display: flex;
   min-width: 0;
-  height: 113px;
+  height: 124px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   font-family: 'Ellak', sans-serif;
 }
 
@@ -300,7 +301,7 @@ body {
 @media (max-width: 1046px) {
   .hero-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 24px 12px;
+    gap: 30px 18px;
     width: min(500px, calc(100% - 32px));
     padding: 20px 0;
   }
@@ -318,8 +319,9 @@ body {
 
 @media (max-width: 760px) {
   .hero-title {
-    width: min(271px, calc(100% - 40px));
-    margin: 0 75px;
+    width: fit-content;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
     padding-top: 240px;
     font-size: clamp(40px, 11.94vw, 48px);
   }
@@ -375,7 +377,7 @@ body {
   .landing-scene-panel {
     --foreground-height: 100vh;
     --mobile-stats-gap: 0px;
-    --mobile-stats-height: 376px;
+    --mobile-stats-height: 392px;
     --about-offset: calc(var(--mobile-stats-gap) + var(--mobile-stats-height));
   }
 
@@ -388,7 +390,7 @@ body {
     top: calc(var(--foreground-height) + var(--mobile-stats-gap));
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(3, 96px);
-    gap: 24px 12px;
+    gap: 32px 16px;
     padding: 20px 0;
   }
 
@@ -412,6 +414,28 @@ body {
     content: '';
     pointer-events: none;
   }
+}
+
+/* Desktop landing sections layer over one another as the scroll animations hand off. */
+@media (min-width: 1025px) {
+  .landing-page {
+    --landing-section-overlap: clamp(64px, 9vh, 110px);
+  }
+
+  .landing-page > .module-section,
+  .landing-page > .aftermovie-section,
+  .landing-page > .alcher-testimonials,
+  .landing-page > .faq-section-wrapper,
+  .landing-page > .footer-wrapper {
+    position: relative;
+    margin-top: calc(-1 * var(--landing-section-overlap));
+  }
+
+  .landing-page > .module-section { z-index: 2; }
+  .landing-page > .aftermovie-section { z-index: 3; }
+  .landing-page > .alcher-testimonials { z-index: 4; }
+  .landing-page > .faq-section-wrapper { z-index: 5; }
+  .landing-page > .footer-wrapper { z-index: 6; }
 }
 
 

@@ -172,15 +172,17 @@ export default function Module() {
                 },
             });
 
-            // 1. title rises from the bottom of the screen up to its place
+            // 1. title moves up a short distance into place so the next section
+            // does not sit blank for too long after About.
             tl.fromTo(
                 headerRef.current,
-                { y: () => window.innerHeight * 0.6, opacity: 0 },
-                { y: 0, opacity: 1, ease: 'power3.out', duration: 1.2 },
+                { y: () => window.innerHeight * 0.12, opacity: 0.25 },
+                { y: 0, opacity: 1, ease: 'power3.out', duration: 0.8 },
                 0
             )
-                // 2. deck rises from below the fold, once the title is mostly up
-                .fromTo(wrapRef.current, { y: () => window.innerHeight }, { y: 0, ease: 'power2.out', duration: 1.2 }, 0.9)
+                // 2. bring the deck into view early with a short rise so it is
+                // visible while the cards fan out, instead of starting below the fold.
+                .fromTo(wrapRef.current, { y: () => window.innerHeight * 0.12 }, { y: 0, ease: 'power2.out', duration: 0.55 }, 0.15)
                 // 3. deck fans out into the row
                 .fromTo(
                     cards,

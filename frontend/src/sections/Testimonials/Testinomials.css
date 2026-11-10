@@ -264,9 +264,10 @@
 
 .alcher-card__quote {
   margin: 0;
-  font-size: calc(11.5 * var(--u));
-  font-weight: 600;
-  line-height: calc(13 * var(--u));
+  font-family: "Gotham", sans-serif;
+  font-size: calc(12 * var(--u));
+  font-weight: 500;
+  line-height: 1.092;
   color: var(--alcher-text-dark);
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -289,9 +290,10 @@
 
 .alcher-card__name {
   margin: 0;
+  font-family: "Gotham", sans-serif;
   font-size: calc(16 * var(--u));
   font-weight: 500;
-  line-height: calc(17 * var(--u));
+  line-height: 1.092;
   color: var(--alcher-text-dark);
   white-space: nowrap;
   overflow: hidden;
@@ -300,9 +302,11 @@
 
 .alcher-card__role {
   margin-top: calc(1 * var(--u));
+  font-family: "Gotham", sans-serif;
   font-size: calc(12 * var(--u));
   font-weight: 400;
-  line-height: calc(14 * var(--u));
+  line-height: 1.092;
+  letter-spacing: calc(-0.24 * var(--u));
   color: var(--alcher-text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -484,19 +488,20 @@
   }
 
   .alcher-card__quote {
-    font-size: calc(9 * var(--u));
-    line-height: calc(10 * var(--u));
+    font-size: calc(16 * var(--u));
+    line-height: 1.092;
     -webkit-line-clamp: 4;
   }
 
   .alcher-card__name {
-    font-size: calc(12.5 * var(--u));
-    line-height: calc(14 * var(--u));
+    font-size: calc(12.388 * var(--u));
+    line-height: 1.092;
   }
 
   .alcher-card__role {
-    font-size: calc(9 * var(--u));
-    line-height: calc(11 * var(--u));
+    font-size: calc(9.291 * var(--u));
+    line-height: 1.092;
+    letter-spacing: calc(-0.1858 * var(--u));
   }
 
   .alcher-card__stars {
