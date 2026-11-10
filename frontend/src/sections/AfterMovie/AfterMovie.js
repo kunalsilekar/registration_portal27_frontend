@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 /* ---- content ---- */
-const POSTER = `${process.env.PUBLIC_URL}/assets/aftermovie/poster.jpg`;
+const POSTER = `${process.env.PUBLIC_URL}/assets/aftermovie.jpg`;
 const YOUTUBE_ID = 'xsxBaj4Ebog';
 const YOUTUBE_EMBED_URL = `https://www.youtube-nocookie.com/embed/${YOUTUBE_ID}?autoplay=1&mute=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&iv_load_policy=3&disablekb=1`;
 

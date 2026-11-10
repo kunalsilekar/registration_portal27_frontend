@@ -332,6 +332,10 @@
   opacity: 0.3;
 }
 
+.alcher-card__star.is-filled {
+  color: #B1A18D;
+}
+
 /* =========================================
    SCROLL NAV  (28px buttons, 10px track, 15px gaps)
    ========================================= */
@@ -509,12 +513,8 @@
   }
 
   .alcher-card__star {
-    width: calc(9 * var(--u));
-    height: calc(9 * var(--u));
-  }
-
-  .alcher-card__star.is-filled {
-    filter: none;
+    width: calc(12 * var(--u));
+    height: calc(12 * var(--u));
   }
 }
 

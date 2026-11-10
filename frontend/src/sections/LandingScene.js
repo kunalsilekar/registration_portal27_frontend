@@ -12,21 +12,18 @@ function LandingScene() {
     const track = trackRef.current;
     if (!track) return;
     const isPhone = window.matchMedia('(max-width: 760px)').matches;
-
-    // Tablet layout uses normal document flow; skip the scroll-driven scene
-    // timeline so the About section does not slide or reveal as you scroll.
-    if (window.matchMedia('(min-width: 761px) and (max-width: 1024px)').matches) {
-      return undefined;
-    }
+    const isDesktop = window.matchMedia('(min-width: 1025px)').matches;
+    const isTablet = !isPhone && !isDesktop;
 
     const ctx = gsap.context(() => {
       const navbar = document.querySelector('.landing-navbar-fixed .navbar');
+      const scenePanel = track.querySelector('.landing-scene-panel');
       const foreground = track.querySelector('.foreground');
       const about = track.querySelector('.about-scene');
       const stats = track.querySelector('.hero-stats');
+      const moduleSection = document.querySelector('.landing-page > .module-section');
       const photos = gsap.utils.toArray('.about-photo');
       const photoImages = gsap.utils.toArray('.about-photo-image');
-
       const isLeft = (el) =>
         el.offsetLeft + el.offsetWidth / 2 < about.offsetWidth / 2;
       const tiltOf = (el) => parseFloat(el.dataset.tilt);
@@ -36,7 +33,6 @@ function LandingScene() {
         window.matchMedia('(max-width: 760px)').matches
           ? navbar.offsetTop - about.offsetTop
           : attachedTargetY();
-
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
@@ -45,24 +41,59 @@ function LandingScene() {
           end: () => '+=' + window.innerHeight * 1.8,
           // Keep phone movement closely tied to the finger scroll; a full
           // one-second scrub makes the layered scene visibly trail behind.
-          scrub: isPhone ? 0.2 : 1,
+          scrub: isTablet ? true : isPhone ? 0.2 : 1,
           invalidateOnRefresh: true,
         },
       });
 
-      // Move the foreground, stats, and About together; on mobile they form one vertical stack.
-      tl.to('.landscape', { y: () => window.matchMedia('(max-width: 760px)').matches ? -140 : 0, duration: 18 }, 0)
+      // Keep the landscape fixed, like desktop; move the foreground, stats,
+      // and About together as the scene scrolls into its next section.
+      tl.to('.landscape', { y: 0, duration: 18 }, 0)
         .to(foreground, { y: sceneTargetY, duration: 18 }, 0)
         .to(stats, { y: sceneTargetY, duration: 18 }, 0)
         .to(about, { y: sceneTargetY, duration: 18 }, 0)
         .to('.hero-copy', { y: -50, duration: 18 }, 0);
 
-      tl.fromTo(
-          '.about-heading',
-          { scale: 1.36, y: 100 },
-          { scale: 1, y: 0, duration: 4 },
-          10
-        )
+      // On tablets, animate Modules with the same scroll progress as About so
+      // their shared edge stays aligned throughout the handoff. Computing the
+      // start offset from the current transforms keeps this stable on refresh.
+      if (isTablet && moduleSection) {
+        const moduleStartY = () => {
+          const currentModuleY = Number(gsap.getProperty(moduleSection, 'y')) || 0;
+          const currentAboutY = Number(gsap.getProperty(about, 'y')) || 0;
+          const panelTop = scenePanel.getBoundingClientRect().top;
+          const aboutBottomInPanel =
+            about.getBoundingClientRect().bottom - currentAboutY - panelTop;
+          const trackDocumentTop = track.getBoundingClientRect().top + window.scrollY;
+          const moduleDocumentTop =
+            moduleSection.getBoundingClientRect().top - currentModuleY + window.scrollY;
+          const moduleTopFromTrack = moduleDocumentTop - trackDocumentTop;
+
+          return aboutBottomInPanel - moduleTopFromTrack;
+        };
+
+        tl.fromTo(
+          moduleSection,
+          { y: moduleStartY },
+          {
+            // Offset Modules into place, then move it by the same amount as
+            // About so their shared edge stays aligned during the handoff.
+            y: () => moduleStartY() + window.innerHeight * 1.8 + sceneTargetY(),
+            duration: 18,
+          },
+          0
+        );
+      }
+
+      // Keep the About reveal effects on desktop. Tablet and phone show the
+      // content immediately while retaining the shared scene scroll movement.
+      if (isDesktop) {
+        tl.fromTo(
+            '.about-heading',
+            { scale: 1.36, y: 100 },
+            { scale: 1, y: 0, duration: 4 },
+            10
+          )
           .fromTo(
             '.about-text',
             { y: 114, opacity: 0 },
@@ -95,12 +126,13 @@ function LandingScene() {
             },
             12
           )
-        .fromTo(
+          .fromTo(
             '.about-cta',
             { opacity: 0, y: 30 },
             { opacity: 1, y: 0, duration: 1.5 },
             15
           );
+      }
     }, track);
 
     const refresh = () => ScrollTrigger.refresh();

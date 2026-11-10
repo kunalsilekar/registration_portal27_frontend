@@ -182,7 +182,8 @@
 
 @media (min-width: 761px) and (max-width: 1024px) {
   .about-scene {
-    height: 80vh;
+    height: 40vh;
+    background: #F2EBE1 url('../../../public/assets/about_background(1).jpg') center / cover no-repeat;
   }
 
   .about-copy {
@@ -207,3 +208,4 @@
     display: none;
   }
 }
+

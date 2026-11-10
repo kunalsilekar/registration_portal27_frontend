@@ -318,34 +318,39 @@ body {
 }
 
 @media (min-width: 761px) and (max-width: 1024px) {
+  /* Let Modules cover the empty tail of the pinned About scene, as on desktop. */
+  .landing-page > .module-section {
+    position: relative;
+    z-index: 2;
+    margin-top: -58vh;
+  }
+
   .landing-scene-track {
-    height: auto;
+    height: 280vh;
   }
 
   .landing-scene-panel {
-    position: relative;
-    top: auto;
-    height: auto;
-    min-height: 0;
-    overflow: visible;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
     --foreground-height: 90vh;
   }
 
   .hero-scene {
-    position: relative;
-    inset: auto;
-    height: calc(var(--foreground-height) + 80vh);
-    min-height: 0;
-    overflow: visible;
+    position: absolute;
+    inset: 0;
+    height: 100vh;
+    overflow: hidden;
   }
 
   .landscape {
-    height: var(--foreground-height);
+    height: 100vh;
   }
 
   .about-scene {
     position: absolute;
-    top: var(--foreground-height);
+    top: calc(var(--foreground-height) + var(--about-offset));
     left: 0;
     margin-top: 0;
   }
@@ -459,6 +464,18 @@ body {
     background-size: 680px 1465px;
     content: '';
     pointer-events: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .landing-page > .module-section {
+    position: relative;
+    z-index: 2;
+    /* Let Modules meet About after the phone scene finishes its scroll movement. */
+    margin-top: 0;
+    background-image: url('../public/assets/background.png');
+    background-position: center -2px;
+    background-repeat: repeat;
   }
 }
 
