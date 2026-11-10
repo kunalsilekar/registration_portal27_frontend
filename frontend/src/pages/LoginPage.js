@@ -50,7 +50,6 @@ function LoginPage() {
     let resizeObserver;
     let initializedGoogle = false;
     let lastRenderedWidth = 0;
-    let returnTimer;
     let script = document.getElementById('google-identity-services');
 
     const renderGoogleButton = () => {
@@ -96,27 +95,8 @@ function LoginPage() {
       resizeObserver.observe(buttonHost);
     }
 
-    // Mobile account selection can leave the embedded button stale after Back.
-    // Re-render on return, allowing a successful credential callback to run first.
-    const refreshButtonOnReturn = () => {
-      if (document.visibilityState === 'hidden') return;
-      window.clearTimeout(returnTimer);
-      returnTimer = window.setTimeout(() => {
-        if (cancelled || googleAuthBusyRef.current) return;
-        lastRenderedWidth = 0;
-        renderGoogleButton();
-      }, 300);
-    };
-    window.addEventListener('focus', refreshButtonOnReturn);
-    window.addEventListener('pageshow', refreshButtonOnReturn);
-    document.addEventListener('visibilitychange', refreshButtonOnReturn);
-
     return () => {
       cancelled = true;
-      window.clearTimeout(returnTimer);
-      window.removeEventListener('focus', refreshButtonOnReturn);
-      window.removeEventListener('pageshow', refreshButtonOnReturn);
-      document.removeEventListener('visibilitychange', refreshButtonOnReturn);
       resizeObserver?.disconnect();
       script?.removeEventListener('load', renderGoogleButton);
     };
