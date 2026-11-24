@@ -16,7 +16,7 @@ const FAQ_DATA = [
     id: 2,
     question: "Is there a registration fee?",
     answer:
-      "[TBD: free / ₹X per participant / ₹X per team]. Some competitions have online prelims; finalists are invited to IIT Guwahati."
+      "900 per head and 2700 for a team. Some competitions have online prelims; finalists are invited to IIT Guwahati."
   },
   {
     id: 3,
