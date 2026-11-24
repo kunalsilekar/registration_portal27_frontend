@@ -62,6 +62,48 @@ body {
   background-image: url(../public/assets/background.png);
 }
 
+.about-modules-wrapper {
+  --shared-about-offset: 0px;
+  --shared-foreground-height: 150vh;
+  position: relative;
+  isolation: isolate;
+}
+
+.about-modules-wrapper::before {
+  position: absolute;
+  z-index: 0;
+  top: calc(var(--shared-foreground-height) + var(--shared-about-offset));
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: url('../public/assets/about_background.jpeg') center / cover fixed no-repeat;
+  content: '';
+  pointer-events: none;
+}
+
+.landing-scene-track,
+.about-modules-wrapper > .module-section {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 761px) and (max-width: 1024px) {
+  .about-modules-wrapper {
+    --shared-foreground-height: 90vh;
+  }
+}
+
+@media (max-width: 760px) {
+  .about-modules-wrapper {
+    --shared-foreground-height: 100vh;
+    --shared-about-offset: 392px;
+  }
+
+  .about-modules-wrapper::before {
+    background-attachment: scroll;
+  }
+}
+
 .landing-scene-track {
   position: relative;
   height: 280vh;
@@ -84,7 +126,7 @@ body {
   height: 100vh;
   overflow: hidden;
   isolation: isolate;
-  background: #F2EBE1;
+  background: transparent;
 }
 
 .landscape {
@@ -93,7 +135,7 @@ body {
   width: 100%;
   height: 110vh;
   object-fit: cover;
-  object-position: center;
+  object-position: center 55%;
   z-index: -10;
   will-change: transform;
 }
@@ -319,7 +361,7 @@ body {
 
 @media (min-width: 761px) and (max-width: 1024px) {
   /* Let Modules cover the empty tail of the pinned About scene, as on desktop. */
-  .landing-page > .module-section {
+  .about-modules-wrapper > .module-section {
     position: relative;
     z-index: 2;
     margin-top: -58vh;
@@ -468,14 +510,12 @@ body {
 }
 
 @media (max-width: 760px) {
-  .landing-page > .module-section {
+  .about-modules-wrapper > .module-section {
     position: relative;
     z-index: 2;
     /* Let Modules meet About after the phone scene finishes its scroll movement. */
     margin-top: 0;
-    background-image: url('../public/assets/background.png');
-    background-position: center -2px;
-    background-repeat: repeat;
+    background: transparent;
   }
 }
 
@@ -485,7 +525,7 @@ body {
     --landing-section-overlap: clamp(64px, 9vh, 110px);
   }
 
-  .landing-page > .module-section,
+  .about-modules-wrapper > .module-section,
   .landing-page > .aftermovie-section,
   .landing-page > .alcher-testimonials,
   .landing-page > .faq-section-wrapper,
@@ -494,7 +534,7 @@ body {
     margin-top: calc(-1 * var(--landing-section-overlap));
   }
 
-  .landing-page > .module-section { z-index: 2; }
+  .about-modules-wrapper > .module-section { z-index: 2; }
   .landing-page > .aftermovie-section { z-index: 3; }
   .landing-page > .alcher-testimonials { z-index: 4; }
   .landing-page > .faq-section-wrapper { z-index: 5; }

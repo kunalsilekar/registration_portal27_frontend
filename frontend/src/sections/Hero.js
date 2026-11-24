@@ -161,7 +161,7 @@ function Hero() {
                 <img
                     ref={landscapeRef}
                     className="landscape"
-                    src="/assets/landscape.jpeg"
+                    src="/assets/hero_background.jpeg"
                     alt="Sunset landscape with mountains and waterfalls"
                 />
             </picture>
@@ -174,7 +174,7 @@ function Hero() {
                 <img
                     ref={foregroundRef}
                     className="foreground"
-                    src="/assets/foreground.jpeg"
+                    src="/assets/hero_foreground.png"
                     alt=""
                 />
             </picture>

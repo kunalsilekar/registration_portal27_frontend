@@ -31,11 +31,7 @@
 @media (min-width: 768px) {
     .module-section {
         z-index: 2;
-        background-image: url('../../../public/assets/background.png');
-        background-attachment: fixed;
-        /* Skip the asset's thin blue edge at its top row. */
-        background-position: center -2px;
-        background-repeat: repeat;
+        background: transparent;
     }
 }
 
@@ -43,11 +39,7 @@
    the section and its cards retain their normal content height. */
 @media (min-width: 761px) and (max-width: 1024px) {
     .module-section {
-        background-image: url('../../../public/assets/background.png');
-        background-attachment: scroll;
-        background-position: center top;
-        background-repeat: no-repeat;
-        background-size: 100% 80vh;
+        background: transparent;
     }
 }
 

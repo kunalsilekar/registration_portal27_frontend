@@ -15,7 +15,7 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #F2EBE1 url('../../../public/assets/about_background.png') center / cover no-repeat;
+  background: transparent;
   color: #053430;
   padding: 0;
 }
@@ -183,7 +183,6 @@
 @media (min-width: 761px) and (max-width: 1024px) {
   .about-scene {
     height: 40vh;
-    background: #F2EBE1 url('../../../public/assets/about_background(1).jpg') center / cover no-repeat;
   }
 
   .about-copy {
@@ -201,6 +200,14 @@
   .about-text {
     width: min(680px, 92%);
     font-size: clamp(15px, 1.65vw, 17px);
+  }
+}
+
+@media (min-width: 761px) {
+  .about-scene {
+    /* Give About its own opaque face of the shared paper background so the
+       hero landscape cannot show through while this scene moves over it. */
+    background: #f4e8d5 url('../../../public/assets/about_background.jpeg') center / cover no-repeat;
   }
 }
 @media (max-width: 768px) {

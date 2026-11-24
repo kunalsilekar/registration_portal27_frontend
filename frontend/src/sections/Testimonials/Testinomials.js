@@ -40,16 +40,16 @@ const DEFAULT_TESTIMONIALS = [
     rating: 5,
     avatar: "/assets/testimonials/Deepanshu.jpg",
   },
-  /*
   {
     id: 4,
     quote:
-      "Performing under the twilight lights of IIT Guwahati was unforgettable. The crowd energy and stage production at Alcheringa are unmatched anywhere.",
-    name: "Aarav Sharma",
-    role: "(Rock-O-Phonix Finalist)",
+      "Alcheringa’26 was an unforgettable experience, making us feel at home with its incredible energy, scale, and spirit!",
+    name: "Procheta Bhattacharjee",
+    role: "(Haute couture, runner up)",
     rating: 5,
-    avatar: AVATAR,
+    avatar: "/assets/testimonials/Procheta_Bhattacharjee.jpeg",
   },
+/*
   {
     id: 5,
     quote:

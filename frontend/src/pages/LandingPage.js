@@ -11,8 +11,10 @@ function LandingPage() {
   return (
     <main className="landing-page">
       <div className="landing-navbar-fixed"><Navbar /></div>
-      <LandingScene />
-      <Module />
+      <div className="about-modules-wrapper">
+        <LandingScene />
+        <Module />
+      </div>
       <AfterMovie />
       <Testimonials />
       <FAQSection />

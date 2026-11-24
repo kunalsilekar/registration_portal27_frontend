@@ -21,7 +21,7 @@ function LandingScene() {
       const foreground = track.querySelector('.foreground');
       const about = track.querySelector('.about-scene');
       const stats = track.querySelector('.hero-stats');
-      const moduleSection = document.querySelector('.landing-page > .module-section');
+      const moduleSection = document.querySelector('.about-modules-wrapper > .module-section');
       const photos = gsap.utils.toArray('.about-photo');
       const photoImages = gsap.utils.toArray('.about-photo-image');
       const isLeft = (el) =>
@@ -46,13 +46,13 @@ function LandingScene() {
         },
       });
 
-      // Keep the landscape fixed, like desktop; move the foreground, stats,
-      // and About together as the scene scrolls into its next section.
+      // Keep the background fixed while the foreground, stats, and About move.
+      // Move the hero copy with the foreground on desktop/tablet to clear About.
       tl.to('.landscape', { y: 0, duration: 18 }, 0)
         .to(foreground, { y: sceneTargetY, duration: 18 }, 0)
         .to(stats, { y: sceneTargetY, duration: 18 }, 0)
         .to(about, { y: sceneTargetY, duration: 18 }, 0)
-        .to('.hero-copy', { y: -50, duration: 18 }, 0);
+        .to('.hero-copy', { y: () => (isPhone ? -50 : sceneTargetY()), duration: 18 }, 0);
 
       // On tablets, animate Modules with the same scroll progress as About so
       // their shared edge stays aligned throughout the handoff. Computing the
