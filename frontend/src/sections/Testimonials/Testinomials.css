@@ -17,7 +17,7 @@
   --alcher-text-dark: #223a3e;  /* all text inside cards */
   --alcher-text-muted: #223a3e;
   --alcher-thumb: #c4ad90;
-  --alcher-bg-image: url("../../../public/assets/testinomials.png");
+  --alcher-bg-image: url("../../../public/assets/testimonials_bg.png");
 }
 
 .alcher-testimonials {
@@ -270,7 +270,6 @@
   line-height: 1.092;
   color: var(--alcher-text-dark);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -494,7 +493,6 @@
   .alcher-card__quote {
     font-size: calc(16 * var(--u));
     line-height: 1.092;
-    -webkit-line-clamp: 4;
   }
 
   .alcher-card__name {
