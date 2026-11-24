@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Phone } from 'lucide-react';
 import './Footer.css';
 
-const stageDesktop = '/assets/footer_bg.jpg';
+const stageDesktop = '/assets/footer.png';
 const stageMobile = '/assets/footer_bg_mobile.jpg';
 const alcherLogoDesktop = '/assets/alcherLogo.svg';
 const alcherLogoMobile = '/assets/alcherLogo_mobile.svg';
