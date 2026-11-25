@@ -36,7 +36,7 @@ function About() {
         </h2>
 
         <p className="about-text">
-          For three decades, IIT Guwahati has turned into India’s loudest stage every winter. Alcheringa brings together dancers, musicians, designers, quizzers and filmmakers from 500+ colleges for four days of competitions, pro-nites and culture you won’t find anywhere else. Alcheringa ‘27 runs [TBD dates], January 2027. Your stage is waiting.
+          For three decades, IIT Guwahati has turned into India’s loudest stage every winter. Alcheringa brings together dancers, musicians, designers, quizzers and filmmakers from 500+ colleges for four days of competitions, pro-nites and culture you won’t find anywhere else. Alcheringa‘27 runs from 4th to 7th February 2027. Your stage is waiting.
         </p>
 
          <div className="about-cta">
