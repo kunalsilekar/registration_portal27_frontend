@@ -80,16 +80,19 @@ const MyTeam = () => {
 
   // VALIDATE INDIVIDUAL FIELDS
   const validateField = (name, value) => {
-    const val = value.trim();
+    const val = String(value ?? "").trim();
 
     if (name === "name") {
       if (val === "") return "Name is required.";
       if (val.length < 3) return "Name must contain at least 3 characters.";
+      if (!/^[A-Za-z\s]+$/.test(val)) {
+        return "Name can contain letters and spaces only.";
+      }
     }
 
     if (name === "email") {
       if (val === "") return "Email is required.";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val)) {
         return "Enter a valid email address.";
       }
     }
@@ -106,13 +109,16 @@ const MyTeam = () => {
 
     if (name === "phone") {
       if (val === "") return "Phone number is required.";
-      if (!/^\d{10}$/.test(val)) {
-        return "Enter a valid 10-digit phone number.";
+      if (!/^[6-9]\d{9}$/.test(val)) {
+        return "Enter a valid 10-digit Indian mobile number starting with 6–9.";
       }
     }
 
     if (name === "college") {
       if (val === "") return "College name is required.";
+      if (!/^[A-Za-z\s]+$/.test(val)) {
+        return "College name can contain letters and spaces only.";
+      }
     }
 
     return "";
@@ -419,13 +425,14 @@ const MyTeam = () => {
 
                     <div className="member-form-field">
                       <label htmlFor={`name-${member.id}`}>
-                        Name of New Member
+                        Name of New Member *
                       </label>
 
                       <input
                         id={`name-${member.id}`}
                         type="text"
                         name="name"
+                        required
                         autoComplete="name"
                         placeholder="Enter member name"
                         value={member.name}
@@ -450,12 +457,13 @@ const MyTeam = () => {
                     </div>
 
                     <div className="member-form-field">
-                      <label htmlFor={`email-${member.id}`}>Email</label>
+                      <label htmlFor={`email-${member.id}`}>Email *</label>
 
                       <input
                         id={`email-${member.id}`}
                         type="email"
                         name="email"
+                        required
                         autoComplete="email"
                         placeholder="Enter email"
                         value={member.email}
@@ -480,7 +488,7 @@ const MyTeam = () => {
                     </div>
 
                     <div className="member-form-field">
-                      <label htmlFor={`gender-${member.id}`}>Gender</label>
+                      <label htmlFor={`gender-${member.id}`}>Gender *</label>
 
                       <div className="gender-dropdown">
                         <button
@@ -530,12 +538,15 @@ const MyTeam = () => {
                     </div>
 
                     <div className="member-form-field">
-                      <label htmlFor={`phone-${member.id}`}>Phone Number</label>
+                      <label htmlFor={`phone-${member.id}`}>Phone Number *</label>
 
                       <input
                         id={`phone-${member.id}`}
                         type="tel"
                         name="phone"
+                        required
+                        inputMode="numeric"
+                        maxLength={10}
                         autoComplete="tel"
                         placeholder="Enter 10-digit phone number"
                         value={member.phone}
@@ -561,13 +572,14 @@ const MyTeam = () => {
 
                     <div className="member-form-field">
                       <label htmlFor={`college-${member.id}`}>
-                        College Name
+                        College Name *
                       </label>
 
                       <input
                         id={`college-${member.id}`}
                         type="text"
                         name="college"
+                        required
                         autoComplete="organization"
                         placeholder="Enter college name"
                         value={member.college}
