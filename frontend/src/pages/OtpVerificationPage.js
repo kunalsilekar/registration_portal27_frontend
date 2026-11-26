@@ -60,7 +60,7 @@ function OtpVerificationPage() {
       if (isSignup) {
         if (!result?.access) throw new Error('The server did not return an access token after verification.');
         setAuthData(result.access, result.user);
-        if (result.refresh) localStorage.setItem('alcher_refresh_token', result.refresh);
+        if (result.refresh) sessionStorage.setItem('alcher_refresh_token', result.refresh);
         sessionStorage.removeItem('alcher_signup_email');
         sessionStorage.removeItem('alcher_otp_flow');
         navigate('/', { replace: true });

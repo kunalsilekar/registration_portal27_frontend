@@ -36,7 +36,7 @@ function RegistrationPage() {
       const auth = await googleLoginApi(response.credential);
       if (!auth.access) throw new Error('The server did not return an access token.');
       setAuthData(auth.access, auth.user);
-      if (auth.refresh) localStorage.setItem('alcher_refresh_token', auth.refresh);
+      if (auth.refresh) sessionStorage.setItem('alcher_refresh_token', auth.refresh);
       const needsCompletion = Boolean(auth.needs_completion);
       localStorage.setItem('alcher_needs_completion', String(needsCompletion));
       navigate(needsCompletion ? '/complete-profile' : '/', { replace: true });

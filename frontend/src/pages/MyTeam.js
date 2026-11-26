@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./MyTeam.css";
 import defaultPhoto from "../asset/Ppic.png";
-import { getAuthToken, getMediaUrl } from "../utils/api";
+import { authenticatedFetch, getAuthToken, getMediaUrl } from "../utils/api";
 
 const API_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
 
@@ -42,7 +42,7 @@ const MyTeam = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/Participant/`, {
+      const response = await authenticatedFetch(`${API_URL}/Participant/`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -269,7 +269,7 @@ const MyTeam = () => {
           collegename: currentMember.college.trim(),
         };
 
-        const response = await fetch(`${API_URL}/Participant/`, {
+        const response = await authenticatedFetch(`${API_URL}/Participant/`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

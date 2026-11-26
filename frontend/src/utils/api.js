@@ -128,13 +128,74 @@ export const getApiMediaUrl = (path) => {
 
 // Backwards-compatible alias used by competition and registration pages.
 export const getMediaUrl = getApiMediaUrl;
-export const getAuthToken = () => {
-  return (
-    localStorage.getItem("alcher_token") ||
-    localStorage.getItem("token") ||
-    localStorage.getItem("access_token") ||
-    null
-  );
+const getTabValue = (key, legacyKeys = []) => {
+  const current = sessionStorage.getItem(key);
+  if (current) return current;
+
+  for (const legacyKey of legacyKeys) {
+    const legacyValue = localStorage.getItem(legacyKey);
+    if (legacyValue) {
+      sessionStorage.setItem(key, legacyValue);
+      localStorage.removeItem(legacyKey);
+      return legacyValue;
+    }
+  }
+  return null;
+};
+
+export const getAuthToken = () =>
+  getTabValue("alcher_token", ["alcher_token", "token", "access_token"]);
+
+let refreshRequest = null;
+
+const refreshAccessToken = async () => {
+  const refresh = getTabValue("alcher_refresh_token", ["alcher_refresh_token"]);
+  if (!refresh) return { invalid: true };
+
+  if (!refreshRequest) {
+    refreshRequest = fetch(`${API_BASE_URL}/api/token/refresh/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh }),
+    })
+      .then(async (response) => {
+        if (response.status === 400 || response.status === 401) {
+          return { invalid: true };
+        }
+        if (!response.ok) return { networkError: true };
+        const data = await response.json().catch(() => ({}));
+        if (!data.access) return { invalid: true };
+        sessionStorage.setItem("alcher_token", data.access);
+        if (data.refresh) sessionStorage.setItem("alcher_refresh_token", data.refresh);
+        return { access: data.access };
+      })
+      .catch(() => ({ networkError: true }))
+      .finally(() => {
+        refreshRequest = null;
+      });
+  }
+
+  return refreshRequest;
+};
+
+// Refresh an expired access token once, then retry the original request.
+export const authenticatedFetch = async (url, options = {}) => {
+  const requestWithToken = (token) => {
+    const headers = new Headers(options.headers || {});
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    return fetch(url, { ...options, headers });
+  };
+
+  const response = await requestWithToken(getAuthToken());
+  if (response.status !== 401) return response;
+
+  const refreshed = await refreshAccessToken();
+  if (refreshed.access) return requestWithToken(refreshed.access);
+  if (refreshed.invalid) clearAuthData();
+  if (refreshed.networkError) {
+    throw new Error("Could not refresh your session. Check your connection and try again.");
+  }
+  return response;
 };
 
 export const completeGoogleProfileApi = async (profile) => {
@@ -144,7 +205,7 @@ export const completeGoogleProfileApi = async (profile) => {
 
   let response;
   try {
-    response = await fetch(API_BASE_URL + "/api/auth/complete-profile/", {
+    response = await authenticatedFetch(API_BASE_URL + "/api/auth/complete-profile/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -166,8 +227,7 @@ export const completeGoogleProfileApi = async (profile) => {
 };
 export const getStoredUser = () => {
   try {
-    const raw =
-      localStorage.getItem("alcher_user") || localStorage.getItem("user");
+    const raw = getTabValue("alcher_user", ["alcher_user", "user"]);
     return raw ? JSON.parse(raw) : null;
   } catch (e) {
     return null;
@@ -176,21 +236,22 @@ export const getStoredUser = () => {
 
 export const setAuthData = (token, user) => {
   if (token) {
-    localStorage.setItem("alcher_token", token);
+    sessionStorage.setItem("alcher_token", token);
   }
   if (user) {
-    localStorage.setItem("alcher_user", JSON.stringify(user));
+    sessionStorage.setItem("alcher_user", JSON.stringify(user));
   }
+  ["alcher_token", "token", "access_token", "alcher_user", "user"].forEach((key) =>
+    localStorage.removeItem(key),
+  );
   window.dispatchEvent(new Event("alcher-auth-changed"));
 };
 
 export const clearAuthData = () => {
-  localStorage.removeItem("alcher_refresh_token");
-  localStorage.removeItem("alcher_token");
-  localStorage.removeItem("token");
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("alcher_user");
-  localStorage.removeItem("user");
+  ["alcher_refresh_token", "alcher_token", "token", "access_token", "alcher_user", "user"].forEach((key) => {
+    sessionStorage.removeItem(key);
+    localStorage.removeItem(key);
+  });
   window.dispatchEvent(new Event("alcher-auth-changed"));
 };
 
@@ -200,7 +261,7 @@ export const submitUserQueryApi = async (question) => {
     throw new Error("You must be logged in to submit a query.");
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/queries/`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/api/queries/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -231,7 +292,7 @@ export const getMyQueriesApi = async () => {
     return [];
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/queries/`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/api/queries/`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -292,7 +353,7 @@ export const fetchProfileApi = async () => {
 
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/profile/`, {
+    response = await authenticatedFetch(`${API_BASE_URL}/api/profile/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   } catch (error) {
@@ -313,7 +374,7 @@ export const fetchMyTeamMembersApi = async () => {
 
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/Participant/`, {
+    response = await authenticatedFetch(`${API_BASE_URL}/api/Participant/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   } catch (error) {
@@ -344,7 +405,7 @@ export const addTeamMemberApi = async (memberData) => {
     state: memberData.state,
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/Participant/`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/api/Participant/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -375,7 +436,7 @@ export const fetchMyRegisteredCompetitionsApi = async () => {
 
   let response;
   try {
-    response = await fetch(`${API_BASE_URL}/api/my-registered-competitions/`, {
+    response = await authenticatedFetch(`${API_BASE_URL}/api/my-registered-competitions/`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   } catch (error) {
@@ -401,7 +462,7 @@ export const registerCompetitionApi = async (payload) => {
     'Authorization': `Bearer ${token}`,
   };
 
-  const response = await fetch(`${API_BASE_URL}/api/register-competition/`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/api/register-competition/`, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),

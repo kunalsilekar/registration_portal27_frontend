@@ -6,7 +6,7 @@ import MyTeam from "./MyTeam";
 import Registrations from "./MyRegistrations";
 import Navbar from "../components/Navbar";
 import Footer from "../sections/Footer";
-import { clearAuthData, getAuthToken } from "../utils/api";
+import { authenticatedFetch, clearAuthData, getAuthToken } from "../utils/api";
 import Cropper from "react-easy-crop";
 import getCroppedImg from "../utils/CropImage";
 
@@ -226,7 +226,7 @@ const Profile = () => {
       }
 
       try {
-        const response = await fetch(`${API_URL}/profile/`, {
+        const response = await authenticatedFetch(`${API_URL}/profile/`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -594,7 +594,7 @@ const Profile = () => {
         formData.append("img", selectedImage);
       }
       console.log("Image being uploaded:", formData.get("img"));
-      const response = await fetch(`${API_URL}/auth/edit-profile/`, {
+      const response = await authenticatedFetch(`${API_URL}/auth/edit-profile/`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
