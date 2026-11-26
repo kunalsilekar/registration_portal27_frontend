@@ -15,7 +15,8 @@
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: transparent;
+  /* Keep the moving About panel opaque on phones as well as larger screens. */
+  background: #f4e8d5 url('../../../public/assets/about_background.jpeg') center / cover no-repeat;
   color: #053430;
   padding: 0;
 }
@@ -203,13 +204,6 @@
   }
 }
 
-@media (min-width: 761px) {
-  .about-scene {
-    /* Give About its own opaque face of the shared paper background so the
-       hero landscape cannot show through while this scene moves over it. */
-    background: #f4e8d5 url('../../../public/assets/about_background.jpeg') center / cover no-repeat;
-  }
-}
 @media (max-width: 768px) {
   .about-photo {
     display: none;
